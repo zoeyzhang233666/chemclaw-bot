@@ -736,6 +736,10 @@ var ZH = {
   Admin: "管理员",
   Add: "添加",
   Close: "关闭",
+  "Enlarge graphic": "放大查看",
+  "Zoom in": "放大",
+  "Zoom out": "缩小",
+  "Fit graphic": "适应窗口",
   Copy: "复制",
   Copied: "已复制",
   Content: "内容",
@@ -9549,7 +9553,7 @@ function useAnchoredMenu({ width: requestedWidth, followScroll = false } = {}) {
   const [anchor, setAnchor] = (0, import_react16.useState)(null);
   const [place, setPlace] = (0, import_react16.useState)(null);
   const [shownPlace, leaving] = useLinger(place, MENU_EXIT_MS);
-  const button = (0, import_react16.useRef)(null);
+  const button2 = (0, import_react16.useRef)(null);
   const menu = (0, import_react16.useRef)(null);
   const tick = useViewport();
   const close = () => {
@@ -9559,19 +9563,19 @@ function useAnchoredMenu({ width: requestedWidth, followScroll = false } = {}) {
   (0, import_react16.useEffect)(() => {
     if (place === null) return void 0;
     const onDown = (event) => {
-      if (menu.current?.contains(event.target) || button.current?.contains(event.target)) return;
+      if (menu.current?.contains(event.target) || button2.current?.contains(event.target)) return;
       close();
     };
     const onKey = (event) => {
       if (event.key === "Escape") {
         event.stopPropagation();
         close();
-        button.current?.focus();
+        button2.current?.focus();
       }
     };
     const onScroll = (event) => {
       if (menu.current?.contains(event.target)) return;
-      const rect = button.current?.getBoundingClientRect();
+      const rect = button2.current?.getBoundingClientRect();
       if (followScroll && rect && rect.bottom > 0 && rect.top < viewBottom()) setAnchor({});
       else close();
     };
@@ -9586,17 +9590,17 @@ function useAnchoredMenu({ width: requestedWidth, followScroll = false } = {}) {
   }, [place, followScroll]);
   const open = () => setAnchor({});
   (0, import_react16.useLayoutEffect)(() => {
-    if (anchor === null || !button.current) return;
-    const rect = button.current.getBoundingClientRect();
+    if (anchor === null || !button2.current) return;
+    const rect = button2.current.getBoundingClientRect();
     const width = requestedWidth === void 0 ? Math.max(240, rect.width) : Math.min(requestedWidth, window.innerWidth - 16);
     const left = Math.max(8, Math.min(rect.right - width, window.innerWidth - width - 8));
     const below = viewBottom() - rect.bottom;
     setPlace(below >= 260 || below >= rect.top ? { left, width, top: rect.bottom + 4, maxHeight: below - 16, "--bt-origin": "top right" } : { left, width, bottom: viewBottom() - rect.top + 4, maxHeight: rect.top - 16, "--bt-origin": "bottom right" });
   }, [anchor, tick, requestedWidth]);
-  return { isOpen: place !== null, shownPlace, leaving, button, menu, open, close };
+  return { isOpen: place !== null, shownPlace, leaving, button: button2, menu, open, close };
 }
 function ModelMenu({ bot, roster, actions, run: run2, wide = false, onPick, onPickEffort }) {
-  const { isOpen, shownPlace, leaving, button, menu, open, close } = useAnchoredMenu();
+  const { isOpen, shownPlace, leaving, button: button2, menu, open, close } = useAnchoredMenu();
   const shown = modelOf(bot, roster);
   const current = bot.model ?? bot.appliedModel;
   const served = servedOf(roster, current);
@@ -9630,7 +9634,7 @@ function ModelMenu({ bot, roster, actions, run: run2, wide = false, onPick, onPi
     (0, import_react16.createElement)(
       "button",
       {
-        ref: button,
+        ref: button2,
         type: "button",
         className: "bt-model-trigger",
         "data-wide": wide || void 0,
@@ -9885,7 +9889,7 @@ var RECOMMENDATIONS = {
 };
 var COMMON = ["📄", "📊", "🔍", "🧮", "💬", "🧬", "🏭", "🎯", "🗺️", "📜", "🎞️", "🧰"];
 function SkillEmojiPicker({ item, value: value2 = "", onChange, disabled = false }) {
-  const { isOpen, shownPlace, leaving, button, menu, open, close } = useAnchoredMenu({ width: 280, followScroll: true });
+  const { isOpen, shownPlace, leaving, button: button2, menu, open, close } = useAnchoredMenu({ width: 280, followScroll: true });
   const [more, setMore] = (0, import_react17.useState)(false);
   const id = (0, import_react17.useId)();
   const automatic = skillEmoji({ ...item, emoji: "" });
@@ -9899,7 +9903,7 @@ function SkillEmojiPicker({ item, value: value2 = "", onChange, disabled = false
   const pick3 = (emoji) => {
     onChange(emoji);
     close();
-    button.current?.focus();
+    button2.current?.focus();
   };
   const navigate = (event) => {
     if (!event.target.matches("[data-emoji]")) return;
@@ -9919,14 +9923,14 @@ function SkillEmojiPicker({ item, value: value2 = "", onChange, disabled = false
       role: "group",
       "aria-labelledby": `${id}-label`,
       onBlur: (event) => {
-        if (!menu.current?.contains(event.relatedTarget) && !button.current?.contains(event.relatedTarget)) close();
+        if (!menu.current?.contains(event.relatedTarget) && !button2.current?.contains(event.relatedTarget)) close();
       }
     },
     (0, import_react17.createElement)("span", { id: `${id}-label` }, t("Skill icon")),
     (0, import_react17.createElement)(
       "button",
       {
-        ref: button,
+        ref: button2,
         type: "button",
         className: "bt-skill-icon-trigger",
         disabled,
@@ -9965,7 +9969,7 @@ function SkillEmojiPicker({ item, value: value2 = "", onChange, disabled = false
         (0, import_react17.createElement)("strong", null, t("Choose skill icon")),
         (0, import_react17.createElement)("button", { type: "button", className: "bt-skill-emoji-close", "aria-label": t("Close icon picker"), onClick: () => {
           close();
-          button.current?.focus();
+          button2.current?.focus();
         } }, (0, import_react17.createElement)(CloseIcon))
       ),
       (0, import_react17.createElement)(
@@ -12480,7 +12484,7 @@ function CategoryDelete({ category, roster, actions, onDeleted, onCancel }) {
   );
 }
 function CategoryMenu({ roster, actions, kinds, selected, onPick, onCreated, onDeleted, manage = false, picker = false, value: value2, disabled = false }) {
-  const { isOpen, shownPlace, leaving, button, menu, open, close } = useAnchoredMenu();
+  const { isOpen, shownPlace, leaving, button: button2, menu, open, close } = useAnchoredMenu();
   const [editing, setEditing] = (0, import_react26.useState)(null);
   const categories = kinds.flatMap((kind) => sidebarCategories(roster, kind));
   const chosen = categories.find((category) => category.id === value2);
@@ -12493,7 +12497,7 @@ function CategoryMenu({ roster, actions, kinds, selected, onPick, onCreated, onD
     import_react26.Fragment,
     null,
     (0, import_react26.createElement)("button", {
-      ref: button,
+      ref: button2,
       type: "button",
       className: "bt-side-filter",
       disabled,
@@ -12615,7 +12619,7 @@ function SidebarFilters({ items, children }) {
     const measure = () => {
       const trigger = node?.querySelector(":scope > .bt-side-filter");
       if (!trigger || !probe.current) return;
-      const widths = [...probe.current.children].map((button2) => button2.getBoundingClientRect().width);
+      const widths = [...probe.current.children].map((button3) => button3.getBoundingClientRect().width);
       const available = node.clientWidth - trigger.getBoundingClientRect().width - 7;
       node.style.setProperty("--bt-shortcut-max", `${Math.max(32, available - widths[0] - 6)}px`);
       setCount(fitShortcuts(widths, available));
@@ -12626,7 +12630,7 @@ function SidebarFilters({ items, children }) {
     if (probe.current) observer?.observe(probe.current);
     return () => observer?.disconnect();
   }, [key]);
-  const button = (item, measuring = false) => (0, import_react27.createElement)("button", {
+  const button2 = (item, measuring = false) => (0, import_react27.createElement)("button", {
     key: item.id,
     type: "button",
     title: item.label,
@@ -12636,9 +12640,9 @@ function SidebarFilters({ items, children }) {
   return (0, import_react27.createElement)(
     "div",
     { ref: row, className: "bt-side-filter-row" },
-    (0, import_react27.createElement)("div", { className: "bt-side-filters", role: "group", "aria-label": t("Filter by category") }, items.slice(0, count).map((item) => button(item))),
+    (0, import_react27.createElement)("div", { className: "bt-side-filters", role: "group", "aria-label": t("Filter by category") }, items.slice(0, count).map((item) => button2(item))),
     children,
-    (0, import_react27.createElement)("div", { ref: probe, className: "bt-side-filters bt-side-filters-probe", "aria-hidden": true, inert: true }, items.map((item) => button(item, true)))
+    (0, import_react27.createElement)("div", { ref: probe, className: "bt-side-filters bt-side-filters-probe", "aria-hidden": true, inert: true }, items.map((item) => button2(item, true)))
   );
 }
 
@@ -13224,18 +13228,18 @@ function UpdateButton({ useUpdate, actions }) {
   const [box, setBox] = (0, import_react28.useState)(null);
   const [error, setError] = (0, import_react28.useState)("");
   const [dshError, setDshError] = (0, import_react28.useState)("");
-  const button = (0, import_react28.useRef)(null);
+  const button2 = (0, import_react28.useRef)(null);
   (0, import_react28.useEffect)(() => {
     if (!open) return void 0;
     const onDown = (event) => {
-      if (event.target instanceof Element && (event.target.closest(".bt-update-pop") || button.current?.contains(event.target))) return;
+      if (event.target instanceof Element && (event.target.closest(".bt-update-pop") || button2.current?.contains(event.target))) return;
       setOpen(false);
     };
     const onKey = (event) => {
       if (event.key === "Escape") {
         event.stopPropagation();
         setOpen(false);
-        button.current?.focus();
+        button2.current?.focus();
       }
     };
     window.addEventListener("mousedown", onDown);
@@ -13252,7 +13256,7 @@ function UpdateButton({ useUpdate, actions }) {
   const tick = useViewport();
   (0, import_react28.useLayoutEffect)(() => {
     if (!open) return;
-    const rect = button.current?.getBoundingClientRect();
+    const rect = button2.current?.getBoundingClientRect();
     if (rect) setBox({ left: Math.max(8, Math.min(rect.left, window.innerWidth - 288)), top: rect.bottom + 6 });
   }, [open, tick]);
   if (!update?.available && !dshRow && phase === "idle" && dshPhase === "idle") return null;
@@ -13274,7 +13278,7 @@ function UpdateButton({ useUpdate, actions }) {
     import_react28.Fragment,
     null,
     (0, import_react28.createElement)("button", {
-      ref: button,
+      ref: button2,
       type: "button",
       className: "bt-round bt-update",
       "data-phase": cloudPhase,
@@ -13452,7 +13456,7 @@ function AccountLauncher({ seat = true, settingsOpen, openSettings, openOnboardi
     return () => actions.seatAccount(false);
   }, [seat]);
   const [box, setBox] = (0, import_react28.useState)(null);
-  const button = (0, import_react28.useRef)(null);
+  const button2 = (0, import_react28.useRef)(null);
   (0, import_react28.useEffect)(() => {
     if (settingsOpen) setOpen(false);
   }, [settingsOpen]);
@@ -13460,14 +13464,14 @@ function AccountLauncher({ seat = true, settingsOpen, openSettings, openOnboardi
   (0, import_react28.useEffect)(() => {
     if (!open) return void 0;
     const onDown = (event) => {
-      if (event.target instanceof Element && (event.target.closest(".bt-account-menu") || button.current?.contains(event.target))) return;
+      if (event.target instanceof Element && (event.target.closest(".bt-account-menu") || button2.current?.contains(event.target))) return;
       setOpen(false);
     };
     const onKey = (event) => {
       if (event.key === "Escape") {
         event.stopPropagation();
         setOpen(false);
-        button.current?.focus();
+        button2.current?.focus();
       }
     };
     window.addEventListener("mousedown", onDown);
@@ -13515,7 +13519,7 @@ function AccountLauncher({ seat = true, settingsOpen, openSettings, openOnboardi
   };
   const tick = useViewport();
   const anchor = () => {
-    const rect = button.current?.getBoundingClientRect();
+    const rect = button2.current?.getBoundingClientRect();
     if (rect) setBox({ left: rect.left, bottom: viewBottom() - rect.top + 5 });
   };
   (0, import_react28.useLayoutEffect)(() => {
@@ -13548,7 +13552,7 @@ function AccountLauncher({ seat = true, settingsOpen, openSettings, openOnboardi
     null,
     (0, import_react28.createElement)(
       "button",
-      { ref: button, type: "button", className: "bt-account", "aria-label": t("Account"), "aria-haspopup": "menu", "aria-expanded": open, onClick: toggle },
+      { ref: button2, type: "button", className: "bt-account", "aria-label": t("Account"), "aria-haspopup": "menu", "aria-expanded": open, onClick: toggle },
       (0, import_react28.createElement)("span", { className: "bt-you", "aria-hidden": true }, (0, import_react28.createElement)(BotMark, { look: MAIN_LOOK, size: 24 }))
     ),
     open && box ? (0, import_react_dom6.createPortal)((0, import_react28.createElement)(
@@ -14122,13 +14126,13 @@ function ComposerPlus({ sessionId, inputActions, useRoster, actions }) {
   const roster = useRoster((value2) => value2);
   const [open, setOpen] = (0, import_react31.useState)(null);
   const [shown, leaving] = useLinger(open, 120);
-  const button = (0, import_react31.useRef)(null);
+  const button2 = (0, import_react31.useRef)(null);
   const menu = (0, import_react31.useRef)(null);
   const tick = useViewport();
   (0, import_react31.useEffect)(() => {
     if (!open) return void 0;
     const onDown = (event) => {
-      if (![button.current, menu.current].some((node) => node?.contains(event.target))) setOpen(null);
+      if (![button2.current, menu.current].some((node) => node?.contains(event.target))) setOpen(null);
     };
     const onKey = (event) => {
       if (event.key === "Escape") {
@@ -14144,13 +14148,13 @@ function ComposerPlus({ sessionId, inputActions, useRoster, actions }) {
     };
   }, [open]);
   const place = (0, import_react31.useMemo)(() => {
-    if (!shown || !button.current) return null;
-    const rect = button.current.getBoundingClientRect();
+    if (!shown || !button2.current) return null;
+    const rect = button2.current.getBoundingClientRect();
     return { left: rect.left, bottom: viewBottom() - rect.top + 8 };
   }, [shown, open, tick]);
   const target = roster.byId?.[sessionId]?.id ?? roster.roomsById?.[sessionId]?.id;
   if (sessionId === void 0 || target === void 0) return null;
-  const fileInput = () => button.current?.closest("[data-composer-card]")?.querySelector("input[type=file]");
+  const fileInput = () => button2.current?.closest("[data-composer-card]")?.querySelector("input[type=file]");
   const toggle = () => {
     if (open) {
       setOpen(null);
@@ -14175,7 +14179,7 @@ function ComposerPlus({ sessionId, inputActions, useRoster, actions }) {
     import_react31.Fragment,
     null,
     (0, import_react31.createElement)("button", {
-      ref: button,
+      ref: button2,
       type: "button",
       className: "bt-plus",
       "aria-label": t("Add"),
@@ -15147,7 +15151,7 @@ var import_react_dom9 = require("react-dom");
 var folderName = (path) => String(path).replace(/[\\/]+$/, "").split(/[\\/]/).pop() || String(path);
 var Tick = ({ on }) => (0, import_react34.createElement)("span", { className: "bt-model-tick", "aria-hidden": true }, on ? (0, import_react34.createElement)(CheckIcon) : null);
 function FolderMenu({ value: value2, group = false, team = false, actions, run: run2, onPick, wide = false, disabled = false }) {
-  const { isOpen, shownPlace, leaving, button, menu, open, close } = useAnchoredMenu();
+  const { isOpen, shownPlace, leaving, button: button2, menu, open, close } = useAnchoredMenu();
   const [info, setInfo] = (0, import_react34.useState)(null);
   const [view, setView] = (0, import_react34.useState)("list");
   const [draft, setDraft] = (0, import_react34.useState)("");
@@ -15254,7 +15258,7 @@ function FolderMenu({ value: value2, group = false, team = false, actions, run: 
     (0, import_react34.createElement)(
       "button",
       {
-        ref: button,
+        ref: button2,
         type: "button",
         className: "bt-model-trigger",
         "data-wide": wide || void 0,
@@ -15716,11 +15720,11 @@ function TimeColumn({ label, count, value: value2, onChange }) {
 function TimePicker({ value: value2, onChange }) {
   const [open, setOpen] = (0, import_react35.useState)(false);
   const anchor = (0, import_react35.useRef)(null);
-  const button = (0, import_react35.useRef)(null);
+  const button2 = (0, import_react35.useRef)(null);
   const [hour, minute] = /^([01]\d|2[0-3]):[0-5]\d$/.test(value2) ? value2.split(":") : ["00", "00"];
   const close = () => {
     setOpen(false);
-    button.current?.focus();
+    button2.current?.focus();
   };
   return (0, import_react35.createElement)(
     "div",
@@ -15737,7 +15741,7 @@ function TimePicker({ value: value2, onChange }) {
       onChange: (event) => onChange(event.target.value)
     }),
     (0, import_react35.createElement)("button", {
-      ref: button,
+      ref: button2,
       type: "button",
       className: "bt-icon-btn",
       "aria-label": t("Choose time"),
@@ -25082,6 +25086,165 @@ function createSwitchWindow(settle) {
   };
 }
 
+// src/client/genui-preview.js
+var FIGURE = "[data-genui-diagram], [data-genui-svg]";
+var BUTTON = ".bt-genui-enlarge";
+var ZOOM_LEVELS = [1, 1.5, 2, 3, 4];
+var CSS2 = `
+.bt-genui-previewable{position:relative}
+.bt-genui-previewable>img,.bt-genui-previewable>svg{cursor:zoom-in}
+.bt-genui-enlarge,.bt-genui-preview button{display:inline-grid;place-items:center;min-width:34px;height:34px;padding:0 8px;border:1px solid var(--bt-line-2);border-radius:8px;background:var(--bt-card);color:var(--bt-ink);font:inherit;cursor:pointer}
+.bt-genui-enlarge{position:absolute;right:8px;top:8px;z-index:1;box-shadow:0 1px 4px var(--bt-line)}
+.bt-genui-enlarge:hover,.bt-genui-preview button:hover{background:var(--bt-hover)}
+.bt-genui-preview button:disabled{opacity:.4;cursor:default}
+.bt-genui-preview{box-sizing:border-box;width:min(1400px,calc(100vw - 24px));height:calc(100dvh - 24px);max-width:none;max-height:none;padding:0;overflow:hidden;border:1px solid var(--bt-line-2);border-radius:16px;background:var(--bt-main);color:var(--bt-ink)}
+.bt-genui-preview[open]{display:grid;grid-template-rows:auto minmax(0,1fr)}
+.bt-genui-preview::backdrop{background:color-mix(in srgb,var(--bt-ink) 40%,transparent)}
+body[data-ds-dark-theme] .bt-genui-preview::backdrop{background:color-mix(in srgb,var(--bt-main) 75%,transparent)}
+.bt-genui-preview-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--bt-line-2)}
+.bt-genui-preview-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:600}
+.bt-genui-preview-scroll{overflow:auto;overscroll-behavior:contain}
+.bt-genui-preview-stage{box-sizing:border-box;display:grid;place-items:center;width:max-content;min-width:100%;min-height:100%;padding:16px}
+`;
+function graphicOf(figure) {
+  const svg = figure.querySelector(":scope > svg[viewBox]");
+  if (svg && svg.viewBox.baseVal.width > 0 && svg.viewBox.baseVal.height > 0) return svg;
+  const image = figure.querySelector(':scope > :is(img[src^="data:image/svg+xml,"], img[src^="data:image/svg+xml;"])');
+  if (image?.naturalWidth > 0 && image.naturalHeight > 0) return image;
+}
+function button(label, glyph, action) {
+  const node = document.createElement("button");
+  node.type = "button";
+  node.textContent = glyph;
+  node.title = label;
+  node.setAttribute("aria-label", label);
+  node.addEventListener("click", action);
+  return node;
+}
+function openPreview(graphic, opener, onClose) {
+  const isImage = graphic instanceof HTMLImageElement;
+  const { width, height } = isImage ? { width: graphic.naturalWidth, height: graphic.naturalHeight } : graphic.viewBox.baseVal;
+  const dialog = document.createElement("dialog");
+  dialog.className = "bt-genui-preview";
+  const title = isImage ? graphic.alt : graphic.querySelector("title")?.textContent;
+  const label = title || t("Enlarge graphic");
+  dialog.setAttribute("aria-label", label);
+  const header = document.createElement("div");
+  header.className = "bt-genui-preview-bar";
+  const heading = document.createElement("div");
+  heading.className = "bt-genui-preview-title";
+  heading.textContent = label;
+  const viewport = document.createElement("div");
+  viewport.className = "bt-genui-preview-scroll";
+  viewport.tabIndex = 0;
+  viewport.setAttribute("aria-label", label);
+  const stage = document.createElement("div");
+  stage.className = "bt-genui-preview-stage";
+  const canvas = document.createElement("div");
+  const style = getComputedStyle(graphic);
+  canvas.style.fontFamily = style.fontFamily;
+  for (let index = 0; index < style.length; index += 1) {
+    const name = style.item(index);
+    if (name.startsWith("--dsl-g-") || name.startsWith("--dsw-")) canvas.style.setProperty(name, style.getPropertyValue(name));
+  }
+  const copy2 = graphic.cloneNode(!isImage);
+  for (const node of copy2.querySelectorAll('[role="button"]')) {
+    for (const name of ["role", "tabindex", "aria-pressed"]) node.removeAttribute(name);
+  }
+  Object.assign(copy2.style, { display: "block", width: "100%", height: "auto", maxWidth: "none", maxHeight: "none", boxSizing: "border-box" });
+  canvas.attachShadow({ mode: "open" }).append(copy2);
+  stage.append(canvas);
+  viewport.append(stage);
+  let level = 0;
+  const minus = button(t("Zoom out"), "−", () => resize(level - 1));
+  const plus = button(t("Zoom in"), "+", () => resize(level + 1));
+  const fit2 = button(t("Fit graphic"), t("Fit graphic"), () => resize(0));
+  const close = button(t("Close"), "×", () => dialog.close());
+  close.autofocus = true;
+  function resize(next) {
+    const { scrollWidth, scrollHeight, scrollLeft, scrollTop, clientWidth, clientHeight } = viewport;
+    const x = (scrollLeft + clientWidth / 2) / scrollWidth;
+    const y = (scrollTop + clientHeight / 2) / scrollHeight;
+    const fitted = Math.min(clientWidth - 32, (clientHeight - 32) * width / height);
+    level = Math.max(0, Math.min(next, ZOOM_LEVELS.length - 1));
+    canvas.style.width = `${Math.max(1, fitted * ZOOM_LEVELS[level])}px`;
+    minus.disabled = fit2.disabled = level === 0;
+    plus.disabled = level === ZOOM_LEVELS.length - 1;
+    viewport.scrollLeft = (x || 0.5) * viewport.scrollWidth - clientWidth / 2;
+    viewport.scrollTop = (y || 0.5) * viewport.scrollHeight - clientHeight / 2;
+  }
+  header.append(heading, minus, fit2, plus, close);
+  dialog.append(header, viewport);
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+  dialog.addEventListener("keydown", (event) => {
+    const next = { "+": level + 1, "=": level + 1, "-": level - 1, "0": 0 }[event.key];
+    if (next === void 0 || event.altKey || event.ctrlKey || event.metaKey) return;
+    event.preventDefault();
+    resize(next);
+  });
+  const observer = new ResizeObserver(() => resize(level));
+  dialog.addEventListener("close", () => {
+    observer.disconnect();
+    dialog.remove();
+    opener?.focus({ preventScroll: true });
+    onClose();
+  }, { once: true });
+  document.body.append(dialog);
+  dialog.showModal();
+  resize(0);
+  observer.observe(viewport);
+  return dialog;
+}
+function installGenuiPreview() {
+  const styles = installStyles(CSS2, "genui-preview");
+  let dialog;
+  const prepare = (figure) => {
+    if (!figure || figure.querySelector(BUTTON) || !graphicOf(figure)) return;
+    const control = button(t("Enlarge graphic"), "⤢", (event) => {
+      event.stopPropagation();
+      const graphic = graphicOf(figure);
+      if (!dialog && graphic) dialog = openPreview(graphic, control, () => {
+        dialog = void 0;
+      });
+    });
+    control.className = BUTTON.slice(1);
+    control.setAttribute("aria-haspopup", "dialog");
+    figure.classList.add("bt-genui-previewable");
+    figure.append(control);
+  };
+  const click = (event) => {
+    if (event.defaultPrevented || !(event.target instanceof Element) || event.target.closest('button, a, [role="button"]') || window.getSelection()?.type === "Range") return;
+    const graphic = event.target.closest("svg, img");
+    const figure = graphic?.closest(FIGURE);
+    if (figure && graphic === graphicOf(figure)) figure.querySelector(BUTTON)?.click();
+  };
+  const load = (event) => {
+    if (event.target instanceof HTMLImageElement) prepare(event.target.closest(FIGURE));
+  };
+  const observer = new MutationObserver((records) => {
+    for (const { addedNodes } of records) for (const node of addedNodes) {
+      if (!(node instanceof Element) || node.matches(BUTTON) || node.closest(".bt-genui-preview")) continue;
+      prepare(node.closest(FIGURE));
+      node.querySelectorAll(FIGURE).forEach(prepare);
+    }
+  });
+  document.querySelectorAll(FIGURE).forEach(prepare);
+  observer.observe(document.body, { childList: true, subtree: true });
+  document.addEventListener("load", load, true);
+  document.addEventListener("click", click);
+  return () => {
+    observer.disconnect();
+    document.removeEventListener("click", click);
+    document.removeEventListener("load", load, true);
+    dialog?.close();
+    document.querySelectorAll(BUTTON).forEach((node) => node.remove());
+    document.querySelectorAll(".bt-genui-previewable").forEach((node) => node.classList.remove("bt-genui-previewable"));
+    styles.remove();
+  };
+}
+
 // src/client/classic-native-view.js
 var import_react63 = require("react");
 function displayView(title, blueprint) {
@@ -25712,6 +25875,7 @@ function apply(ctx) {
       release?.();
     };
   }, "chemclaw-bot: GenUI surfaces");
+  ctx.effect(installGenuiPreview, "chemclaw-bot: GenUI graphic preview");
   if (browsers) {
     Object.assign(actions, {
       // The globe button: the Bot's active tab in the browser view, or a new tab.

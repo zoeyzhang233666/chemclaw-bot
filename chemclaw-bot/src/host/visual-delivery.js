@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
-import { needsFlowDiagram, needsSvgIllustration } from './flow-intent.js'
+import { capacityDataRequest, capacityMeasurementsInAnswer, needsFlowDiagram, needsSvgIllustration } from './flow-intent.js'
 import { marketQuoteIntent, mixedOverlayRequested } from './market-quote-intent.js'
 import { genuiViewAvailable, nativeViewAvailable } from './native-view-session.js'
 
@@ -281,6 +281,7 @@ export function missingRequestedKinds(requested, delivered, genui = true) {
 
 const diagramInstruction = 'Emit an inline dsh-ui type=diagram with short nodes {id,label,sub?} and edges {from,to,label?,kind?}. Use kind=flowchart for a short sequence or kind=architecture with x,y,w,h for a branching graph. Use dashed edges for unverified relationships.'
 const svgInstruction = 'Emit an inline dsh-ui type=svg, using a complete self-contained SVG in code with xmlns and a padded viewBox.'
+const capacityInstruction = 'Use one native show_view stack with a row of metric cards for the verified capacity, output, utilization or quota figures. Include the unit in each metric value string and the period in its caption. If a chart is also missing and there are at least two comparable verified observations, include a native hbar for entities or line for time in that stack.'
 
 export function requestedViewReminder(turn, native, kinds, requested, genui) {
   const explicit = kinds.filter(kind => requested.has(kind))
@@ -295,6 +296,7 @@ export function requestedViewReminder(turn, native, kinds, requested, genui) {
       : 'Add ONLY the missing view(s) using already verified data; do not repeat existing prose, views, research or external actions. ')
     + (kinds.includes('diagram') || kinds.includes('flow') && genui ? `${diagramInstruction} ` : '')
     + (kinds.includes('svg') ? `${svgInstruction} ` : '')
+    + (kinds.includes('metric') ? `${capacityInstruction} ` : '')
     + (kinds.includes('flow') && !genui ? 'Use the available show_view type=flow with concise nodes and edges. ' : '')
     + (native ? 'Use show_view for supported visuals and an inline dsh-ui fence without panel:true for other GenUI components. '
       : 'Use the installed GenUI components in an inline dsh-ui fence. ')
@@ -312,10 +314,18 @@ export function visualReminder(turn, native) {
 export function install(rt) {
   const { ctx } = rt
   const turns = new Map()
-  const fresh = turn => ({ turn, text: '', question: '', visual: false, mixedVisualCommitted: false, mixedOverlayRequired: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', question: '', visual: false, nativeMetric: false, mixedVisualCommitted: false, mixedOverlayRequired: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
+  }
+  const recordNativeView = (entry, view) => {
+    entry.visual = true
+    if (entry.marketHistory && marketPriceVisual(view)) entry.marketChartCommitted = true
+    if (entry.mixedOverlayRequired && mixedMarketVisualStatus(view).complete) entry.mixedVisualCommitted = true
+    const kinds = deliveredViewKinds(view)
+    entry.nativeMetric ||= kinds.has('metric')
+    for (const kind of kinds) entry.kinds.add(kind)
   }
   const observe = (session, event) => {
     const id = String(session.id)
@@ -336,6 +346,7 @@ export function install(rt) {
         next.marketOhlcStatus = previous.marketOhlcStatus
         next.textOnly = previous.textOnly
         next.visual = previous.visual
+        next.nativeMetric = previous.nativeMetric
         next.kinds = new Set(previous.kinds)
       }
       turns.set(id, next)
@@ -349,12 +360,7 @@ export function install(rt) {
       if (result && entry.calls.has(result.toolCallId)) {
         const view = entry.calls.get(result.toolCallId)
         entry.calls.delete(result.toolCallId)
-        if (!result.isError && !event.data.error && /^The view is (?:on screen|staged)/u.test(textOf(result.content))) {
-          entry.visual = true
-          if (entry.marketHistory && marketPriceVisual(view)) entry.marketChartCommitted = true
-          if (entry.mixedOverlayRequired && mixedMarketVisualStatus(view).complete) entry.mixedVisualCommitted = true
-          for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind)
-        }
+        if (!result.isError && !event.data.error && /^The view is (?:on screen|staged)/u.test(textOf(result.content))) recordNativeView(entry, view)
       }
     } else if (event.type === 'user/message') {
       const source = event.data?.source
@@ -373,6 +379,7 @@ export function install(rt) {
         entry.mixedVisualCommitted = false
         entry.marketOhlcStatus = 'untried'
         entry.visual = false
+        entry.nativeMetric = false
         entry.invalidGenuiChart = false
         entry.kinds = new Set()
         entry.requested = new Set(requestedChartKinds(text))
@@ -434,13 +441,7 @@ export function install(rt) {
     if (!deliveredViewKinds(spec?.items).has('mermaid')) return decision
     return { kind: 'deny', reason: `${entry.requested.has('svg') || needsSvgIllustration(entry.question) ? svgInstruction : diagramInstruction} Keep the other GenUI components if useful and deliver the regular text answer.` }
   })
-  rt.noteVisualDelivery = (id, view) => {
-    const entry = stateOf(id)
-    entry.visual = true
-    if (entry.marketHistory && marketPriceVisual(view)) entry.marketChartCommitted = true
-    if (entry.mixedOverlayRequired && mixedMarketVisualStatus(view).complete) entry.mixedVisualCommitted = true
-    for (const kind of deliveredViewKinds(view)) entry.kinds.add(kind)
-  }
+  rt.noteVisualDelivery = (id, view) => recordNativeView(stateOf(id), view)
   rt.marketHistoryOf = id => stateOf(id).marketHistory && !stateOf(id).textOnly
   rt.marketQuoteIntentOf = id => stateOf(id).quoteIntent
   rt.explicitSpotRequestOf = id => stateOf(id).quoteIntent === 'spot'
@@ -473,10 +474,13 @@ export function install(rt) {
     if (!specified && genui && needsSvgIllustration(entry.question)) enabledRequests.add('svg')
     else if (!specified && (native || genui) && (entry.kinds.has('mermaid') || needsFlowDiagram(entry.question, entry.text))) enabledRequests.add('flow')
     const missing = missingRequestedKinds(enabledRequests, entry.kinds, genui)
+    const missingCapacity = native && !entry.nativeMetric && !specified && !entry.requested.has('flow')
+      && capacityDataRequest(entry.question) && capacityMeasurementsInAnswer(entry.text)
+    if (missingCapacity) missing.push('metric')
     const knownMismatch = entry.visual && entry.kinds.size > 0 && missing.length > 0
     const missingGraphic = missing.some(kind => ['flow', 'svg', 'diagram'].includes(kind))
     const mixedIncomplete = botMixedNeeded(entry, rt.isBotSession?.(id) === true)
-    if (entry.visual && !knownMismatch && !mixedIncomplete && !missingGraphic) return
+    if (entry.visual && !knownMismatch && !mixedIncomplete && !missingGraphic && !missingCapacity) return
     if ((rt.state?.exchangeTurns?.[id] ?? []).includes(turn)) return
     const info = rt.live?.get(id)?.info
     if (info?.handoff && !info.resume || info?.role === 'request' && info.audience !== 'user') return
@@ -491,7 +495,7 @@ export function install(rt) {
     try {
       const reminder = mixedIncomplete
         ? `${VISUAL_NOTICE} turn=${turn}]\nThe user requested a dated spot/futures overlay with basis, but no successfully staged native show_view contains both the same-date spot/futures lines AND a basis series. In a Bot or group use ONE native show_view stack with (1) a 2-series line chart, and (2) a basis line (spot minus futures), if separately verified dated observations allow it. Do not output a dsh-ui fence, raw view JSON, standalone futures chart or regional spot bars. If spot history is unavailable, do NOT fabricate prices: give a clear partial-data explanation or table instead. Do not repeat research. Only one correction.`
-        : knownMismatch || missingGraphic ? requestedViewReminder(turn, native, missing, entry.requested, genui)
+        : knownMismatch || missingGraphic || missingCapacity ? requestedViewReminder(turn, native, missing, entry.requested, genui)
       : entry.invalidGenuiChart && native
         ? `${VISUAL_NOTICE} turn=${turn}]\nThe previous GenUI chart lacks drawable data. Use one native show_view chart with the verified observations in this answer, or a factual table when data is missing. Do not repeat research or invent data.`
         : visualReminder(turn, native)

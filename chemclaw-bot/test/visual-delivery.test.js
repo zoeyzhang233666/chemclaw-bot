@@ -56,6 +56,33 @@ test('first-pass GenUI or a successfully delivered show_view adds no correction'
 const svgCode = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0 0 L2 2"/></svg>'
 const diagramFence = '```dsh-ui\n' + JSON.stringify({ items: [{ type: 'diagram', kind: 'flowchart', nodes: [{ id: 'a', label: '生产' }, { id: 'b', label: '销售' }], edges: [{ from: 'a', to: 'b' }] }] }) + '\n```'
 
+test('capacity figures trigger one native metric repair and keep verified comparisons in the same stack', () => {
+  const figures = '甲地产能 120 万吨/年，乙地产能 90 万吨/年。'
+  for (const native of [false, true]) {
+    const f = setup({ native })
+    f.start(); f.user('查询各地产能分布'); f.answer(figures + '\n\n' + diagramFence); f.stop(); f.stop()
+    assert.equal(f.notices.length, 1)
+    assert.match(f.notices[0].content[0].text, /native show_view stack.*metric cards.*comparable verified observations/)
+    assert.doesNotMatch(f.notices[0].content[0].text, /dsh-ui type=diagram/)
+  }
+  const ready = setup()
+  ready.start(); ready.user('查询各地产能分布')
+  ready.rt.noteVisualDelivery('s', { type: 'stack', children: [{ type: 'metric', label: '甲地产能', value: 120 }, {
+    type: 'chart', kind: 'hbar', categories: ['甲地', '乙地'], series: [{ values: [120, 90] }],
+  }] })
+  ready.answer(figures); ready.stop()
+  assert.deepEqual(ready.notices, [])
+  for (const [question, answer] of [
+    ['查询各地产能分布', '暂无可靠数字。'],
+    ['为什么产能集中在沿海？', figures],
+    ['查询各地产能分布，只用文字', figures],
+  ]) {
+    const f = setup()
+    f.start(); f.user(question); f.answer(answer + '\n\n' + diagramFence); f.stop()
+    assert.deepEqual(f.notices, [])
+  }
+})
+
 test('explicit SVG requests use the SVG component and automatic logic accepts a finished diagram', () => {
   assert.deepEqual(requestedChartKinds('请生成一张 SVG 流程图'), ['svg'])
   assert.deepEqual(requestedChartKinds('请用 GenUI diagram 画流程图'), ['diagram'])

@@ -98,7 +98,7 @@ const flowFixture = {
 const diagramFixture = title => ({ type: 'diagram', kind: 'architecture', title,
   nodes: [
     { id: 'feed', label: '上游原料', sub: '供应与成本', x: 24, y: 112, w: 140, h: 52 },
-    { id: 'plant', label: '生产与开工', sub: '核对产能与开工率', type: 'focal', x: 228, y: 112, w: 148, h: 52 },
+    { id: 'plant', label: '生产与开工', sub: '核对产能与开工率', description: '节点详情验收：区分设计产能和实际开工。', type: 'focal', x: 228, y: 112, w: 148, h: 52 },
     { id: 'sales', label: '下游销售', sub: '确认订单', x: 452, y: 52, w: 140, h: 52 },
     { id: 'stock', label: '库存变化', sub: '库存环节待核验', x: 452, y: 172, w: 140, h: 52 },
   ],
@@ -227,6 +227,23 @@ function decide(body) {
   const result = fresh ? undefined : blocks.find(block => block.type === 'tool_result')
   const activityAt = messages.findLastIndex(message => message.role === 'user' && !isResults(message))
   const activity = activityAt >= 0 ? textOf(messages[activityAt].content) : ''
+  if (/^GenUI check bundled skill\s*$/mu.test(activity) && tools.has('skill')) {
+    if (!result) return [tool('skill', { name: 'genui' })]
+    if (!textOf(result.content).includes('# GenUI')) return [text('Bundled GenUI skill could not be loaded.')]
+    return [text('Bundled GenUI skill loaded.' + inlineView({ type: 'text', text: 'Skill instructions verified.' }))]
+  }
+  if (/^(?:User: )?查询合成产能分布\s*$/mu.test(activity) && tools.has('show_view')
+    && system.includes('a metric row and horizontal bars')) {
+    if (result) return [text('合成产能正文：同一口径下，沿海为 120 万吨/年，内陆为 90 万吨/年。')]
+    const metrics = [
+      { type: 'metric', label: '沿海产能', value: '120 万吨/年', caption: '同年合成数据' },
+      { type: 'metric', label: '内陆产能', value: '90 万吨/年', caption: '同年合成数据' },
+    ]
+    const chart = { type: 'chart', kind: 'hbar', unit: '万吨/年', categories: ['沿海', '内陆'], series: [{ name: '同年产能', values: [120, 90] }] }
+    return [text('沿海产能较高。'), tool('show_view', { audience: 'user', await_reply: false, title: '合成产能分布', view: { type: 'stack', children: [
+      { type: 'row', children: metrics }, chart,
+    ] } })]
+  }
   const flowMessage = /^(?:User: )?展示合成流程图\s*$/mu.test(activity)
     || (/^(?:User: )?梳理合成供应链\s*$/mu.test(activity) && system.includes('automatically choose dsh-ui type=diagram'))
   if (flowMessage) return [text('流程图正文：库存环节仍待核验。' + inlineView(diagramFixture('合成供应链流程')))]

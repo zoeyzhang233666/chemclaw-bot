@@ -53,6 +53,7 @@ import { noticeApprovals } from './approval-notices.js'
 import { listedOpener } from './open-listed.js'
 import { RIGHTBAR_ATTRIBUTES, columnOpened, createSwitchWindow, drawerOpened, rightColumnOpen } from './right-panel.js'
 import { createGenuiSurfaces } from './genui-surfaces.js'
+import { installGenuiPreview } from './genui-preview.js'
 import { ClassicNativeViews } from './classic-native-view.js'
 
 export const inject = ['sessions', 'uiWorkspace', 'uiConversation', 'slots', 'theme', 'layout']
@@ -613,6 +614,7 @@ export function apply(ctx) {
     const release = ctx.provide('genuiSidechat', actions.genuiSurfaces)
     return () => { actions.genuiSurfaces.dispose(); release?.() }
   }, 'chemclaw-bot: GenUI surfaces')
+  ctx.effect(installGenuiPreview, 'chemclaw-bot: GenUI graphic preview')
   // Without the Desktop bridge these stay undefined, and no browser control renders.
   if (browsers) {
     Object.assign(actions, {

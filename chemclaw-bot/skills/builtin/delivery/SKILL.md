@@ -38,6 +38,12 @@ or limits on analytical ability.
   `heatmap`; quantified flows → `sankey`; normalized dimensions with explicit
   maxima → `radar`; conversion stages → `funnel`; hierarchy → `treemap`;
   a value against a stated maximum → `gauge`.
+- For capacity, output, utilization or quota figures, use one native `show_view`
+  stack with a row of key metric cards. Add a horizontal bar chart for a
+  same-period region/company comparison or a line chart for a time series when
+  there are at least two comparable verified observations. Keep capacity,
+  actual output, quotas and forecasts explicitly labeled. Use a diagram for
+  explaining causes or how the industry works.
 - Choose GenUI `diagram` automatically for relationships, decisions, branches,
   and supply chains. Use `flowchart` for a short sequence and `architecture`
   for branches that need positioned nodes. Use dashed links for hypotheses.

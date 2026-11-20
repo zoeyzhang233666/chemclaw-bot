@@ -4,11 +4,26 @@ const GREETING = /^\s*(?:你好|您好|哈[喽啰]|嗨|在吗|早上好|晚上�
 const DATA_LOOKUP = /(?:价格|行情|产量|销量|库存|持仓量|产能|市场份额)(?:走势|分布|排行|历史|数据|查询)|\b(?:price history|production (?:volume|distribution)|market share)\b/iu
 const ANSWER_STRUCTURE = /^\s*(?:#{1,5}[ \t]+|\d{1,2}[.、)）][ \t]*|[-*][ \t]+)/gmu
 const FENCE = /^ {0,3}\x60{3}[^\n]*\n[\s\S]*?^ {0,3}\x60{3}[ \t]*\r?$/gmu
+const CAPACITY_METRIC = /产能|产量|开工率|装置利用率|配额|\b(?:production (?:capacity|volume)|installed capacity|operating rate|capacity utili[sz]ation|(?:export|production) quota)\b/iu
+const QUANTITATIVE_CUE = /多少|几成|数值|数据|对比|比较|排名|排行|规模|走势|趋势|各地|各省|各国|各地区|\b(?:how (?:much|many)|data|compare|ranking|trend|by (?:region|country|company))\b/iu
+const CAPACITY_UNIT = /\d+(?:[.,]\d+)*\s*(?:%|％|(?:亿|万|千)?(?:吨|桶|立方米|方|加仑)|(?:million\s+|thousand\s+)?(?:metric\s+)?(?:tonnes?|tons?|barrels?|bpd|mtpa|ktpa)\b)/iu
+
+export function capacityDataRequest(question) {
+  if (!CAPACITY_METRIC.test(question)) return false
+  if (/什么意思|什么叫|怎么(?:计算|定义)|如何(?:计算|定义)|有何区别|\b(?:definition|what (?:does .+ mean|is meant by)|how (?:to|do .*?) calculate)\b/iu.test(question)) return false
+  return QUANTITATIVE_CUE.test(question) || !RELATIONSHIP_QUESTION.test(question)
+}
+
+export function capacityMeasurementsInAnswer(answer) {
+  const prose = answer.replace(FENCE, '')
+  return CAPACITY_METRIC.test(prose) && CAPACITY_UNIT.test(prose)
+}
 
 export const needsSvgIllustration = question => /剖面(?:图|结构|示意)|截面(?:结构|示意)|空间(?:位置|结构|排布)|形态(?:对比|示意)|零件(?:位置|分布)|矢量(?:图|插图)|\b(?:cross[- ]section|cutaway|vector illustration|spatial arrangement)\b/iu.test(question)
 
 export function needsFlowDiagram(question, answer = '') {
   if (GREETING.test(question)) return false
+  if (capacityDataRequest(question)) return false
   if (RELATIONSHIP_QUESTION.test(question)) return true
   if (DATA_LOOKUP.test(question)) return false
   const prose = answer.replace(FENCE, '')

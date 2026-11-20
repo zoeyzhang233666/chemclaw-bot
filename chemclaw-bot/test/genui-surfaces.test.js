@@ -79,5 +79,5 @@ test('current policy and delivery skill teach automatic GenUI selection and prot
     assert.match(text, /same (?:data|relationship)/)
   }
   const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)))
-  assert.equal(pkg.dependencies['@changfenhuang/dsh-genui'], '0.15.0')
+  assert.equal(pkg.dependencies['@changfenhuang/dsh-genui'], '0.16.0')
 })

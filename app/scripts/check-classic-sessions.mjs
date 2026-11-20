@@ -79,6 +79,40 @@ function windowChecks(cdp) {
 
 export async function checkClassicSessions(cdp) {
   const { evaluate, until, bot, session, current, click, show, send, waitRunning, history } = windowChecks(cdp)
+  const preview = async (graphic, inline = false) => {
+    const modal = "document.querySelector('.bt-genui-preview[open]')"
+    const copy = `${modal}?.querySelector('.bt-genui-preview-stage > div')?.shadowRoot?.firstElementChild`
+    const control = `${graphic}.parentElement.querySelector('.bt-genui-enlarge')`
+    await until(control, 'the vector preview control')
+    await evaluate(inline ? `${graphic}.click()` : `${control}.click()`)
+    await until(copy, 'the original vector in a modal')
+    assert.ok(await evaluate(`(() => {
+      const original = ${graphic};
+      const cloned = ${copy};
+      return original.localName === cloned.localName && (original.src ? original.src === cloned.src
+        : original.getAttribute('viewBox') === cloned.getAttribute('viewBox') && cloned.querySelector('marker'));
+    })()`))
+    const initial = await evaluate(`${copy}.getBoundingClientRect().width`)
+    await evaluate(`${modal}.querySelector('button:nth-last-child(2)').click()`)
+    await until(`${copy}?.getBoundingClientRect().width > ${initial} * 1.4`, 'vector scaling without changing the source')
+    for (const type of ['keyDown', 'keyUp']) {
+      await cdp.call('Input.dispatchKeyEvent', { type, key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 })
+    }
+    await until(`!${modal} && document.activeElement === ${control}`, 'Escape closes the modal and restores focus')
+  }
+  const checkDiagramNode = async graphic => {
+    const node = `${graphic}.querySelector('[role=button][aria-label="生产与开工"]')`
+    await until(node, 'an interactive GenUI diagram node')
+    await evaluate(`${node}.dispatchEvent(new MouseEvent('click', { bubbles: true }))`)
+    await until(`${node}.getAttribute('aria-pressed') === 'true' && ${graphic}.parentElement.querySelector('[aria-live=polite]')?.textContent.includes('区分设计产能和实际开工')`, 'inline diagram node details')
+    assert.equal(await evaluate("Boolean(document.querySelector('.bt-genui-preview[open]'))"), false)
+  }
+  const checkCapacity = async id => {
+    await send('查询合成产能分布')
+    await until(`${visible('合成产能正文')} && [...document.querySelectorAll('.bt-widget-metric')].some(node => node.textContent.includes('沿海产能')) && document.querySelector('.bt-chart-svg .bt-chart-mark')`, 'native capacity metrics, bar chart and ordinary text')
+    await waitRunning(id, false)
+    assert.equal((await history(id)).includes('The answer is still missing these inline views: metric'), false)
+  }
   const roster = await evaluate(bot('state'))
   const expert = roster.bots.find(item => item.id === roster.mainBotId)
   const expertSession = expert.sessionId
@@ -251,6 +285,10 @@ export async function checkClassicSessions(cdp) {
   await until(`${visible('Synthetic renderer verification.')} && ${visible('Pilot complete')}`, 'GenUI timeline and ordinary Markdown together')
   await waitRunning(b, false)
   assert.equal(await current(), b)
+  await send('GenUI check bundled skill')
+  await until(visible('Bundled GenUI skill loaded.'), 'the registered upstream GenUI skill can be loaded by DSH')
+  await waitRunning(b, false)
+  await checkCapacity(b)
   await send('GenUI check marketstats')
   const metrics = "[...document.querySelectorAll('[data-genui]')].find(node => node.innerText.includes('Synthetic market metrics'))"
   await until(`${metrics}?.querySelectorAll('[class$="_statValue"]').length === 4`, 'GenUI market metrics in Classic')
@@ -268,9 +306,12 @@ export async function checkClassicSessions(cdp) {
   await send('梳理合成供应链')
   await until(`${supply}?.textContent.includes('库存变化') && ${visible('流程图正文：库存环节仍待核验。')}`, 'automatic GenUI diagram and Markdown in a Classic Session')
   await waitRunning(b, false)
+  await checkDiagramNode(supply)
+  await preview(supply)
   await send('解释合成设备剖面结构')
   await until(`${svgReady} && ${visible('剖面正文')}`, 'automatic GenUI SVG image and text in Classic')
   await waitRunning(b, false)
+  await preview(svgImage, true)
   await send('为什么合成分布会是这样？')
   await until(`${diagram('合成分布成因图')} && ${visible('合成原因正文')}`, 'semantic follow-up adds a GenUI diagram after an unrelated tab')
   await waitRunning(b, false)
@@ -288,6 +329,7 @@ export async function checkClassicSessions(cdp) {
   } finally { await cdp.call('Emulation.clearDeviceMetricsOverride') }
   await click('.bt-return')
   await show(expertSession, `[data-bot-id="${expert.id}"]`)
+  await checkCapacity(expertSession)
   await send('GenUI check marketstats')
   await until(`${metrics}?.closest('.bt-rich-reply')`, 'expert GenUI outside the speech bubble')
   assert.equal(await evaluate(`Boolean(${metrics}.closest('.bt-bubble'))`), false)
@@ -295,9 +337,12 @@ export async function checkClassicSessions(cdp) {
   await send('梳理合成供应链')
   await until(`${supply}?.closest('.bt-rich-reply') && ${visible('流程图正文')}`, 'GenUI diagram outside the expert text bubble')
   await waitRunning(expertSession, false)
+  await checkDiagramNode(supply)
+  await preview(supply)
   await send('解释合成设备剖面结构')
   await until(`${svgReady} && ${svgImage}?.closest('.bt-rich-reply') && ${visible('剖面正文')}`, 'GenUI SVG image outside the expert text bubble')
   await waitRunning(expertSession, false)
+  await preview(svgImage, true)
   await cdp.call('Emulation.setDeviceMetricsOverride', { width: 560, height: 860, deviceScaleFactor: 1, mobile: false })
   try { await until(`${fits(supply)} && ${fits(svgImage)}`, 'both original GenUI components fit a narrow expert reply') }
   finally { await cdp.call('Emulation.clearDeviceMetricsOverride') }

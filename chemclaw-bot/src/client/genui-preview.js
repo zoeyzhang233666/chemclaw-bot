@@ -1,0 +1,166 @@
+import { t } from './i18n.js'
+import { installStyles } from './styles.js'
+
+const FIGURE = '[data-genui-diagram], [data-genui-svg]'
+const BUTTON = '.bt-genui-enlarge'
+const ZOOM_LEVELS = [1, 1.5, 2, 3, 4]
+
+const CSS = `
+.bt-genui-previewable{position:relative}
+.bt-genui-previewable>img,.bt-genui-previewable>svg{cursor:zoom-in}
+.bt-genui-enlarge,.bt-genui-preview button{display:inline-grid;place-items:center;min-width:34px;height:34px;padding:0 8px;border:1px solid var(--bt-line-2);border-radius:8px;background:var(--bt-card);color:var(--bt-ink);font:inherit;cursor:pointer}
+.bt-genui-enlarge{position:absolute;right:8px;top:8px;z-index:1;box-shadow:0 1px 4px var(--bt-line)}
+.bt-genui-enlarge:hover,.bt-genui-preview button:hover{background:var(--bt-hover)}
+.bt-genui-preview button:disabled{opacity:.4;cursor:default}
+.bt-genui-preview{box-sizing:border-box;width:min(1400px,calc(100vw - 24px));height:calc(100dvh - 24px);max-width:none;max-height:none;padding:0;overflow:hidden;border:1px solid var(--bt-line-2);border-radius:16px;background:var(--bt-main);color:var(--bt-ink)}
+.bt-genui-preview[open]{display:grid;grid-template-rows:auto minmax(0,1fr)}
+.bt-genui-preview::backdrop{background:color-mix(in srgb,var(--bt-ink) 40%,transparent)}
+body[data-ds-dark-theme] .bt-genui-preview::backdrop{background:color-mix(in srgb,var(--bt-main) 75%,transparent)}
+.bt-genui-preview-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--bt-line-2)}
+.bt-genui-preview-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:600}
+.bt-genui-preview-scroll{overflow:auto;overscroll-behavior:contain}
+.bt-genui-preview-stage{box-sizing:border-box;display:grid;place-items:center;width:max-content;min-width:100%;min-height:100%;padding:16px}
+`
+
+function graphicOf(figure) {
+  const svg = figure.querySelector(':scope > svg[viewBox]')
+  if (svg && svg.viewBox.baseVal.width > 0 && svg.viewBox.baseVal.height > 0) return svg
+  const image = figure.querySelector(':scope > :is(img[src^="data:image/svg+xml,"], img[src^="data:image/svg+xml;"])')
+  if (image?.naturalWidth > 0 && image.naturalHeight > 0) return image
+}
+
+function button(label, glyph, action) {
+  const node = document.createElement('button')
+  node.type = 'button'
+  node.textContent = glyph
+  node.title = label
+  node.setAttribute('aria-label', label)
+  node.addEventListener('click', action)
+  return node
+}
+
+function openPreview(graphic, opener, onClose) {
+  const isImage = graphic instanceof HTMLImageElement
+  const { width, height } = isImage ? { width: graphic.naturalWidth, height: graphic.naturalHeight } : graphic.viewBox.baseVal
+  const dialog = document.createElement('dialog')
+  dialog.className = 'bt-genui-preview'
+  const title = isImage ? graphic.alt : graphic.querySelector('title')?.textContent
+  const label = title || t('Enlarge graphic')
+  dialog.setAttribute('aria-label', label)
+  const header = document.createElement('div')
+  header.className = 'bt-genui-preview-bar'
+  const heading = document.createElement('div')
+  heading.className = 'bt-genui-preview-title'
+  heading.textContent = label
+  const viewport = document.createElement('div')
+  viewport.className = 'bt-genui-preview-scroll'
+  viewport.tabIndex = 0
+  viewport.setAttribute('aria-label', label)
+  const stage = document.createElement('div')
+  stage.className = 'bt-genui-preview-stage'
+  const canvas = document.createElement('div')
+  const style = getComputedStyle(graphic)
+  canvas.style.fontFamily = style.fontFamily
+  for (let index = 0; index < style.length; index += 1) {
+    const name = style.item(index)
+    if (name.startsWith('--dsl-g-') || name.startsWith('--dsw-')) canvas.style.setProperty(name, style.getPropertyValue(name))
+  }
+  // Isolate the diagram's marker IDs. Model-provided SVG stays an image.
+  const copy = graphic.cloneNode(!isImage)
+  for (const node of copy.querySelectorAll('[role="button"]')) {
+    for (const name of ['role', 'tabindex', 'aria-pressed']) node.removeAttribute(name)
+  }
+  Object.assign(copy.style, { display: 'block', width: '100%', height: 'auto', maxWidth: 'none', maxHeight: 'none', boxSizing: 'border-box' })
+  canvas.attachShadow({ mode: 'open' }).append(copy)
+  stage.append(canvas)
+  viewport.append(stage)
+
+  let level = 0
+  const minus = button(t('Zoom out'), '−', () => resize(level - 1))
+  const plus = button(t('Zoom in'), '+', () => resize(level + 1))
+  const fit = button(t('Fit graphic'), t('Fit graphic'), () => resize(0))
+  const close = button(t('Close'), '×', () => dialog.close())
+  close.autofocus = true
+
+  function resize(next) {
+    const { scrollWidth, scrollHeight, scrollLeft, scrollTop, clientWidth, clientHeight } = viewport
+    const x = (scrollLeft + clientWidth / 2) / scrollWidth
+    const y = (scrollTop + clientHeight / 2) / scrollHeight
+    const fitted = Math.min(clientWidth - 32, (clientHeight - 32) * width / height)
+    level = Math.max(0, Math.min(next, ZOOM_LEVELS.length - 1))
+    canvas.style.width = `${Math.max(1, fitted * ZOOM_LEVELS[level])}px`
+    minus.disabled = fit.disabled = level === 0
+    plus.disabled = level === ZOOM_LEVELS.length - 1
+    viewport.scrollLeft = (x || .5) * viewport.scrollWidth - clientWidth / 2
+    viewport.scrollTop = (y || .5) * viewport.scrollHeight - clientHeight / 2
+  }
+
+  header.append(heading, minus, fit, plus, close)
+  dialog.append(header, viewport)
+  dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close() })
+  dialog.addEventListener('keydown', event => {
+    const next = { '+': level + 1, '=': level + 1, '-': level - 1, '0': 0 }[event.key]
+    if (next === undefined || event.altKey || event.ctrlKey || event.metaKey) return
+    event.preventDefault()
+    resize(next)
+  })
+  const observer = new ResizeObserver(() => resize(level))
+  dialog.addEventListener('close', () => {
+    observer.disconnect()
+    dialog.remove()
+    opener?.focus({ preventScroll: true })
+    onClose()
+  }, { once: true })
+  document.body.append(dialog)
+  dialog.showModal()
+  resize(0)
+  observer.observe(viewport)
+  return dialog
+}
+
+export function installGenuiPreview() {
+  const styles = installStyles(CSS, 'genui-preview')
+  let dialog
+  const prepare = figure => {
+    if (!figure || figure.querySelector(BUTTON) || !graphicOf(figure)) return
+    const control = button(t('Enlarge graphic'), '⤢', event => {
+      event.stopPropagation()
+      const graphic = graphicOf(figure)
+      if (!dialog && graphic) dialog = openPreview(graphic, control, () => { dialog = undefined })
+    })
+    control.className = BUTTON.slice(1)
+    control.setAttribute('aria-haspopup', 'dialog')
+    figure.classList.add('bt-genui-previewable')
+    figure.append(control)
+  }
+  const click = event => {
+    if (event.defaultPrevented || !(event.target instanceof Element)
+      || event.target.closest('button, a, [role="button"]') || window.getSelection()?.type === 'Range') return
+    const graphic = event.target.closest('svg, img')
+    const figure = graphic?.closest(FIGURE)
+    if (figure && graphic === graphicOf(figure)) figure.querySelector(BUTTON)?.click()
+  }
+  const load = event => {
+    if (event.target instanceof HTMLImageElement) prepare(event.target.closest(FIGURE))
+  }
+  const observer = new MutationObserver(records => {
+    for (const { addedNodes } of records) for (const node of addedNodes) {
+      if (!(node instanceof Element) || node.matches(BUTTON) || node.closest('.bt-genui-preview')) continue
+      prepare(node.closest(FIGURE))
+      node.querySelectorAll(FIGURE).forEach(prepare)
+    }
+  })
+  document.querySelectorAll(FIGURE).forEach(prepare)
+  observer.observe(document.body, { childList: true, subtree: true })
+  document.addEventListener('load', load, true)
+  document.addEventListener('click', click)
+  return () => {
+    observer.disconnect()
+    document.removeEventListener('click', click)
+    document.removeEventListener('load', load, true)
+    dialog?.close()
+    document.querySelectorAll(BUTTON).forEach(node => node.remove())
+    document.querySelectorAll('.bt-genui-previewable').forEach(node => node.classList.remove('bt-genui-previewable'))
+    styles.remove()
+  }
+}
