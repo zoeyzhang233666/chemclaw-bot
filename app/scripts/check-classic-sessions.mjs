@@ -345,7 +345,6 @@ export async function checkClassicSessions(cdp) {
   await waitRunning(b, false)
   await checkCapacity(b)
   await checkSpotHistory(b)
-  await checkMarketFollowup(b)
   await checkFencePresentation(b)
   await send('GenUI check marketstats')
   const metrics = "[...document.querySelectorAll('[data-genui]')].find(node => node.innerText.includes('Synthetic market metrics'))"
@@ -385,6 +384,8 @@ export async function checkClassicSessions(cdp) {
   try {
     await until(`${fits(supply)} && ${fits(svgImage)}`, 'both original GenUI components fit a narrow Classic reply')
   } finally { await cdp.call('Emulation.clearDeviceMetricsOverride') }
+  await checkMarketFollowup(await create())
+  await show(b)
   await click('.bt-return')
   await show(expertSession, `[data-bot-id="${expert.id}"]`)
   await checkCapacity(expertSession)
