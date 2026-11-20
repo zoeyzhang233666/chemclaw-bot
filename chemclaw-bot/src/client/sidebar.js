@@ -802,7 +802,7 @@ function useLandOnMainBot(roster, useSessions, actions) {
     const bot = id === '' ? undefined : roster.byId[id]
     if (bot !== undefined) {
       lastBot.current = { botId: bot.id, sessionId: id }
-      if (currentPart(bot) !== id) actions.landOn(bot.id)
+      if (currentPart(bot) !== id) actions.landOn(bot.id, undefined, id)
       return undefined
     }
     // A DSH Agent Session, blank or not, is a real destination: it stays.
@@ -811,7 +811,7 @@ function useLandOnMainBot(roster, useSessions, actions) {
       return undefined
     }
     const last = lastBot.current
-    const timer = setTimeout(() => actions.landOn(roster.mainBotId, last), last ? 0 : 400)
+    const timer = setTimeout(() => actions.landOn(roster.mainBotId, last, id || undefined, blank === '1'), last ? 0 : 400)
     return () => clearTimeout(timer)
   }, [mainView, roster])
 }

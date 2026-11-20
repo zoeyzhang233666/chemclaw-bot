@@ -1,6 +1,7 @@
 ﻿// Store: the saved team (state.json), its migrations, the lock that keeps a second dsh
 // host on the same data from writing it, and the indexes that map a Session to the Bot
 // or group chat it belongs to.
+import { randomUUID } from 'node:crypto'
 import { mkdirSync, statSync } from 'node:fs'
 import { copyFile, mkdir, readFile, unlink, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
@@ -413,6 +414,21 @@ export function install(rt) {
   const groupOwners = new Map()
   /** @type {Map<string, {botId:string, roomId?:string}>} */
   const pastOwners = new Map()
+  const assigning = new Set()
+  const ownsSession = id => selfOf(id) !== undefined || botOf(id) !== undefined || roomOf(id) !== undefined || rt.agentOf?.(id) !== undefined
+  const blocksSessionReuse = id => assigning.has(id) || ownsSession(id)
+  // DSH publishes a created Session before the roster can claim it.
+  async function createOwnedSession(request) {
+    if (process.env.DS_BOT_APP !== '1') return ctx.sessionController.create(request)
+    const sessionId = `session-${randomUUID()}`
+    assigning.add(sessionId)
+    try {
+      return await ctx.sessionController.create({ ...request, sessionId })
+    } catch (error) {
+      assigning.delete(sessionId)
+      throw error
+    }
+  }
   const chatOf = botId => botOf(botId)?.sessionId ?? botId
   const indexSessions = () => {
     chatOwners.clear()
@@ -430,6 +446,7 @@ export function install(rt) {
     }
     // The agents module owns the DSH Agent session index; it installs after this.
     rt.indexAgents?.()
+    for (const id of assigning) if (ownsSession(id)) assigning.delete(id)
   }
   // The Bot a Session speaks for: its own chat, one of its group Sessions, or an
   // earlier segment of either.
@@ -487,7 +504,7 @@ export function install(rt) {
   Object.assign(rt, {
     state, load, save, refresh, readOnly, assertLedgerWriter, own,
     botOf, roomOf, isMain, chatOf, selfOf, isBotSession,
-    chatOwners, groupOwners, pastOwners,
+    chatOwners, groupOwners, pastOwners, createOwnedSession, blocksSessionReuse,
     groupSessionsOf, dropGroupSession, retireGroupSession, findBot, findRooms, isAdminOf,
   })
 }
