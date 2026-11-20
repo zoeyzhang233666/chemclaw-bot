@@ -243,6 +243,17 @@ function decide(body) {
     if (!textOf(result.content).includes('# GenUI')) return [text('Bundled GenUI skill could not be loaded.')]
     return [text('Bundled GenUI skill loaded.' + inlineView({ type: 'text', text: 'Skill instructions verified.' }))]
   }
+  if (tools.has('show_view') && /^纯碱最近一个月现货价格$/mu.test(activity)) {
+    return [text('合成现货正文：轻质均价从 1118 元/吨 → 1134 元/吨 → 1123 元/吨。' + inlineView(diagramFixture('错误的报价关系图')))]
+  }
+  if (tools.has('show_view') && activity.includes('the dated spot chart from verified evidence')
+    && messages.slice(0, activityAt).some(message => /^纯碱最近一个月现货价格$/mu.test(textOf(message.content)))) {
+    if (result) return [text('合成现货价格已补齐。')]
+    const metric = { type: 'metric', label: '合成轻质现货均价', value: '1123 元/吨', caption: '2026-11-19' }
+    const chart = { type: 'chart', kind: 'line', unit: '元/吨', categories: ['2026-10-23', '2026-11-04', '2026-11-19'],
+      series: [{ name: '合成轻质纯碱现货', values: [1118, 1134, 1123] }] }
+    return [tool('show_view', { audience: 'user', await_reply: false, title: '合成现货走势', view: { type: 'stack', children: [metric, chart] } })]
+  }
   if (/^(?:User: )?查询合成产能分布\s*$/mu.test(activity) && tools.has('show_view')
     && system.includes('a metric row and horizontal bars')) {
     if (result) return [text('合成产能正文：同一口径下，沿海为 120 万吨/年，内陆为 90 万吨/年。')]

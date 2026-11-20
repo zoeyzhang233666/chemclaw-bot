@@ -70,6 +70,15 @@ test('original text block indices survive empty, image and reasoning blocks', ()
   assert.deepEqual(assistantTextBlocks([{ kind: 'text', text: '' }, { kind: 'image' }, { kind: 'reasoning', text: 'hidden' }, { kind: 'text', text: 'same' }, { kind: 'text', text: 'same' }]), [{ text: 'same', contentBlockIndex: 3 }, { text: 'same', contentBlockIndex: 4 }])
 })
 
+test('diagram connector elbows stay within the correct segments when turning up or left', async () => {
+  const { roundDiagramConnector } = await import('../src/client/genui-diagram-layout.js')
+  assert.equal(roundDiagramConnector('M 40 20 H 28 Q 20 20 20 28 V -8 Q 20 0 28 0 H 0'),
+    'M 40 20 L 28 20 Q 20 20 20 12 L 20 8 Q 20 0 12 0 L 0 0')
+  assert.equal(roundDiagramConnector('M 40 20 V 38 Q 40 30 48 30 H 28 Q 36 30 36 38 V 40'),
+    'M 40 20 L 40 28 Q 40 30 38 30 L 38 30 Q 36 30 36 32 L 36 40')
+  assert.equal(roundDiagramConnector('M 40 20 L 40 40'), 'M 40 20 L 40 40')
+})
+
 test('current policy and delivery skill teach automatic GenUI selection and protocol separation', () => {
   const skill = readFileSync(new URL('../skills/builtin/delivery/SKILL.md', import.meta.url), 'utf8')
   for (const text of [skill, `${VIEW_POLICY}\n${GENUI_GRAPH_POLICY}`]) {

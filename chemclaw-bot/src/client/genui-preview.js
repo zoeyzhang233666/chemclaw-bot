@@ -1,5 +1,6 @@
 import { t } from './i18n.js'
 import { installStyles } from './styles.js'
+import { layoutGenuiDiagram } from './genui-diagram-layout.js'
 
 const FIGURE = '[data-genui-diagram], [data-genui-svg]'
 const ARTIFACT = '[data-genui-artifact]'
@@ -33,6 +34,30 @@ function graphicOf(figure) {
   if (svg && svg.viewBox.baseVal.width > 0 && svg.viewBox.baseVal.height > 0) return svg
   const image = figure.querySelector(':scope > :is(img[src^="data:image/svg+xml,"], img[src^="data:image/svg+xml;"])')
   if (image?.naturalWidth > 0 && image.naturalHeight > 0) return image
+}
+
+function sizeInlineGraphic(graphic) {
+  const image = graphic instanceof HTMLImageElement
+  const { width, height } = image ? { width: graphic.naturalWidth, height: graphic.naturalHeight } : graphic.viewBox.baseVal
+  const simple = !image && graphic.querySelectorAll('g[role="button"]').length <= 3
+  const compactHeight = image ? 400 : simple ? 360 : 620
+  // A viewBox-only SVG can report the browser's 300px default intrinsic width.
+  // Read the declared canvas without adding any of the image markup to the DOM.
+  let canvasWidth = width
+  if (image) {
+    try {
+      const svg = decodeURIComponent(graphic.src.slice(graphic.src.indexOf(',') + 1))
+      const viewBox = /<svg\b[^>]*?\sviewBox\s*=\s*(["'])([^"']+)\1/u.exec(svg)?.[2]
+      const dimensions = viewBox?.trim().split(/[\s,]+/u).map(Number)
+      if (dimensions?.length === 4 && Number.isFinite(dimensions[2]) && dimensions[2] > 0) canvasWidth = dimensions[2]
+    } catch { /* use the image's reported dimensions */ }
+  }
+  const preferredWidth = image ? Math.max(220, canvasWidth) : simple ? Math.min(width, 520) : width
+  const limit = Math.min(preferredWidth, width / height * compactHeight)
+  const original = { maxWidth: graphic.style.maxWidth, height: graphic.style.height }
+  graphic.style.maxWidth = `min(100%, ${Math.round(Math.max(1, limit))}px)`
+  graphic.style.height = 'auto'
+  return () => { Object.assign(graphic.style, original) }
 }
 
 function button(label, glyph, action) {
@@ -196,7 +221,11 @@ export function installGenuiPreview() {
         control.setAttribute('aria-haspopup', 'dialog')
         control.append(enlargeGlyph())
       }
-      entry = { control, graphic, strip: entry?.strip, restore: styleBusinessDiagram(figure, graphic) }
+      const restoreStyle = styleBusinessDiagram(figure, graphic)
+      const restoreLayout = graphic.localName === 'svg' ? layoutGenuiDiagram(graphic) : undefined
+      const restoreSize = sizeInlineGraphic(graphic)
+      const restore = () => { restoreSize(); restoreLayout?.(); restoreStyle?.() }
+      entry = { control, graphic, strip: entry?.strip, restore }
       controls.set(figure, entry)
       figure.classList.add('bt-genui-previewable')
     }

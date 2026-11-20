@@ -56,6 +56,75 @@ test('first-pass GenUI or a successfully delivered show_view adds no correction'
 
 const svgCode = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0 0 L2 2"/></svg>'
 const diagramFence = '```dsh-ui\n' + JSON.stringify({ items: [{ type: 'diagram', kind: 'flowchart', nodes: [{ id: 'a', label: '生产' }, { id: 'b', label: '销售' }], edges: [{ from: 'a', to: 'b' }] }] }) + '\n```'
+const spotQuestion = '纯碱最近一个月现货价格'
+const spotMetric = { type: 'metric', label: '纯碱现货', value: '1123 元/吨' }
+const spotLine = { type: 'chart', kind: 'line', categories: ['2026-10-23', '2026-11-19'], series: [{ name: '轻质纯碱现货', values: [1118, 1123] }] }
+
+test('spot history requires native metrics and a dated line even after a table or a relationship view', () => {
+  const prose = '价格先涨后跌。1120 元/吨 → 1134 元/吨 → 1123 元/吨。'
+  for (const native of [false, true]) for (const view of [
+    { type: 'table', rows: [[1118], [1123]] },
+    spotMetric,
+    spotLine,
+    { type: 'stack', children: [spotMetric, { ...spotLine, kind: 'hbar' }] },
+    { type: 'stack', children: [spotMetric, { ...spotLine, categories: ['华东', '华北'] }] },
+    { type: 'stack', children: [spotMetric, spotLine] },
+  ]) {
+    const f = setup({ native })
+    f.start(); f.user(spotQuestion); f.answer(prose + '\n\n' + diagramFence)
+    f.rt.noteVisualDelivery('s', view); f.stop(); f.stop()
+    if (view.children?.includes(spotLine)) assert.deepEqual(f.notices, [])
+    else {
+      assert.equal(f.notices.length, 1)
+      const notice = f.notices[0].content[0].text
+      const missing = notice.match(/native show_view stack to deliver (.+) from verified/u)?.[1]
+      assert.equal(missing, view.type === 'table' ? 'headline metric cards and the dated spot chart'
+        : view === spotLine ? 'headline metric cards' : 'the dated spot chart')
+      assert.doesNotMatch(notice, /dsh-ui type=diagram|explicitly requested svg/)
+    }
+  }
+  const partial = setup()
+  partial.start(); partial.user(spotQuestion)
+  partial.answer('仅查到最新现货快照，1123 元/吨。'); partial.rt.noteVisualDelivery('s', spotMetric); partial.stop()
+  assert.deepEqual(partial.notices, [])
+})
+
+test('asking to restore native cards and charts reuses the spot request without treating SVG as requested', () => {
+  const f = setup()
+  f.start(); f.user(spotQuestion); f.answer('1123 元/吨。')
+  f.start(2); f.user('为什么刚才不再生成 ChemClaw 原生 UI 标签卡和数据图，表格不能替代这个')
+  f.answer('上面有现货数据。'); f.stop(2)
+  assert.match(f.notices[0].content[0].text, /headline metric cards and the dated spot chart/)
+  assert.deepEqual(requestedChartKinds('请生成原生标签卡和数据图，而不是 SVG'), [])
+})
+
+test('a numeric answer with values only in the table still needs the native cards and chart', () => {
+  const f = setup()
+  f.start(); f.user('查询各地产能分布')
+  f.answer('产能如下。\n\n| 地区 | 产能（万吨） |\n| --- | --- |\n| 甲地 | 120 |\n| 乙地 | 90 |')
+  f.stop()
+  assert.match(f.notices[0].content[0].text, /headline metric cards and the data chart/)
+})
+
+test('a data-only turn withdraws completed decorative GenUI diagrams and preserves supporting content', async () => {
+  const f = setup()
+  const hook = f.ctx.listeners.get('llm/stream')[0]
+  const table = { type: 'table', columns: ['日期', '价格'], rows: [['11-19', 1123]] }
+  const alias = { type: 'svg', title: '错误的报价关系图', svg: svgCode }
+  const raw = '已核实价格。\n\n' + diagramFence + '\n\n' + genuiMarkdown(JSON.stringify({ items: [table, alias] }))
+  const model = async function* () {
+    yield { type: 'block-end', index: 0, block: { type: 'text', text: raw } }
+  }
+  const end = async () => (await Array.fromAsync(hook({ sessionId: 's', tools: [{ name: 'show_view' }] }, model)))[0].block.text
+  f.start(); f.user(spotQuestion)
+  assert.equal((await end()).replace(/\n{3,}/gu, '\n\n'), '已核实价格。\n\n' + genuiMarkdown(JSON.stringify({ items: [table] })).trimEnd())
+  f.start(2); f.user('纯碱最近一个月现货价格，为什么价格会变化？请用 SVG 解释原因')
+  assert.match(await end(), /错误的报价关系图/)
+  f.start(3); f.user('纯碱最近一个月现货价格，需要多级表头的复杂数据表')
+  const specialized = await end()
+  assert.match(specialized, /错误的报价关系图/)
+  assert.doesNotMatch(specialized, /"type":"diagram"/)
+})
 
 test('a generated SVG alias is normalized while ordinary Markdown examples are preserved', async () => {
   const alias = { type: 'svg', title: '合成因果图', svg: svgCode }
@@ -601,7 +670,7 @@ test('empty or misnamed ECharts data is not a successful inline GenUI view', () 
     assert.equal(hasInlineGenui(output), false)
     const f = setup(); f.start(); f.user('纯碱最近一个月现货价'); f.answer(output); f.stop()
     assert.equal(f.notices.length, 1)
-    assert.match(f.notices[0].content[0].text, /native show_view chart/)
+    assert.match(f.notices[0].content[0].text, /native show_view stack to deliver headline metric cards and the dated spot chart/)
     f.stop()
     assert.equal(f.notices.length, 1, 'one bounded correction, no repeated loop')
   }

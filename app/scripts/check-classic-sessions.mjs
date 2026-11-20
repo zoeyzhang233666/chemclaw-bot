@@ -92,7 +92,8 @@ export async function checkClassicSessions(cdp) {
       const original = ${graphic};
       const cloned = ${copy};
       return original.localName === cloned.localName && (original.src ? original.src === cloned.src
-        : original.getAttribute('viewBox') === cloned.getAttribute('viewBox') && cloned.querySelector('marker'));
+        : original.getAttribute('viewBox') === cloned.getAttribute('viewBox') && cloned.querySelector('marker')
+          && cloned.querySelector('[data-bt-diagram-labels]')?.textContent === original.querySelector('[data-bt-diagram-labels]')?.textContent);
     })()`))
     const initial = await evaluate(`${copy}.getBoundingClientRect().width`)
     await evaluate(`${modal}.querySelector('button:nth-last-child(2)').click()`)
@@ -106,6 +107,15 @@ export async function checkClassicSessions(cdp) {
     const node = `${graphic}.querySelector('[role=button][aria-label="生产与开工"]')`
     await until(node, 'an interactive GenUI diagram node')
     await until(`${graphic}.lastElementChild.getAttribute('display') === 'none' && ${graphic}.querySelector('[data-bt-diagram-node]')`, 'business diagram colors and a hidden software legend')
+    await until(`${graphic}.querySelector('path[marker-end][stroke-linejoin=round]') && ${graphic}.querySelector('[data-bt-diagram-labels]')?.textContent === '待核验'`, 'rounded connectors and collision-adjusted edge labels')
+    assert.ok(await evaluate(`(() => {
+      const graphic = ${graphic};
+      const label = graphic.querySelector('[data-bt-diagram-labels] rect').getBBox();
+      return [...graphic.querySelectorAll('g[role=button]')].every(node => {
+        const box = node.firstElementChild.firstElementChild.getBBox();
+        return box.x + box.width <= label.x || label.x + label.width <= box.x || box.y + box.height <= label.y || label.y + label.height <= box.y;
+      });
+    })()`))
     await evaluate(`${node}.dispatchEvent(new MouseEvent('click', { bubbles: true }))`)
     await until(`${node}.getAttribute('aria-pressed') === 'true' && ${graphic}.parentElement.querySelector('[aria-live=polite]')?.textContent.includes('区分设计产能和实际开工')`, 'inline diagram node details')
     assert.equal(await evaluate("Boolean(document.querySelector('.bt-genui-preview[open]'))"), false)
@@ -118,6 +128,8 @@ export async function checkClassicSessions(cdp) {
     assert.equal(await evaluate(rawVisible), false)
     await until("document.querySelector('[data-genui-svg] img[alt=合成成因矢量图]')?.naturalWidth > 0", 'SVG alias repaired by the host and rendered')
     await waitRunning(id, false)
+    const width = await evaluate("document.querySelector('[data-genui-svg] img[alt=合成成因矢量图]').getBoundingClientRect().width")
+    assert.ok(width > 0 && width <= 220, 'a simple SVG stays compact inline')
     assert.equal(await evaluate(rawVisible), false)
     assert.equal(await evaluate(visible('const readableExample = 2')), true)
     await send('GenUI check broken SVG')
@@ -130,6 +142,12 @@ export async function checkClassicSessions(cdp) {
     await until(`${visible('合成产能正文')} && [...document.querySelectorAll('.bt-widget-metric')].some(node => node.textContent.includes('沿海产能')) && document.querySelector('.bt-chart-svg .bt-chart-mark')`, 'native capacity metrics, bar chart and ordinary text')
     await waitRunning(id, false)
     assert.equal((await history(id)).includes('The answer is still missing these inline views: metric'), false)
+  }
+  const checkSpotHistory = async id => {
+    await send('纯碱最近一个月现货价格')
+    await until(`${visible('合成现货正文')} && [...document.querySelectorAll('.bt-widget-metric')].some(node => node.textContent.includes('合成轻质现货均价')) && [...document.querySelectorAll('.bt-chart-svg .bt-chart-line')].some(node => (node.getAttribute('d').match(/L/g) ?? []).length === 2)`, 'native spot metric and plotted three-point line')
+    await waitRunning(id, false)
+    assert.equal(await evaluate(visible('错误的报价关系图')), false)
   }
   const roster = await evaluate(bot('state'))
   const expert = roster.bots.find(item => item.id === roster.mainBotId)
@@ -307,6 +325,7 @@ export async function checkClassicSessions(cdp) {
   await until(visible('Bundled GenUI skill loaded.'), 'the registered upstream GenUI skill can be loaded by DSH')
   await waitRunning(b, false)
   await checkCapacity(b)
+  await checkSpotHistory(b)
   await checkFencePresentation(b)
   await send('GenUI check marketstats')
   const metrics = "[...document.querySelectorAll('[data-genui]')].find(node => node.innerText.includes('Synthetic market metrics'))"
@@ -349,6 +368,7 @@ export async function checkClassicSessions(cdp) {
   await click('.bt-return')
   await show(expertSession, `[data-bot-id="${expert.id}"]`)
   await checkCapacity(expertSession)
+  await checkSpotHistory(expertSession)
   await checkFencePresentation(expertSession)
   await send('GenUI check marketstats')
   await until(`${metrics}?.closest('.bt-rich-reply')`, 'expert GenUI outside the speech bubble')
