@@ -171,12 +171,14 @@ export async function checkClassicSessions(cdp) {
     await until(`[...document.querySelectorAll('[data-genui-diagram] svg')].filter(svg => svg.querySelector('title')?.textContent === '合成沥青传导修复图').some(svg => !svg.closest('figure').querySelector('.bt-genui-diagram-fallback') && new Set([...svg.querySelectorAll('g[role=button]')].map(node => { const box = node.getBBox(); return box.x + ',' + box.y })).size === 4)`, 'overlapping source coordinates render as four separately placed nodes')
     await waitRunning(id, false)
   }
-  const checkSemanticVisuals = async id => {
+  const wideViewport = { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false }
+  const checkWideVisuals = async id => {
     const graph = label => `[...document.querySelectorAll('svg[data-chemclaw-flow]')].find(node => node.textContent.includes(${JSON.stringify(label)}))`
     await send('解释伊美关系如何影响原油价格')
     const mechanism = graph('预期可供数量下降')
     await until(visible('示例运费'), 'the initial price response is displayed')
     await until(mechanism, 'the mechanism question also receives a native relationship diagram')
+    await until(`${mechanism}?.closest('figure').clientWidth >= 540`, 'the mechanism diagram has room for wide layout')
     await until(`${mechanism}?.querySelectorAll('[data-shared]').length === 2`, 'the mechanism diagram has separate shared trunks')
     await waitRunning(id, false)
     assert.ok(await evaluate(`(() => {
@@ -192,6 +194,20 @@ export async function checkClassicSessions(cdp) {
       await cdp.call('Input.dispatchKeyEvent', { type, key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 })
     }
     await until(`!document.querySelector('.bt-genui-preview[open]') && document.activeElement === ${zoom}`, 'Escape restores focus after the native preview')
+    await cdp.call('Emulation.setDeviceMetricsOverride', { ...wideViewport, width: 390 })
+    try {
+      await until(`(() => {
+        const graph = ${mechanism};
+        if (!graph) return false;
+        const frame = graph.closest('figure');
+        const boxes = [...graph.querySelectorAll('.bt-flow-step rect')];
+        return frame.clientWidth > 0 && Number(graph.getAttribute('width')) <= frame.clientWidth
+          && boxes.length === 5 && boxes.every(box => box.getAttribute('x') === boxes[0].getAttribute('x'))
+          && graph.querySelectorAll('path[marker-end]').length >= 3;
+      })()`, 'the narrow mechanism diagram wraps without clipping its nodes or dropping arrows')
+    } finally {
+      await cdp.call('Emulation.setDeviceMetricsOverride', wideViewport)
+    }
     await send('沥青库存')
     await until(`${visible('合成最新库存')} && [...document.querySelectorAll('.bt-view')].some(node => node.textContent.includes('合成最新库存') && node.querySelector('.bt-chart-line'))`, 'a table-only inventory response recovers a metric and a native trend')
     await waitRunning(id, false)
@@ -214,6 +230,10 @@ export async function checkClassicSessions(cdp) {
     await send('合成价格走势及事件窗口')
     await until(`${visible('合成窗口最新价')} && ${visible('合成报价事件窗口')} && [...document.querySelectorAll('.bt-view')].some(node => node.textContent.includes('合成窗口最新价') && node.querySelector('.bt-chart-line'))`, 'event-window SVG accompanies the native metric and overview line')
     await waitRunning(id, false)
+  }
+  const checkSemanticVisuals = async id => {
+    await cdp.call('Emulation.setDeviceMetricsOverride', wideViewport)
+    try { await checkWideVisuals(id) } finally { await cdp.call('Emulation.clearDeviceMetricsOverride') }
   }
   const roster = await evaluate(bot('state'))
   const expert = roster.bots.find(item => item.id === roster.mainBotId)
