@@ -73,7 +73,7 @@ function windowChecks(cdp) {
   }
   const running = id => `${session('state', { sessionId: id })}.then(value => value.running)`
   const waitRunning = (id, active) => until(`await (${running(id)}) === ${active}`, `${id} running=${active}`)
-  const history = id => evaluate(session('events', { address: { kind: 'session', sessionId: id }, maxMessages: 30 })).then(JSON.stringify)
+  const history = (id, maxMessages = 30) => evaluate(session('events', { address: { kind: 'session', sessionId: id }, maxMessages })).then(JSON.stringify)
   return { evaluate, until, bot, session, current, click, show, send, waitRunning, history }
 }
 
@@ -378,6 +378,6 @@ export async function checkClassicRestart(cdp, { id, marker, other }) {
   await until("document.querySelector('[data-classic-native-view]')?.innerText.includes('测试合计')", 'restored native card')
   await until(`${diagram('合成供应链流程')} && ${svgReady}`, 'restored GenUI diagram and SVG')
   assert.equal(await evaluate(visible(other)), false)
-  assert.ok((await history(id)).includes(marker))
+  assert.ok((await history(id, 100)).includes(marker))
   console.log('check-packed: Classic mode restored its native Session after app restart')
 }
