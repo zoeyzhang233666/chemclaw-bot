@@ -54,6 +54,7 @@ import { listedOpener } from './open-listed.js'
 import { RIGHTBAR_ATTRIBUTES, columnOpened, createSwitchWindow, drawerOpened, rightColumnOpen } from './right-panel.js'
 import { createGenuiSurfaces } from './genui-surfaces.js'
 import { installGenuiPreview } from './genui-preview.js'
+import { installGenuiPresentation } from './genui-presentation.js'
 import { ClassicNativeViews } from './classic-native-view.js'
 
 export const inject = ['sessions', 'uiWorkspace', 'uiConversation', 'slots', 'theme', 'layout']
@@ -615,6 +616,7 @@ export function apply(ctx) {
     return () => { actions.genuiSurfaces.dispose(); release?.() }
   }, 'chemclaw-bot: GenUI surfaces')
   ctx.effect(installGenuiPreview, 'chemclaw-bot: GenUI graphic preview')
+  ctx.effect(() => installGenuiPresentation(ctx), 'chemclaw-bot: GenUI fence presentation')
   // Without the Desktop bridge these stay undefined, and no browser control renders.
   if (browsers) {
     Object.assign(actions, {

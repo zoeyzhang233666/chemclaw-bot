@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
+import { repairGenuiSvgFences } from '../shared/genui-fences.js'
 import { capacityDataRequest, capacityMeasurementsInAnswer, needsFlowDiagram, needsSvgIllustration } from './flow-intent.js'
 import { marketQuoteIntent, mixedOverlayRequested } from './market-quote-intent.js'
 import { genuiViewAvailable, nativeViewAvailable } from './native-view-session.js'
@@ -280,7 +281,8 @@ export function missingRequestedKinds(requested, delivered, genui = true) {
 }
 
 const diagramInstruction = 'Emit an inline dsh-ui type=diagram with short nodes {id,label,sub?} and edges {from,to,label?,kind?}. Use kind=flowchart for a short sequence or kind=architecture with x,y,w,h for a branching graph. Use dashed edges for unverified relationships.'
-const svgInstruction = 'Emit an inline dsh-ui type=svg, using a complete self-contained SVG in code with xmlns and a padded viewBox.'
+const svgInstruction = 'Emit inline dsh-ui type=svg using {"items":[{"type":"svg","title":"…","code":"<svg …>…</svg>"}]}. The SVG string belongs in code, never svg. Include xmlns and a padded viewBox.'
+const relationshipInstruction = `Choose one view for the missing relationship. ${diagramInstruction} For a visual explanation that needs semantic colors, labelled lanes or shared branch lines, use SVG instead. ${svgInstruction}`
 const capacityInstruction = 'Use one native show_view stack with a row of metric cards for the verified capacity, output, utilization or quota figures. Include the unit in each metric value string and the period in its caption. If a chart is also missing and there are at least two comparable verified observations, include a native hbar for entities or line for time in that stack.'
 
 export function requestedViewReminder(turn, native, kinds, requested, genui) {
@@ -294,7 +296,8 @@ export function requestedViewReminder(turn, native, kinds, requested, genui) {
         : 'For a candlestick use a single GenUI dsh-ui ECharts candlestick full-option view. ')
         + 'If the verified historical data contains only close/low or lacks complete OHLC, do not synthesize bars, fetch again or draw a substitute line: explain in one sentence that source OHLC is missing. Do not send another tool call. '
       : 'Add ONLY the missing view(s) using already verified data; do not repeat existing prose, views, research or external actions. ')
-    + (kinds.includes('diagram') || kinds.includes('flow') && genui ? `${diagramInstruction} ` : '')
+    + (kinds.includes('diagram') ? `${diagramInstruction} ` : '')
+    + (kinds.includes('flow') && genui ? `${relationshipInstruction} ` : '')
     + (kinds.includes('svg') ? `${svgInstruction} ` : '')
     + (kinds.includes('metric') ? `${capacityInstruction} ` : '')
     + (kinds.includes('flow') && !genui ? 'Use the available show_view type=flow with concise nodes and edges. ' : '')
@@ -313,6 +316,23 @@ export function visualReminder(turn, native) {
 // model round trip. A missing view receives at most one same-turn reminder.
 export function install(rt) {
   const { ctx } = rt
+  // The closing block is authoritative. Repair a known field alias there so
+  // both renderers and GenUI's own feedback receive the same canonical SVG.
+  ctx.on('llm/stream', (options, next) => {
+    if (options.sessionId === undefined || options.purpose !== undefined || rt.ownRequest?.(options)) return next()
+    return (async function* () {
+      for await (const chunk of next()) {
+        if (chunk.type === 'block-end' && chunk.block.type === 'text') {
+          const text = repairGenuiSvgFences(chunk.block.text)
+          if (text !== chunk.block.text) {
+            yield { ...chunk, block: { ...chunk.block, text } }
+            continue
+          }
+        }
+        yield chunk
+      }
+    })()
+  })
   const turns = new Map()
   const fresh = turn => ({ turn, text: '', question: '', visual: false, nativeMetric: false, mixedVisualCommitted: false, mixedOverlayRequired: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
@@ -439,7 +459,9 @@ export function install(rt) {
       try { spec = JSON.parse(spec) } catch { return decision }
     }
     if (!deliveredViewKinds(spec?.items).has('mermaid')) return decision
-    return { kind: 'deny', reason: `${entry.requested.has('svg') || needsSvgIllustration(entry.question) ? svgInstruction : diagramInstruction} Keep the other GenUI components if useful and deliver the regular text answer.` }
+    const instruction = entry.requested.has('svg') || needsSvgIllustration(entry.question) ? svgInstruction
+      : entry.requested.has('diagram') ? diagramInstruction : relationshipInstruction
+    return { kind: 'deny', reason: `${instruction} Keep the other GenUI components if useful and deliver the regular text answer.` }
   })
   rt.noteVisualDelivery = (id, view) => recordNativeView(stateOf(id), view)
   rt.marketHistoryOf = id => stateOf(id).marketHistory && !stateOf(id).textOnly

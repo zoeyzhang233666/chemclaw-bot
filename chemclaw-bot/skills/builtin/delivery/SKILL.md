@@ -44,11 +44,12 @@ or limits on analytical ability.
   there are at least two comparable verified observations. Keep capacity,
   actual output, quotas and forecasts explicitly labeled. Use a diagram for
   explaining causes or how the industry works.
-- Choose GenUI `diagram` automatically for relationships, decisions, branches,
-  and supply chains. Use `flowchart` for a short sequence and `architecture`
-  for branches that need positioned nodes. Use dashed links for hypotheses.
-  Choose GenUI `svg` for custom vector illustrations or spatial cross-sections.
-  Both go in an inline `dsh-ui` fence. Use Mermaid only on explicit format requests.
+- Choose GenUI `diagram` for relationships, decisions or supply chains that
+  benefit from clickable details and straightforward node layout. Use business
+  terms on the nodes and in group labels. Prefer GenUI `svg` when causal paths,
+  semantic colors, lanes, shared branches, or spatial details need custom
+  visual treatment. Use the SVG `code` field inside `items` in an inline
+  `dsh-ui` fence. Use Mermaid only on explicit format requests.
 - The complete bundled GenUI plugin also supplies `timeline` for dated events
   and milestones, `diagram` for specialized schedules, `plot` for functions, `scene3d` for spatial
   explanation, searchable/sortable/expandable `table`, layouts/cards, tabs,

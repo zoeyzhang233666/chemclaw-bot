@@ -82,8 +82,10 @@ export async function checkClassicSessions(cdp) {
   const preview = async (graphic, inline = false) => {
     const modal = "document.querySelector('.bt-genui-preview[open]')"
     const copy = `${modal}?.querySelector('.bt-genui-preview-stage > div')?.shadowRoot?.firstElementChild`
-    const control = `${graphic}.parentElement.querySelector('.bt-genui-enlarge')`
-    await until(control, 'the vector preview control')
+    const footer = `${graphic}.closest('[data-genui-artifact]')?.querySelector('[data-genui-export]')`
+    const control = `${footer}?.querySelector('.bt-genui-enlarge')`
+    await until(`${control}?.nextElementSibling?.getAttribute('aria-haspopup') === 'menu'`, 'the vector preview control to the left of download')
+    assert.ok(await evaluate(`${control}.getBoundingClientRect().top >= ${graphic}.getBoundingClientRect().bottom`))
     await evaluate(inline ? `${graphic}.click()` : `${control}.click()`)
     await until(copy, 'the original vector in a modal')
     assert.ok(await evaluate(`(() => {
@@ -103,9 +105,25 @@ export async function checkClassicSessions(cdp) {
   const checkDiagramNode = async graphic => {
     const node = `${graphic}.querySelector('[role=button][aria-label="生产与开工"]')`
     await until(node, 'an interactive GenUI diagram node')
+    await until(`${graphic}.lastElementChild.getAttribute('display') === 'none' && ${graphic}.querySelector('[data-bt-diagram-node]')`, 'business diagram colors and a hidden software legend')
     await evaluate(`${node}.dispatchEvent(new MouseEvent('click', { bubbles: true }))`)
     await until(`${node}.getAttribute('aria-pressed') === 'true' && ${graphic}.parentElement.querySelector('[aria-live=polite]')?.textContent.includes('区分设计产能和实际开工')`, 'inline diagram node details')
     assert.equal(await evaluate("Boolean(document.querySelector('.bt-genui-preview[open]'))"), false)
+  }
+  const checkFencePresentation = async id => {
+    const rawVisible = `[...document.querySelectorAll('[data-code-block-content] pre')].some(node =>
+      /合成成因矢量图|合成损坏图|viewBox/u.test(node.textContent) && node.getBoundingClientRect().height > 0)`
+    await send('GenUI check streamed SVG')
+    await until(`${visible('先显示行情成因。')} && document.querySelector('.bt-genui-status:not([data-unavailable])')`, 'streaming SVG shows a compact status alongside prose')
+    assert.equal(await evaluate(rawVisible), false)
+    await until("document.querySelector('[data-genui-svg] img[alt=合成成因矢量图]')?.naturalWidth > 0", 'SVG alias repaired by the host and rendered')
+    await waitRunning(id, false)
+    assert.equal(await evaluate(rawVisible), false)
+    assert.equal(await evaluate(visible('const readableExample = 2')), true)
+    await send('GenUI check broken SVG')
+    await until(`${visible('图形失败时保留正文。')} && document.querySelector('.bt-genui-status[data-unavailable]')`, 'failed SVG keeps prose and a readable status')
+    await waitRunning(id, false)
+    assert.equal(await evaluate(rawVisible), false)
   }
   const checkCapacity = async id => {
     await send('查询合成产能分布')
@@ -289,6 +307,7 @@ export async function checkClassicSessions(cdp) {
   await until(visible('Bundled GenUI skill loaded.'), 'the registered upstream GenUI skill can be loaded by DSH')
   await waitRunning(b, false)
   await checkCapacity(b)
+  await checkFencePresentation(b)
   await send('GenUI check marketstats')
   const metrics = "[...document.querySelectorAll('[data-genui]')].find(node => node.innerText.includes('Synthetic market metrics'))"
   await until(`${metrics}?.querySelectorAll('[class$="_statValue"]').length === 4`, 'GenUI market metrics in Classic')
@@ -330,6 +349,7 @@ export async function checkClassicSessions(cdp) {
   await click('.bt-return')
   await show(expertSession, `[data-bot-id="${expert.id}"]`)
   await checkCapacity(expertSession)
+  await checkFencePresentation(expertSession)
   await send('GenUI check marketstats')
   await until(`${metrics}?.closest('.bt-rich-reply')`, 'expert GenUI outside the speech bubble')
   assert.equal(await evaluate(`Boolean(${metrics}.closest('.bt-bubble'))`), false)

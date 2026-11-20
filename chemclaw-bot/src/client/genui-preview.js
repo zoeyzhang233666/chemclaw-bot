@@ -2,15 +2,21 @@ import { t } from './i18n.js'
 import { installStyles } from './styles.js'
 
 const FIGURE = '[data-genui-diagram], [data-genui-svg]'
+const ARTIFACT = '[data-genui-artifact]'
+const EXPORT = '[data-genui-export]'
 const BUTTON = '.bt-genui-enlarge'
 const ZOOM_LEVELS = [1, 1.5, 2, 3, 4]
 
 const CSS = `
-.bt-genui-previewable{position:relative}
 .bt-genui-previewable>img,.bt-genui-previewable>svg{cursor:zoom-in}
-.bt-genui-enlarge,.bt-genui-preview button{display:inline-grid;place-items:center;min-width:34px;height:34px;padding:0 8px;border:1px solid var(--bt-line-2);border-radius:8px;background:var(--bt-card);color:var(--bt-ink);font:inherit;cursor:pointer}
-.bt-genui-enlarge{position:absolute;right:8px;top:8px;z-index:1;box-shadow:0 1px 4px var(--bt-line)}
-.bt-genui-enlarge:hover,.bt-genui-preview button:hover{background:var(--bt-hover)}
+.bt-genui-enlarge{box-sizing:border-box;display:inline-grid;place-items:center;width:26px;height:26px;padding:0;border:0;border-radius:6px;background:transparent;color:var(--bt-ink-3);cursor:pointer}
+.bt-genui-enlarge:is(:hover,:focus-visible){background:var(--bt-hover);color:var(--bt-ink)}
+.bt-genui-figure-actions{display:flex;justify-content:flex-end;margin:8px 0 6px}
+.bt-business-diagram{--dsw-alias-label-tertiary:var(--bt-ink-2)}
+.bt-business-diagram [data-bt-diagram-node]{fill:color-mix(in srgb,var(--bt-ink-blue) 8%,var(--bt-main))}
+.bt-business-diagram [data-bt-diagram-node][stroke-width="1"]{stroke:color-mix(in srgb,var(--bt-ink-blue) 60%,var(--bt-ink))}
+.bt-genui-preview button{display:inline-grid;place-items:center;min-width:34px;height:34px;padding:0 8px;border:1px solid var(--bt-line-2);border-radius:8px;background:var(--bt-card);color:var(--bt-ink);font:inherit;cursor:pointer}
+.bt-genui-preview button:hover{background:var(--bt-hover)}
 .bt-genui-preview button:disabled{opacity:.4;cursor:default}
 .bt-genui-preview{box-sizing:border-box;width:min(1400px,calc(100vw - 24px));height:calc(100dvh - 24px);max-width:none;max-height:none;padding:0;overflow:hidden;border:1px solid var(--bt-line-2);border-radius:16px;background:var(--bt-main);color:var(--bt-ink)}
 .bt-genui-preview[open]{display:grid;grid-template-rows:auto minmax(0,1fr)}
@@ -37,6 +43,53 @@ function button(label, glyph, action) {
   node.setAttribute('aria-label', label)
   node.addEventListener('click', action)
   return node
+}
+
+function enlargeGlyph() {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  svg.setAttribute('width', '14')
+  svg.setAttribute('height', '14')
+  svg.setAttribute('viewBox', '0 0 16 16')
+  svg.setAttribute('aria-hidden', 'true')
+  const path = document.createElementNS(svg.namespaceURI, 'path')
+  path.setAttribute('d', 'M9.5 3H13v3.5M13 3 9.3 6.7M6.5 13H3V9.5M3 13l3.7-3.7')
+  path.setAttribute('fill', 'none')
+  path.setAttribute('stroke', 'currentColor')
+  path.setAttribute('stroke-width', '1.3')
+  path.setAttribute('stroke-linecap', 'round')
+  path.setAttribute('stroke-linejoin', 'round')
+  svg.append(path)
+  return svg
+}
+
+const SOFTWARE = /软件架构|系统架构|后端架构|前后端|微服务|数据库|缓存层|软件系统|\b(?:software architecture|system architecture|it architecture|microservices?|database|api gateway|frontend|backend|reverse proxy)\b/iu
+
+function styleBusinessDiagram(figure, graphic) {
+  if (graphic.localName !== 'svg' || figure.classList.contains('bt-business-diagram')) return
+  const nodes = [...graphic.querySelectorAll('g[role="button"]')]
+  const legend = graphic.lastElementChild
+  // GenUI 0.16 places its generated technology legend in the trailing group.
+  if (!legend?.matches('g[transform]:has(> g > line + text):has(> g > g > rect)') || !nodes.length
+    || SOFTWARE.test(graphic.querySelector('title')?.textContent ?? '')
+    || nodes.filter(node => SOFTWARE.test(node.getAttribute('aria-label') ?? '')).length >= 2) return
+  const original = graphic.getAttribute('viewBox')
+  const { x, y, width, height } = graphic.viewBox.baseVal
+  const legendY = legend.transform.baseVal.getItem(0)?.matrix.f
+  if (legendY > y && legendY < y + height) graphic.setAttribute('viewBox', `${x} ${y} ${width} ${legendY - y}`)
+  legend.setAttribute('display', 'none')
+  figure.classList.add('bt-business-diagram')
+  for (const node of nodes) {
+    const [ground, face] = node.firstElementChild?.children ?? []
+    if (ground?.localName === 'rect' && face?.localName === 'rect' && face.getAttribute('fill') === ground.getAttribute('fill')) {
+      face.setAttribute('data-bt-diagram-node', '')
+    }
+  }
+  return () => {
+    graphic.setAttribute('viewBox', original)
+    legend.removeAttribute('display')
+    figure.classList.remove('bt-business-diagram')
+    graphic.querySelectorAll('[data-bt-diagram-node]').forEach(rect => rect.removeAttribute('data-bt-diagram-node'))
+  }
 }
 
 function openPreview(graphic, opener, onClose) {
@@ -67,6 +120,11 @@ function openPreview(graphic, opener, onClose) {
   }
   // Isolate the diagram's marker IDs. Model-provided SVG stays an image.
   const copy = graphic.cloneNode(!isImage)
+  const tinted = [...graphic.querySelectorAll('[data-bt-diagram-node]')]
+  copy.querySelectorAll('[data-bt-diagram-node]').forEach((rect, index) => {
+    const { fill, stroke } = getComputedStyle(tinted[index])
+    Object.assign(rect.style, { fill, stroke })
+  })
   for (const node of copy.querySelectorAll('[role="button"]')) {
     for (const name of ['role', 'tabindex', 'aria-pressed']) node.removeAttribute(name)
   }
@@ -120,33 +178,65 @@ function openPreview(graphic, opener, onClose) {
 
 export function installGenuiPreview() {
   const styles = installStyles(CSS, 'genui-preview')
+  const controls = new Map()
   let dialog
   const prepare = figure => {
-    if (!figure || figure.querySelector(BUTTON) || !graphicOf(figure)) return
-    const control = button(t('Enlarge graphic'), '⤢', event => {
-      event.stopPropagation()
-      const graphic = graphicOf(figure)
-      if (!dialog && graphic) dialog = openPreview(graphic, control, () => { dialog = undefined })
-    })
-    control.className = BUTTON.slice(1)
-    control.setAttribute('aria-haspopup', 'dialog')
-    figure.classList.add('bt-genui-previewable')
-    figure.append(control)
+    const graphic = figure && graphicOf(figure)
+    if (!graphic) return
+    let entry = controls.get(figure)
+    if (entry?.graphic !== graphic) {
+      entry?.restore?.()
+      const control = entry?.control ?? button(t('Enlarge graphic'), '', event => {
+        event.stopPropagation()
+        const current = graphicOf(figure)
+        if (!dialog && current) dialog = openPreview(current, control, () => { dialog = undefined })
+      })
+      if (!entry) {
+        control.className = BUTTON.slice(1)
+        control.setAttribute('aria-haspopup', 'dialog')
+        control.append(enlargeGlyph())
+      }
+      entry = { control, graphic, strip: entry?.strip, restore: styleBusinessDiagram(figure, graphic) }
+      controls.set(figure, entry)
+      figure.classList.add('bt-genui-previewable')
+    }
+    const download = figure.closest(ARTIFACT)?.querySelector(`:scope > ${EXPORT} > button[aria-haspopup="menu"]`)
+    if (download) {
+      if (entry.control.parentElement !== download.parentElement) download.before(entry.control)
+      entry.strip?.remove()
+      entry.strip = undefined
+    } else if (!entry.control.isConnected) {
+      entry.strip = document.createElement('div')
+      entry.strip.className = 'bt-genui-figure-actions'
+      entry.strip.append(entry.control)
+      figure.append(entry.strip)
+    }
+  }
+  const drop = (figure, entry) => {
+    entry.control.remove()
+    entry.strip?.remove()
+    entry.restore?.()
+    figure.classList.remove('bt-genui-previewable')
+    controls.delete(figure)
   }
   const click = event => {
     if (event.defaultPrevented || !(event.target instanceof Element)
       || event.target.closest('button, a, [role="button"]') || window.getSelection()?.type === 'Range') return
     const graphic = event.target.closest('svg, img')
     const figure = graphic?.closest(FIGURE)
-    if (figure && graphic === graphicOf(figure)) figure.querySelector(BUTTON)?.click()
+    if (figure && graphic === graphicOf(figure)) controls.get(figure)?.control.click()
   }
   const load = event => {
     if (event.target instanceof HTMLImageElement) prepare(event.target.closest(FIGURE))
   }
   const observer = new MutationObserver(records => {
+    if (records.some(record => record.removedNodes.length)) {
+      for (const [figure, entry] of controls) if (!figure.isConnected) drop(figure, entry)
+    }
     for (const { addedNodes } of records) for (const node of addedNodes) {
-      if (!(node instanceof Element) || node.matches(BUTTON) || node.closest('.bt-genui-preview')) continue
+      if (!(node instanceof Element) || node.closest(`${BUTTON}, .bt-genui-preview`)) continue
       prepare(node.closest(FIGURE))
+      if (node.closest(EXPORT)) node.closest(ARTIFACT)?.querySelectorAll(FIGURE).forEach(prepare)
       node.querySelectorAll(FIGURE).forEach(prepare)
     }
   })
@@ -159,8 +249,7 @@ export function installGenuiPreview() {
     document.removeEventListener('click', click)
     document.removeEventListener('load', load, true)
     dialog?.close()
-    document.querySelectorAll(BUTTON).forEach(node => node.remove())
-    document.querySelectorAll('.bt-genui-previewable').forEach(node => node.classList.remove('bt-genui-previewable'))
+    for (const [figure, entry] of controls) drop(figure, entry)
     styles.remove()
   }
 }

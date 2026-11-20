@@ -51,6 +51,7 @@ test('apply registers listeners, tools, and effects in a fixed order', (t) => {
     'prompt chemclaw-identity 640',
     'effect chemclaw-bot: visual delivery policy',
     'prompt chemclaw-visual-delivery 9901',
+    'on llm/stream',
     'on session/event',
     'on session/disposed',
     'on tools/pre-execute',

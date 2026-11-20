@@ -227,6 +227,17 @@ function decide(body) {
   const result = fresh ? undefined : blocks.find(block => block.type === 'tool_result')
   const activityAt = messages.findLastIndex(message => message.role === 'user' && !isResults(message))
   const activity = activityAt >= 0 ? textOf(messages[activityAt].content) : ''
+  if (/^GenUI check streamed SVG$/mu.test(activity)) {
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20"><rect width="40" height="20"/></svg>'
+    return [{ ...text('先显示行情成因。\n\n```js\nconst readableExample = 2\n```\n\n```dsh-ui\n'
+      + JSON.stringify({ type: 'svg', title: '合成成因矢量图', svg }) + '\n```'), slow: true }]
+  }
+  if (/^GenUI check broken SVG$/mu.test(activity)) {
+    return [text('图形失败时保留正文。' + inlineView({ type: 'svg', title: '合成损坏图' }))]
+  }
+  if (/\[genui-fence-repair\]/u.test(activity) && /"合成损坏图"/u.test(activity)) {
+    return [text('图形已改为文字说明。' + inlineView({ type: 'text', text: '合成说明' }))]
+  }
   if (/^GenUI check bundled skill\s*$/mu.test(activity) && tools.has('skill')) {
     if (!result) return [tool('skill', { name: 'genui' })]
     if (!textOf(result.content).includes('# GenUI')) return [text('Bundled GenUI skill could not be loaded.')]

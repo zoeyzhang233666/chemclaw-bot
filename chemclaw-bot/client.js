@@ -740,6 +740,8 @@ var ZH = {
   "Zoom in": "放大",
   "Zoom out": "缩小",
   "Fit graphic": "适应窗口",
+  "Preparing the visual…": "正在生成图形…",
+  "The visual could not be displayed.": "这张图未能显示，可以请我重新生成。",
   Copy: "复制",
   Copied: "已复制",
   Content: "内容",
@@ -11060,6 +11062,176 @@ function assistantTextBlocks(blocks = []) {
   return blocks.flatMap((block, contentBlockIndex) => block.kind === "text" && block.text.trim() ? [{ text: block.text, contentBlockIndex }] : []);
 }
 
+// src/shared/genui-fences.js
+var UI_LANGUAGE = /^dsh-ui(?:[>`"'.,;:)\]】」』]+)?[ \t]*$/iu;
+var OPEN = /^ {0,3}(`{3,}|~{3,})([^\r\n]*)(?:\r?\n|$)/gmu;
+var SVG = /^\s*<svg\b[\s\S]*<\/svg>\s*$/iu;
+function* genuiFences(text) {
+  const openings = new RegExp(OPEN);
+  for (let opening; opening = openings.exec(text); ) {
+    const ticks = opening[1];
+    const closing = new RegExp(`^ {0,3}${ticks[0]}{${ticks.length},}[ \\t]*(?:\\r?$)`, "gmu");
+    const start = openings.lastIndex;
+    closing.lastIndex = start;
+    const match = closing.exec(text);
+    const end = match?.index ?? text.length;
+    if (UI_LANGUAGE.test(opening[2].trimStart())) yield { start: opening.index, body: text.slice(start, end).trimEnd(), end: match ? closing.lastIndex : end, closed: Boolean(match) };
+    openings.lastIndex = match ? closing.lastIndex + 1 : text.length + 1;
+  }
+}
+var isSvg = (code) => typeof code === "string" && code.length <= 12e3 && SVG.test(code);
+function repairGenuiSvg(body) {
+  if (!body.includes('"svg"')) return void 0;
+  let spec;
+  try {
+    spec = JSON.parse(body);
+  } catch {
+    return void 0;
+  }
+  let changed = false;
+  const repair = (node, depth = 0) => {
+    if (node === null || typeof node !== "object" || depth > 12) return;
+    if (node.type === "svg" && isSvg(node.svg) && (node.code === void 0 || isSvg(node.code))) {
+      node.code ??= node.svg;
+      delete node.svg;
+      changed = true;
+    }
+    for (const key of ["items", "children", "tabs"]) {
+      if (Array.isArray(node[key])) for (const child of node[key]) repair(child, depth + 1);
+    }
+  };
+  repair(spec);
+  if (!changed) return void 0;
+  return JSON.stringify(spec.type === "svg" && !Array.isArray(spec.items) ? { items: [spec] } : spec);
+}
+var genuiMarkdown = (body) => "```dsh-ui\n" + body + "\n```";
+function repairGenuiSvgFences(text) {
+  if (!text.includes('"svg"')) return text;
+  let out = "";
+  let offset = 0;
+  for (const fence of genuiFences(text)) {
+    if (!fence.closed) continue;
+    const repaired = repairGenuiSvg(fence.body);
+    if (repaired === void 0) continue;
+    out += text.slice(offset, fence.start) + genuiMarkdown(repaired);
+    offset = fence.end;
+  }
+  return offset === 0 ? text : out + text.slice(offset);
+}
+
+// src/client/genui-presentation.js
+var CODE = "[data-code-block-content]";
+var ASSISTANT = '[data-chat-flow-kind="assistant-step"][data-chat-node-key]';
+var SURFACE = '[data-genui-surface^="chemclaw-bot/"]';
+var OWNED = ":is([data-genui-artifact], [data-genui-panel], .genui-dom-fence, [data-genui-explicit-fence])";
+var CSS2 = `
+.bt-genui-source{border:0!important;background:transparent!important;box-shadow:none!important}
+.bt-genui-source>:not(.bt-genui-status),.genui-dom-fence-diagnostic:has(+ .bt-genui-source),[data-genui-svg] [role=status]+pre{display:none!important}
+.bt-genui-status{color:var(--bt-ink-2);font-size:13px;padding:8px 0}
+.bt-genui-status[data-unavailable]{animation:bt-genui-status-show .16s step-end}
+@keyframes bt-genui-status-show{from{opacity:0}to{opacity:1}}
+`;
+var sources = /* @__PURE__ */ new WeakMap();
+var candidates = /* @__PURE__ */ new WeakMap();
+function setGenuiMarkdownSource(root, text, live) {
+  if (root) sources.set(root, { text, live });
+}
+function fencesOf(value2, text) {
+  const previous = candidates.get(value2);
+  if (previous?.text === text) return previous.fences;
+  const fences = [...genuiFences(text)];
+  candidates.set(value2, { text, fences });
+  return fences;
+}
+function installGenuiPresentation(ctx) {
+  const styles = installStyles(CSS2, "genui-presentation");
+  const marked = /* @__PURE__ */ new Map();
+  const collect = /* @__PURE__ */ new Set();
+  const clear = (block) => {
+    marked.get(block)?.remove();
+    marked.delete(block);
+    block.classList.remove("bt-genui-source");
+  };
+  const viewSnapshot = () => {
+    const sessionId = ctx.sessions.list.getSnapshot().ids.find((id) => (ctx.sessions.retainInfo(id).getSnapshot().retainedBy.mainView ?? 0) > 0);
+    return sessionId === void 0 ? void 0 : ctx.uiConversation.binding(sessionId).target("chat").getSnapshot();
+  };
+  const update = (content, readChat) => {
+    const block = content.parentElement;
+    if (!block?.isConnected || block.closest(OWNED)) return;
+    const body = content.querySelector("pre")?.textContent.trimEnd();
+    const surface = block.closest(SURFACE);
+    const local = surface && sources.get(surface);
+    const row = !surface && block.closest(ASSISTANT);
+    if (!body || !local && (!row || row.dataset.chatGroupPart === "reasoning" || block.closest("[data-tool]"))) {
+      if (marked.has(block)) clear(block);
+      return;
+    }
+    const node = row && readChat()?.nodes.get(row.dataset.chatNodeKey);
+    const protocol = local ? fencesOf(surface, local.text).some((fence) => fence.body === body) : node?.data?.blocks?.some((item) => item.kind === "text" && fencesOf(item, item.text).some((fence) => fence.body === body));
+    if (!protocol) {
+      if (marked.has(block)) clear(block);
+      return;
+    }
+    let status = marked.get(block);
+    if (!status) {
+      status = document.createElement("div");
+      status.className = "bt-genui-status";
+      status.setAttribute("role", "status");
+      marked.set(block, status);
+      block.classList.add("bt-genui-source");
+    }
+    if (status.parentElement !== block) block.append(status);
+    const live = local ? local.live : node.data.status === "running";
+    status.toggleAttribute("data-unavailable", !live);
+    const label = t(live ? "Preparing the visual…" : "The visual could not be displayed.");
+    if (status.textContent !== label) status.textContent = label;
+  };
+  const find = (node) => {
+    const element = node instanceof Element ? node : node.parentElement;
+    if (!element || element.closest(".bt-genui-status")) return;
+    const parent = element.closest(CODE);
+    if (parent) collect.add(parent);
+    else element.querySelectorAll(CODE).forEach((content) => collect.add(content));
+  };
+  const flush = () => {
+    let chat;
+    let read = false;
+    const readChat = () => {
+      if (!read) {
+        read = true;
+        try {
+          chat = viewSnapshot();
+        } catch {
+        }
+      }
+      return chat;
+    };
+    for (const content of collect) update(content, readChat);
+    collect.clear();
+  };
+  const observer = new MutationObserver((records) => {
+    let removed = false;
+    for (const record2 of records) {
+      if (record2.type === "characterData" || record2.type === "attributes" || record2.target.closest?.(CODE)) find(record2.target);
+      else for (const node of record2.addedNodes) find(node);
+      removed ||= record2.removedNodes.length > 0;
+    }
+    if (removed) {
+      for (const block of marked.keys()) if (!block.isConnected) clear(block);
+    }
+    flush();
+  });
+  find(document.body);
+  flush();
+  observer.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["data-streaming", "data-bt-genui-live"] });
+  return () => {
+    observer.disconnect();
+    for (const block of marked.keys()) clear(block);
+    styles.remove();
+  };
+}
+
 // src/client/cells.js
 var import_react24 = require("react");
 var import_react_dom3 = require("react-dom");
@@ -11103,10 +11275,14 @@ function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey
   const { shown, folded, control } = useFold(text, { limit: rich ? FOLD_HUGE : fold, whole, live });
   const linked = useArtifactLinks(shown, { sessionId, botId: selfId, live });
   const key = msgKey ? `${msgKey}:${index}` : void 0;
-  const body = (0, import_react24.createElement)(import_dsh_client_ui_primitives.MarkdownText, { text: linkMentions(linked, roster.bots, selfId), streaming: live, labels: mdLabels3(), variant: "compact", fileMentions: mentions });
+  const markdownText = linkMentions(linked, roster.bots, selfId);
+  const body = (0, import_react24.createElement)(import_dsh_client_ui_primitives.MarkdownText, { text: markdownText, streaming: live, labels: mdLabels3(), variant: "compact", fileMentions: mentions });
   const row = (0, import_react24.useRef)(null);
   const markdown = (0, import_react24.useRef)(null);
   const source = genui?.source ?? "chemclaw-bot/assistant";
+  (0, import_react24.useLayoutEffect)(() => {
+    setGenuiMarkdownSource(markdown.current, markdownText, live);
+  }, [markdownText, live]);
   (0, import_react24.useLayoutEffect)(() => {
     if (live || folded || !genui || !rich || !actions.genuiSurfaces) return void 0;
     return actions.genuiSurfaces.add({
@@ -11135,7 +11311,7 @@ function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey
       (0, import_react24.createElement)(
         "div",
         { className: rich ? "bt-rich-reply" : "bt-bubble", "data-folded": folded || void 0 },
-        (0, import_react24.createElement)("div", { ref: markdown, className: control ? "bt-fold-body" : void 0, "data-genui-surface": source }, body),
+        (0, import_react24.createElement)("div", { ref: markdown, className: control ? "bt-fold-body" : void 0, "data-genui-surface": source, "data-bt-genui-live": live || void 0 }, body),
         control
       ),
       live ? null : (0, import_react24.createElement)(MessageTools, { text: folded ? text : shown, name: roster.byId[selfId]?.name ?? t("Bot"), sessionId, react: key ? (emoji) => actions.toggleReaction(msgKey, index, emoji) : void 0, actions, open: toolsOpen })
@@ -15349,17 +15525,17 @@ function runsOnDay(tasks, day) {
       try {
         const zone = task.timeZone || "UTC";
         const parts = zoneParts(start, zone);
-        const candidates = new Set(next >= start && next < end ? [next] : []);
+        const candidates2 = new Set(next >= start && next < end ? [next] : []);
         for (let delta = -1; delta <= 2; delta++) {
           const date = new Date(Date.UTC(parts.year, parts.month - 1, parts.day + delta));
           const weekday = date.getUTCDay() || 7;
           if (task.kind === "weekly" && !task.weekdays?.includes(weekday)) continue;
           const times = wallTimes(date, task.time, zone);
           const occurrence = times.find((ms) => ms >= next);
-          if (occurrence >= start && occurrence < end) candidates.add(occurrence);
+          if (occurrence >= start && occurrence < end) candidates2.add(occurrence);
         }
-        at = Math.min(...candidates);
-        count = candidates.size;
+        at = Math.min(...candidates2);
+        count = candidates2.size;
       } catch {
       }
     }
@@ -18570,7 +18746,7 @@ function NewGroupForm({ roster, actions, run: run2, onCreated, onCancel }) {
   );
   const matches = (query) => (bot) => `${bot.name} ${bot.role ?? ""}`.toLowerCase().includes(query.trim().toLowerCase());
   const admins = roster.bots.filter(matches(adminQuery));
-  const candidates = roster.bots.filter((bot) => bot.id !== admin).filter(matches(memberQuery));
+  const candidates2 = roster.bots.filter((bot) => bot.id !== admin).filter(matches(memberQuery));
   const search = (label, value2, onChange, disabled) => (0, import_react45.createElement)(
     "label",
     { className: "bt-ng-search" },
@@ -18607,8 +18783,8 @@ function NewGroupForm({ roster, actions, run: run2, onCreated, onCancel }) {
           (0, import_react45.createElement)(
             "div",
             { className: "bt-ng-picks", role: "group", "aria-label": t("Members") },
-            admin === null ? (0, import_react45.createElement)("span", { className: "bt-ng-empty" }, t("Choose an admin first")) : candidates.map((bot) => chip(bot, members.includes(bot.id), () => toggle(bot.id), "checkbox")),
-            admin !== null && candidates.length === 0 ? (0, import_react45.createElement)("span", { className: "bt-ng-empty" }, t("No matching experts.")) : null
+            admin === null ? (0, import_react45.createElement)("span", { className: "bt-ng-empty" }, t("Choose an admin first")) : candidates2.map((bot) => chip(bot, members.includes(bot.id), () => toggle(bot.id), "checkbox")),
+            admin !== null && candidates2.length === 0 ? (0, import_react45.createElement)("span", { className: "bt-ng-empty" }, t("No matching experts.")) : null
           )
         )
       ),
@@ -21088,7 +21264,7 @@ function LocationsSection({ actions, run: run2 }) {
 function MainBotsSection({ roster, actions, run: run2 }) {
   const mains = (roster.mainBotIds ?? []).map((id) => roster.byId[id]).filter(Boolean);
   const [first, ...others] = mains;
-  const candidates = roster.bots.filter((bot) => !isMainOf(roster, bot.id));
+  const candidates2 = roster.bots.filter((bot) => !isMainOf(roster, bot.id));
   return (0, import_react54.createElement)(
     SetSection,
     { title: t("Main Bot") },
@@ -21111,7 +21287,7 @@ function MainBotsSection({ roster, actions, run: run2 }) {
       (0, import_react54.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", onClick: () => run2(actions.setMain(bot.id, true, { primary: true })) }, t("Move to first")),
       (0, import_react54.createElement)("button", { type: "button", className: "bt-soft bt-soft-sm", onClick: () => run2(actions.setMain(bot.id, false)) }, t("Remove Main Bot role"))
     )),
-    candidates.length > 0 ? (0, import_react54.createElement)(
+    candidates2.length > 0 ? (0, import_react54.createElement)(
       SetRow,
       { label: t("Add a Main Bot"), hint: t("Main Bots can create and change Bots, and run every group chat.") },
       (0, import_react54.createElement)("select", {
@@ -21121,7 +21297,7 @@ function MainBotsSection({ roster, actions, run: run2 }) {
         onChange: (event) => {
           if (event.target.value) void run2(actions.setMain(event.target.value, true));
         }
-      }, (0, import_react54.createElement)("option", { value: "" }, t("Choose a Bot…")), candidates.map((bot) => (0, import_react54.createElement)("option", { key: bot.id, value: bot.id }, bot.name)))
+      }, (0, import_react54.createElement)("option", { value: "" }, t("Choose a Bot…")), candidates2.map((bot) => (0, import_react54.createElement)("option", { key: bot.id, value: bot.id }, bot.name)))
     ) : null
   );
 }
@@ -22652,7 +22828,7 @@ function BrowserView({ bot, tabId, leaving, landed, actions, useBrowserPages, ho
   const imports = actions.browserImport;
   const [flow, setFlow] = (0, import_react59.useState)(null);
   const flowRef = (0, import_react59.useRef)(null);
-  const [sources, setSources] = (0, import_react59.useState)(null);
+  const [sources2, setSources] = (0, import_react59.useState)(null);
   const [busy, setBusy] = (0, import_react59.useState)(false);
   const setFlowTracked = (next) => {
     flowRef.current = typeof next === "function" ? next(flowRef.current) : next;
@@ -22684,7 +22860,7 @@ function BrowserView({ bot, tabId, leaving, landed, actions, useBrowserPages, ho
   }, [tabId]);
   const openImport = () => {
     setFlowTracked("menu");
-    if (sources === null) void imports.sources().then(setSources, () => setSources([]));
+    if (sources2 === null) void imports.sources().then(setSources, () => setSources([]));
   };
   const showPicked = (r) => {
     if (r?.id) setFlowTracked({ stage: "preview", id: r.id, preview: r.preview, restarted: r.restarted === true });
@@ -22839,7 +23015,7 @@ function BrowserView({ bot, tabId, leaving, landed, actions, useBrowserPages, ho
     (0, import_react59.createElement)(
       "div",
       { ref: frame, className: "bt-browser-frame", "data-guest": showGuest || void 0 },
-      flow === "menu" ? (0, import_react59.createElement)(ImportMenu, { sources, busy, onFile: pickFile, onSource: pickSource, onClose: () => setFlowTracked(null) }) : null,
+      flow === "menu" ? (0, import_react59.createElement)(ImportMenu, { sources: sources2, busy, onFile: pickFile, onSource: pickSource, onClose: () => setFlowTracked(null) }) : null,
       typeof flow === "object" && flow !== null ? (0, import_react59.createElement)(ImportCard, { flow, page, busy, onApply: applyImport, onCancel: cancelImport, onCloseAndImport: closeAndImport, onDone: () => setFlowTracked(null), onReload: () => actions.browserCommand(tabId, "reload") }) : null,
       flow === null && page.error ? (0, import_react59.createElement)(
         "div",
@@ -22866,7 +23042,7 @@ function importError(error) {
   if (error === "app-bound") return t("This browser encrypts its cookies so only it can read them. Export them to a file first, then import that file.");
   return String(error);
 }
-function ImportMenu({ sources, busy, onFile, onSource, onClose }) {
+function ImportMenu({ sources: sources2, busy, onFile, onSource, onClose }) {
   (0, import_react59.useEffect)(() => {
     const close = (event) => {
       if (event.key === "Escape") onClose();
@@ -22885,7 +23061,7 @@ function ImportMenu({ sources, busy, onFile, onSource, onClose }) {
       (0, import_react59.createElement)("span", { className: "bt-import-item-name" }, t("From a file…")),
       (0, import_react59.createElement)("span", { className: "bt-import-item-sub" }, t("cookies.txt, JSON, storageState"))
     ),
-    sources === null ? (0, import_react59.createElement)("div", { className: "bt-import-menu-note" }, t("Loading…")) : sources.length === 0 ? (0, import_react59.createElement)("div", { className: "bt-import-menu-note" }, t("No browsers found")) : sources.map((source) => (0, import_react59.createElement)(
+    sources2 === null ? (0, import_react59.createElement)("div", { className: "bt-import-menu-note" }, t("Loading…")) : sources2.length === 0 ? (0, import_react59.createElement)("div", { className: "bt-import-menu-note" }, t("No browsers found")) : sources2.map((source) => (0, import_react59.createElement)(
       "button",
       {
         key: source.id,
@@ -25088,14 +25264,20 @@ function createSwitchWindow(settle) {
 
 // src/client/genui-preview.js
 var FIGURE = "[data-genui-diagram], [data-genui-svg]";
+var ARTIFACT = "[data-genui-artifact]";
+var EXPORT = "[data-genui-export]";
 var BUTTON = ".bt-genui-enlarge";
 var ZOOM_LEVELS = [1, 1.5, 2, 3, 4];
-var CSS2 = `
-.bt-genui-previewable{position:relative}
+var CSS3 = `
 .bt-genui-previewable>img,.bt-genui-previewable>svg{cursor:zoom-in}
-.bt-genui-enlarge,.bt-genui-preview button{display:inline-grid;place-items:center;min-width:34px;height:34px;padding:0 8px;border:1px solid var(--bt-line-2);border-radius:8px;background:var(--bt-card);color:var(--bt-ink);font:inherit;cursor:pointer}
-.bt-genui-enlarge{position:absolute;right:8px;top:8px;z-index:1;box-shadow:0 1px 4px var(--bt-line)}
-.bt-genui-enlarge:hover,.bt-genui-preview button:hover{background:var(--bt-hover)}
+.bt-genui-enlarge{box-sizing:border-box;display:inline-grid;place-items:center;width:26px;height:26px;padding:0;border:0;border-radius:6px;background:transparent;color:var(--bt-ink-3);cursor:pointer}
+.bt-genui-enlarge:is(:hover,:focus-visible){background:var(--bt-hover);color:var(--bt-ink)}
+.bt-genui-figure-actions{display:flex;justify-content:flex-end;margin:8px 0 6px}
+.bt-business-diagram{--dsw-alias-label-tertiary:var(--bt-ink-2)}
+.bt-business-diagram [data-bt-diagram-node]{fill:color-mix(in srgb,var(--bt-ink-blue) 8%,var(--bt-main))}
+.bt-business-diagram [data-bt-diagram-node][stroke-width="1"]{stroke:color-mix(in srgb,var(--bt-ink-blue) 60%,var(--bt-ink))}
+.bt-genui-preview button{display:inline-grid;place-items:center;min-width:34px;height:34px;padding:0 8px;border:1px solid var(--bt-line-2);border-radius:8px;background:var(--bt-card);color:var(--bt-ink);font:inherit;cursor:pointer}
+.bt-genui-preview button:hover{background:var(--bt-hover)}
 .bt-genui-preview button:disabled{opacity:.4;cursor:default}
 .bt-genui-preview{box-sizing:border-box;width:min(1400px,calc(100vw - 24px));height:calc(100dvh - 24px);max-width:none;max-height:none;padding:0;overflow:hidden;border:1px solid var(--bt-line-2);border-radius:16px;background:var(--bt-main);color:var(--bt-ink)}
 .bt-genui-preview[open]{display:grid;grid-template-rows:auto minmax(0,1fr)}
@@ -25120,6 +25302,47 @@ function button(label, glyph, action) {
   node.setAttribute("aria-label", label);
   node.addEventListener("click", action);
   return node;
+}
+function enlargeGlyph() {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("width", "14");
+  svg.setAttribute("height", "14");
+  svg.setAttribute("viewBox", "0 0 16 16");
+  svg.setAttribute("aria-hidden", "true");
+  const path = document.createElementNS(svg.namespaceURI, "path");
+  path.setAttribute("d", "M9.5 3H13v3.5M13 3 9.3 6.7M6.5 13H3V9.5M3 13l3.7-3.7");
+  path.setAttribute("fill", "none");
+  path.setAttribute("stroke", "currentColor");
+  path.setAttribute("stroke-width", "1.3");
+  path.setAttribute("stroke-linecap", "round");
+  path.setAttribute("stroke-linejoin", "round");
+  svg.append(path);
+  return svg;
+}
+var SOFTWARE = /软件架构|系统架构|后端架构|前后端|微服务|数据库|缓存层|软件系统|\b(?:software architecture|system architecture|it architecture|microservices?|database|api gateway|frontend|backend|reverse proxy)\b/iu;
+function styleBusinessDiagram(figure, graphic) {
+  if (graphic.localName !== "svg" || figure.classList.contains("bt-business-diagram")) return;
+  const nodes = [...graphic.querySelectorAll('g[role="button"]')];
+  const legend = graphic.lastElementChild;
+  if (!legend?.matches("g[transform]:has(> g > line + text):has(> g > g > rect)") || !nodes.length || SOFTWARE.test(graphic.querySelector("title")?.textContent ?? "") || nodes.filter((node) => SOFTWARE.test(node.getAttribute("aria-label") ?? "")).length >= 2) return;
+  const original = graphic.getAttribute("viewBox");
+  const { x, y, width, height } = graphic.viewBox.baseVal;
+  const legendY = legend.transform.baseVal.getItem(0)?.matrix.f;
+  if (legendY > y && legendY < y + height) graphic.setAttribute("viewBox", `${x} ${y} ${width} ${legendY - y}`);
+  legend.setAttribute("display", "none");
+  figure.classList.add("bt-business-diagram");
+  for (const node of nodes) {
+    const [ground, face] = node.firstElementChild?.children ?? [];
+    if (ground?.localName === "rect" && face?.localName === "rect" && face.getAttribute("fill") === ground.getAttribute("fill")) {
+      face.setAttribute("data-bt-diagram-node", "");
+    }
+  }
+  return () => {
+    graphic.setAttribute("viewBox", original);
+    legend.removeAttribute("display");
+    figure.classList.remove("bt-business-diagram");
+    graphic.querySelectorAll("[data-bt-diagram-node]").forEach((rect) => rect.removeAttribute("data-bt-diagram-node"));
+  };
 }
 function openPreview(graphic, opener, onClose) {
   const isImage = graphic instanceof HTMLImageElement;
@@ -25148,6 +25371,11 @@ function openPreview(graphic, opener, onClose) {
     if (name.startsWith("--dsl-g-") || name.startsWith("--dsw-")) canvas.style.setProperty(name, style.getPropertyValue(name));
   }
   const copy2 = graphic.cloneNode(!isImage);
+  const tinted = [...graphic.querySelectorAll("[data-bt-diagram-node]")];
+  copy2.querySelectorAll("[data-bt-diagram-node]").forEach((rect, index) => {
+    const { fill: fill2, stroke } = getComputedStyle(tinted[index]);
+    Object.assign(rect.style, { fill: fill2, stroke });
+  });
   for (const node of copy2.querySelectorAll('[role="button"]')) {
     for (const name of ["role", "tabindex", "aria-pressed"]) node.removeAttribute(name);
   }
@@ -25198,35 +25426,67 @@ function openPreview(graphic, opener, onClose) {
   return dialog;
 }
 function installGenuiPreview() {
-  const styles = installStyles(CSS2, "genui-preview");
+  const styles = installStyles(CSS3, "genui-preview");
+  const controls = /* @__PURE__ */ new Map();
   let dialog;
   const prepare = (figure) => {
-    if (!figure || figure.querySelector(BUTTON) || !graphicOf(figure)) return;
-    const control = button(t("Enlarge graphic"), "⤢", (event) => {
-      event.stopPropagation();
-      const graphic = graphicOf(figure);
-      if (!dialog && graphic) dialog = openPreview(graphic, control, () => {
-        dialog = void 0;
+    const graphic = figure && graphicOf(figure);
+    if (!graphic) return;
+    let entry = controls.get(figure);
+    if (entry?.graphic !== graphic) {
+      entry?.restore?.();
+      const control = entry?.control ?? button(t("Enlarge graphic"), "", (event) => {
+        event.stopPropagation();
+        const current = graphicOf(figure);
+        if (!dialog && current) dialog = openPreview(current, control, () => {
+          dialog = void 0;
+        });
       });
-    });
-    control.className = BUTTON.slice(1);
-    control.setAttribute("aria-haspopup", "dialog");
-    figure.classList.add("bt-genui-previewable");
-    figure.append(control);
+      if (!entry) {
+        control.className = BUTTON.slice(1);
+        control.setAttribute("aria-haspopup", "dialog");
+        control.append(enlargeGlyph());
+      }
+      entry = { control, graphic, strip: entry?.strip, restore: styleBusinessDiagram(figure, graphic) };
+      controls.set(figure, entry);
+      figure.classList.add("bt-genui-previewable");
+    }
+    const download2 = figure.closest(ARTIFACT)?.querySelector(`:scope > ${EXPORT} > button[aria-haspopup="menu"]`);
+    if (download2) {
+      if (entry.control.parentElement !== download2.parentElement) download2.before(entry.control);
+      entry.strip?.remove();
+      entry.strip = void 0;
+    } else if (!entry.control.isConnected) {
+      entry.strip = document.createElement("div");
+      entry.strip.className = "bt-genui-figure-actions";
+      entry.strip.append(entry.control);
+      figure.append(entry.strip);
+    }
+  };
+  const drop = (figure, entry) => {
+    entry.control.remove();
+    entry.strip?.remove();
+    entry.restore?.();
+    figure.classList.remove("bt-genui-previewable");
+    controls.delete(figure);
   };
   const click = (event) => {
     if (event.defaultPrevented || !(event.target instanceof Element) || event.target.closest('button, a, [role="button"]') || window.getSelection()?.type === "Range") return;
     const graphic = event.target.closest("svg, img");
     const figure = graphic?.closest(FIGURE);
-    if (figure && graphic === graphicOf(figure)) figure.querySelector(BUTTON)?.click();
+    if (figure && graphic === graphicOf(figure)) controls.get(figure)?.control.click();
   };
   const load = (event) => {
     if (event.target instanceof HTMLImageElement) prepare(event.target.closest(FIGURE));
   };
   const observer = new MutationObserver((records) => {
+    if (records.some((record2) => record2.removedNodes.length)) {
+      for (const [figure, entry] of controls) if (!figure.isConnected) drop(figure, entry);
+    }
     for (const { addedNodes } of records) for (const node of addedNodes) {
-      if (!(node instanceof Element) || node.matches(BUTTON) || node.closest(".bt-genui-preview")) continue;
+      if (!(node instanceof Element) || node.closest(`${BUTTON}, .bt-genui-preview`)) continue;
       prepare(node.closest(FIGURE));
+      if (node.closest(EXPORT)) node.closest(ARTIFACT)?.querySelectorAll(FIGURE).forEach(prepare);
       node.querySelectorAll(FIGURE).forEach(prepare);
     }
   });
@@ -25239,8 +25499,7 @@ function installGenuiPreview() {
     document.removeEventListener("click", click);
     document.removeEventListener("load", load, true);
     dialog?.close();
-    document.querySelectorAll(BUTTON).forEach((node) => node.remove());
-    document.querySelectorAll(".bt-genui-previewable").forEach((node) => node.classList.remove("bt-genui-previewable"));
+    for (const [figure, entry] of controls) drop(figure, entry);
     styles.remove();
   };
 }
@@ -25876,6 +26135,7 @@ function apply(ctx) {
     };
   }, "chemclaw-bot: GenUI surfaces");
   ctx.effect(installGenuiPreview, "chemclaw-bot: GenUI graphic preview");
+  ctx.effect(() => installGenuiPresentation(ctx), "chemclaw-bot: GenUI fence presentation");
   if (browsers) {
     Object.assign(actions, {
       // The globe button: the Bot's active tab in the browser view, or a new tab.

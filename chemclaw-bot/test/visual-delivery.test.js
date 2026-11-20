@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds, marketHistoryRequest, marketPriceVisual, redundantMarketSourceQuestion, multiAssetMarketRequest, genuiChartPayloadsUsable, nativeChartPayloadsUsable, mixedMarketVisualStatus, stripUnrenderedMixedViewText } from '../src/host/visual-delivery.js'
 import { fakeContext } from './fake-ctx.js'
+import { genuiFences, genuiMarkdown, repairGenuiSvgFences } from '../src/shared/genui-fences.js'
 
 const content = text => [{ type: 'text', text }]
 const fence = (panel = false) => '```dsh-ui\n' + JSON.stringify({ panel, items: [{ type: 'text', text: 'Result' }] }) + '\n```'
@@ -55,6 +56,39 @@ test('first-pass GenUI or a successfully delivered show_view adds no correction'
 
 const svgCode = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0 0 L2 2"/></svg>'
 const diagramFence = '```dsh-ui\n' + JSON.stringify({ items: [{ type: 'diagram', kind: 'flowchart', nodes: [{ id: 'a', label: '生产' }, { id: 'b', label: '销售' }], edges: [{ from: 'a', to: 'b' }] }] }) + '\n```'
+
+test('a generated SVG alias is normalized while ordinary Markdown examples are preserved', async () => {
+  const alias = { type: 'svg', title: '合成因果图', svg: svgCode }
+  const raw = genuiMarkdown(JSON.stringify(alias))
+  const ordinary = '````markdown\n' + raw + '\n````'
+  const answer = ordinary + '\n\n正文\n\n' + raw
+  const expected = ordinary + '\n\n正文\n\n' + genuiMarkdown(JSON.stringify({ items: [{ type: 'svg', title: '合成因果图', code: svgCode }] }))
+  assert.equal(repairGenuiSvgFences(answer), expected)
+  assert.equal([...genuiFences(ordinary)].length, 0)
+  const partial = '\n~~~dsh-ui\n{"items":'
+  assert.deepEqual([...genuiFences(partial)].map(fence => [fence.body, fence.closed]), [['{"items":', false]])
+  assert.equal(repairGenuiSvgFences(partial), partial)
+  const wrong = genuiMarkdown(JSON.stringify({ items: [{ type: 'svg', svg: '<svg>' }] }))
+  assert.equal(repairGenuiSvgFences(wrong), wrong)
+  const f = setup()
+  const hook = f.ctx.listeners.get('llm/stream')[0]
+  const model = async function* () {
+    yield { type: 'text-delta', index: 0, text: answer }
+    yield { type: 'block-end', index: 0, block: { type: 'text', text: answer } }
+  }
+  const chunks = await Array.fromAsync(hook({ sessionId: 's' }, model))
+  assert.equal(chunks[0].text, answer)
+  assert.equal(chunks[1].block.text, expected)
+  assert.equal((await Array.fromAsync(hook({ sessionId: 's', purpose: 'summary' }, model))).at(-1).block.text, answer)
+})
+
+test('a causal industry question accepts either GenUI vector format without a duplicate', () => {
+  for (const graphic of [diagramFence, genuiMarkdown(JSON.stringify({ items: [{ type: 'svg', code: svgCode }] }))]) {
+    const f = setup()
+    f.start(); f.user('原油行情波动是什么原因，梳理传导路径'); f.answer('以下是原因。\n\n' + graphic); f.stop()
+    assert.deepEqual(f.notices, [])
+  }
+})
 
 test('capacity figures trigger one native metric repair and keep verified comparisons in the same stack', () => {
   const figures = '甲地产能 120 万吨/年，乙地产能 90 万吨/年。'

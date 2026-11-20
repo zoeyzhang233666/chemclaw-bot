@@ -25,6 +25,7 @@ import { partIndexOf, withBtwRows } from './btw-model.js'
 import { layoutOf, thinkingShown } from './themes.js'
 import { toolActivityDetail, liveActivitySummary } from '../shared/tool-activity.js'
 import { assistantTextBlocks, hasGenuiFence } from './genui-surfaces.js'
+import { setGenuiMarkdownSource } from './genui-presentation.js'
 
 export { clockLabel }
 
@@ -66,10 +67,12 @@ function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey
   const { shown, folded, control } = useFold(text, { limit: rich ? FOLD_HUGE : fold, whole, live })
   const linked = useArtifactLinks(shown, { sessionId, botId: selfId, live })
   const key = msgKey ? `${msgKey}:${index}` : undefined
-  const body = h(MarkdownText, { text: linkMentions(linked, roster.bots, selfId), streaming: live, labels: mdLabels(), variant: 'compact', fileMentions: mentions })
+  const markdownText = linkMentions(linked, roster.bots, selfId)
+  const body = h(MarkdownText, { text: markdownText, streaming: live, labels: mdLabels(), variant: 'compact', fileMentions: mentions })
   const row = useRef(null)
   const markdown = useRef(null)
   const source = genui?.source ?? 'chemclaw-bot/assistant'
+  useLayoutEffect(() => { setGenuiMarkdownSource(markdown.current, markdownText, live) }, [markdownText, live])
   useLayoutEffect(() => {
     if (live || folded || !genui || !rich || !actions.genuiSurfaces) return undefined
     return actions.genuiSurfaces.add({
@@ -90,7 +93,7 @@ function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey
     h('div', { className: 'bt-msg-line' },
       lead,
       h('div', { className: rich ? 'bt-rich-reply' : 'bt-bubble', 'data-folded': folded || undefined },
-        h('div', { ref: markdown, className: control ? 'bt-fold-body' : undefined, 'data-genui-surface': source }, body),
+        h('div', { ref: markdown, className: control ? 'bt-fold-body' : undefined, 'data-genui-surface': source, 'data-bt-genui-live': live || undefined }, body),
         control),
       live ? null : h(MessageTools, { text: folded ? text : shown, name: roster.byId[selfId]?.name ?? t('Bot'), sessionId, react: key ? emoji => actions.toggleReaction(msgKey, index, emoji) : undefined, actions, open: toolsOpen })),
     picked.length ? h('div', { className: 'bt-reacts' }, picked.map(emoji => h('button', {
