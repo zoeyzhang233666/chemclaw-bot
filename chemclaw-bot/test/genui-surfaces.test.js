@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { readFileSync } from 'node:fs'
 import { createGenuiSurfaces, assistantTextBlocks } from '../src/client/genui-surfaces.js'
-import { VIEW_POLICY } from '../src/host/view-policy.js'
+import { GENUI_GRAPH_POLICY, VIEW_POLICY } from '../src/host/view-policy.js'
 
 const root = source => ({ isConnected: true, getAttribute: () => source })
 const surface = (threadId, sendPrompt = async () => {}) => ({
@@ -72,8 +72,8 @@ test('original text block indices survive empty, image and reasoning blocks', ()
 
 test('current policy and delivery skill teach automatic GenUI selection and protocol separation', () => {
   const skill = readFileSync(new URL('../skills/builtin/delivery/SKILL.md', import.meta.url), 'utf8')
-  for (const text of [skill, VIEW_POLICY]) {
-    for (const component of ['timeline', 'flow', 'diagram', 'plot', 'scene3d']) assert.ok(text.includes(component), component)
+  for (const text of [skill, `${VIEW_POLICY}\n${GENUI_GRAPH_POLICY}`]) {
+    for (const component of ['timeline', 'svg', 'diagram', 'plot', 'scene3d']) assert.ok(text.includes(component), component)
     assert.match(text, /Use Mermaid only/)
     assert.ok(text.includes('panel:true'))
     assert.match(text, /same (?:data|relationship)/)

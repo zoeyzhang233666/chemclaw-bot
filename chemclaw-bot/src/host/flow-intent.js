@@ -5,6 +5,8 @@ const DATA_LOOKUP = /(?:价格|行情|产量|销量|库存|持仓量|产能|市�
 const ANSWER_STRUCTURE = /^\s*(?:#{1,5}[ \t]+|\d{1,2}[.、)）][ \t]*|[-*][ \t]+)/gmu
 const FENCE = /^ {0,3}\x60{3}[^\n]*\n[\s\S]*?^ {0,3}\x60{3}[ \t]*\r?$/gmu
 
+export const needsSvgIllustration = question => /剖面(?:图|结构|示意)|截面(?:结构|示意)|空间(?:位置|结构|排布)|形态(?:对比|示意)|零件(?:位置|分布)|矢量(?:图|插图)|\b(?:cross[- ]section|cutaway|vector illustration|spatial arrangement)\b/iu.test(question)
+
 export function needsFlowDiagram(question, answer = '') {
   if (GREETING.test(question)) return false
   if (RELATIONSHIP_QUESTION.test(question)) return true

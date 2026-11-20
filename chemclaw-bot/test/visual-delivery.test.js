@@ -53,16 +53,19 @@ test('first-pass GenUI or a successfully delivered show_view adds no correction'
   }
 })
 
-test('an explicitly requested SVG flow receives one native correction when missing', () => {
-  assert.deepEqual(requestedChartKinds('请生成一张 SVG 流程图'), ['flow'])
+const svgCode = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0 0 L2 2"/></svg>'
+const diagramFence = '```dsh-ui\n' + JSON.stringify({ items: [{ type: 'diagram', kind: 'flowchart', nodes: [{ id: 'a', label: '生产' }, { id: 'b', label: '销售' }], edges: [{ from: 'a', to: 'b' }] }] }) + '\n```'
+
+test('explicit SVG requests use the SVG component and automatic logic accepts a finished diagram', () => {
+  assert.deepEqual(requestedChartKinds('请生成一张 SVG 流程图'), ['svg'])
+  assert.deepEqual(requestedChartKinds('请用 GenUI diagram 画流程图'), ['diagram'])
   assert.deepEqual(requestedChartKinds('请生成 Mermaid 流程图'), ['mermaid'])
   const f = setup({ native: true })
   f.start(); f.user('请生成一张 SVG 流程图'); f.answer('这里是工作流程。'); f.stop(); f.stop()
   assert.equal(f.notices.length, 1)
-  assert.match(f.notices[0].content[0].text, /show_view type=flow/)
+  assert.match(f.notices[0].content[0].text, /dsh-ui type=svg/)
   const ready = setup({ native: true })
-  ready.start(); ready.user('请生成流程图'); ready.answer('这里是工作流程。')
-  ready.rt.noteVisualDelivery('s', { type: 'flow' })
+  ready.start(); ready.user('请生成流程图'); ready.answer('这里是工作流程。\n\n' + diagramFence)
   ready.stop()
   assert.equal(ready.notices.length, 0)
 })
@@ -78,21 +81,32 @@ test('the automatic SVG check covers real-world logic questions even when some o
     const f = setup({ native })
     f.start(); f.user(question); f.answer(answer); f.stop(); f.stop()
     assert.equal(f.notices.length, 1)
-    assert.match(f.notices[0].content[0].text, /show_view type=flow/)
-    assert.match(f.notices[0].content[0].text, /Do not use Mermaid/)
+    assert.match(f.notices[0].content[0].text, /dsh-ui type=diagram/)
   }
   for (const question of ['你好！', '全球低硫燃料油产量分布', '请生成 Mermaid 流程图', '为什么这样分布？只用文字']) {
     const f = setup({ native: true })
     f.start(); f.user(question); f.answer(`影响路径：A → B → C\n\n${question.includes('Mermaid') ? mermaid : fence()}`); f.stop()
     assert.deepEqual(f.notices, [])
   }
-  const fallback = setup({ native: true }); fallback.ctx.tools.get = () => undefined
+  const fallback = setup({ native: true }); fallback.ctx.tools.get = name => name === 'show_view' ? {} : undefined
   fallback.start(); fallback.user('为什么有这样的分布'); fallback.answer(fence()); fallback.stop()
-  assert.match(fallback.notices[0].content[0].text, /inline dsh-ui SVG component/)
-  const delivered = setup({ native: true }); delivered.ctx.tools.get = () => undefined
-  delivered.start(); delivered.user('为什么有这样的分布')
-  delivered.answer('```svg\n<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L2 2"/></svg>\n```'); delivered.stop()
+  assert.match(fallback.notices[0].content[0].text, /show_view type=flow/)
+  const delivered = setup({ native: true })
+  delivered.start(); delivered.user('请画 SVG 图')
+  delivered.answer('```svg\n' + svgCode + '\n```'); delivered.stop()
   assert.deepEqual(delivered.notices, [])
+})
+
+test('an ordinary cross-section question automatically chooses the isolated GenUI SVG image', () => {
+  const f = setup()
+  f.start(); f.user('解释合成设备剖面结构'); f.answer(diagramFence); f.stop(); f.stop()
+  assert.equal(f.notices.length, 1)
+  assert.match(f.notices[0].content[0].text, /dsh-ui type=svg/)
+  assert.doesNotMatch(f.notices[0].content[0].text, /explicitly requested svg/)
+  const ready = setup()
+  ready.start(); ready.user('解释合成设备剖面结构')
+  ready.answer('```dsh-ui\n' + JSON.stringify({ items: [{ type: 'svg', code: svgCode }] }) + '\n```'); ready.stop()
+  assert.deepEqual(ready.notices, [])
 })
 
 test('Mermaid validation redirects an ordinary human diagram before the fence is published', async () => {
@@ -103,7 +117,7 @@ test('Mermaid validation redirects an ordinary human diagram before the fence is
   f.start(); f.user('我想知道产业链结构')
   const redirect = await policy(exec, next)
   assert.equal(redirect.kind, 'deny')
-  assert.match(redirect.reason, /show_view type=flow/)
+  assert.match(redirect.reason, /dsh-ui type=diagram/)
   assert.deepEqual(await policy({ ...exec, arguments: { spec: { items: [{ type: 'text', text: 'Mermaid' }] } } }, next), { kind: 'allow' })
   f.start(2); f.user('请生成 Mermaid 流程图')
   assert.deepEqual(await policy(exec, next), { kind: 'allow' })
@@ -174,7 +188,7 @@ test('direct user group replies get the same global check', () => {
   f.emit('user/message', { source: { kind: 'bot', role: 'room' }, content: content('This round so far (oldest first):\nUser: 我想知道产业链结构\n\nPlease reply.') })
   f.answer(fence()); f.stop(2)
   assert.equal(f.notices.length, 2)
-  assert.match(f.notices[1].content[0].text, /show_view type=flow/)
+  assert.match(f.notices[1].content[0].text, /dsh-ui type=diagram/)
 })
 
 test('hot reload restores current-turn preferences, delivery and correction budget before the first live event', () => {

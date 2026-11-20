@@ -11096,7 +11096,7 @@ function Bubbles({ texts: texts2, genui, roster, selfId, actions, streaming, ses
 }
 function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
   const rich = hasGenuiFence(text);
-  const { shown, folded, control } = useFold(text, { limit: fold, whole, live });
+  const { shown, folded, control } = useFold(text, { limit: rich ? FOLD_HUGE : fold, whole, live });
   const linked = useArtifactLinks(shown, { sessionId, botId: selfId, live });
   const key = msgKey ? `${msgKey}:${index}` : void 0;
   const body = (0, import_react24.createElement)(import_dsh_client_ui_primitives.MarkdownText, { text: linkMentions(linked, roster.bots, selfId), streaming: live, labels: mdLabels3(), variant: "compact", fileMentions: mentions });
@@ -25098,15 +25098,34 @@ function collectViews(block, cards) {
       cards.set(block.callId, shown ? displayView(args.text("title"), args.value("view")) : null);
     } else if (name === "group_relay" && settled) {
       for (const [index, reply] of parseReplies(contentText(block.content)).replies.entries()) {
-        if (reply.kind !== "view") continue;
-        const view = displayView(reply.title, reply.view);
-        if (view) cards.set(`${block.callId}:${index}`, view);
+        const key = `${block.callId}:${index}`;
+        if (reply.kind === "view") {
+          const view = displayView(reply.title, reply.view);
+          if (view) cards.set(key, view);
+        } else if (reply.kind === void 0 && reply.botId && typeof reply.text === "string" && hasGenuiFence(reply.text)) {
+          cards.set(key, { reply, source: `chemclaw-bot/group/${block.callId}`, eventSeq: block.seq, contentBlockIndex: index });
+        }
       }
     }
   }
   for (const child of block.subCalls ?? []) collectViews(child, cards);
 }
-function ClassicNativeViews({ sessionId, turn, useClassicViewCalls, useRoster, useSurface }) {
+function GroupGenuiReplay({ item, sessionId, useRoster, actions }) {
+  const roster = useRoster((state) => state);
+  const { reply, source, eventSeq, contentBlockIndex } = item;
+  const bot = roster.byId[reply.botId] ?? { id: reply.botId, name: reply.name, color: reply.color ?? "gray" };
+  return (0, import_react63.createElement)(GroupMessage, {
+    bot,
+    roster,
+    actions,
+    room: roster.roomsById[sessionId],
+    text: reply.text,
+    time: reply.time,
+    duration: reply.duration,
+    genui: [{ source, threadId: sessionId, eventSeq, contentBlockIndex }]
+  });
+}
+function ClassicNativeViews({ sessionId, turn, useClassicViewCalls, useRoster, useSurface, actions }) {
   const tools = useClassicViewCalls(String(turn.turn));
   const expertSurface = useSurface((state) => groupsFor(state).conversation);
   const replayAllowed = useRoster((state) => state.ready && !isHiddenTurn(state, sessionId, turn.turn));
@@ -25115,7 +25134,7 @@ function ClassicNativeViews({ sessionId, turn, useClassicViewCalls, useRoster, u
   const cards = /* @__PURE__ */ new Map();
   for (const { root } of tools) collectViews(root, cards);
   const views = [...cards].filter(([, view]) => view !== null);
-  if (views.length > 0) return views.map(([id, view]) => (0, import_react63.createElement)("div", { key: id, className: "bt-q-inline", "data-classic-native-view": "" }, (0, import_react63.createElement)(DeliveredView, view)));
+  if (views.length > 0) return views.map(([id, view]) => view.reply ? (0, import_react63.createElement)(GroupGenuiReplay, { key: id, item: view, sessionId, useRoster, actions }) : (0, import_react63.createElement)("div", { key: id, className: "bt-q-inline", "data-classic-native-view": "" }, (0, import_react63.createElement)(DeliveredView, view)));
   return cards.size > 0 && !teamOwned ? (0, import_react63.createElement)("p", { role: "status", className: "bt-view-muted" }, t("The native card could not be displayed.")) : null;
 }
 
@@ -25999,7 +26018,7 @@ function apply(ctx) {
     order: 10,
     inject: (sessionId) => {
       const chat = ctx.uiConversation.binding(sessionId).target("chat");
-      return { hooks: { roster, surface }, keyedHooks: {
+      return { actions, hooks: { roster, surface }, keyedHooks: {
         classicViewCalls: (turn) => chat.getSnapshot().nodes.turnDataSource(Number(turn), "tool-call")
       } };
     }

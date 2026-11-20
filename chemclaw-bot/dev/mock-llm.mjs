@@ -95,21 +95,27 @@ const flowFixture = {
   ],
   edges: [{ from: 'feed', to: 'plant' }, { from: 'plant', to: 'sales' }, { from: 'plant', to: 'stock', uncertain: true }, { from: 'sales', to: 'feed', label: '订单反馈', feedback: true }],
 }
-const wideFlowFixture = {
-  ...flowFixture,
-  nodes: [...flowFixture.nodes,
-    { id: 'ship', label: '运输与交付', detail: '核对仓储、物流、到货和签收条件' },
-    { id: 'quality', label: '质量复核', detail: '确认规格与批次记录是否一致' },
-    { id: 'recycle', label: '回收与再利用', detail: '确认回收责任与返工安排', tone: 'good' },
+const diagramFixture = title => ({ type: 'diagram', kind: 'architecture', title,
+  nodes: [
+    { id: 'feed', label: '上游原料', sub: '供应与成本', x: 24, y: 112, w: 140, h: 52 },
+    { id: 'plant', label: '生产与开工', sub: '核对产能与开工率', type: 'focal', x: 228, y: 112, w: 148, h: 52 },
+    { id: 'sales', label: '下游销售', sub: '确认订单', x: 452, y: 52, w: 140, h: 52 },
+    { id: 'stock', label: '库存变化', sub: '库存环节待核验', x: 452, y: 172, w: 140, h: 52 },
   ],
-  edges: [...flowFixture.edges,
-    { from: 'plant', to: 'ship', label: '发运' },
-    { from: 'plant', to: 'quality', label: '来料与产成品质检', uncertain: true },
-    { from: 'plant', to: 'recycle' },
-    { from: 'feed', to: 'quality', label: '原料批次直接进入质量核验' },
-    { from: 'recycle', to: 'plant', label: '根据回收和返工情况更新生产与进度安排', feedback: true },
-  ],
+  edges: [{ from: 'feed', to: 'plant', kind: 'accent' }, { from: 'plant', to: 'sales' }, { from: 'plant', to: 'stock', kind: 'dashed', label: '待核验' }],
+})
+const svgFixture = {
+  type: 'svg', title: '合成设备剖面',
+  code: ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 200">',
+    '<rect x="24" y="24" width="392" height="152" rx="18" fill="#eef2ff" stroke="#6366f1" stroke-width="2"/>',
+    '<path d="M24 106H416" stroke="#6366f1" stroke-width="2"/>',
+    // Keep the fixture above the ordinary group message folding threshold.
+    ...Array.from({ length: 20 }, (_, i) => `<path d="M40 ${44 + i * 6}h10M390 ${44 + i * 6}h10" stroke="#a9aee9" stroke-width="1"/>`),
+    '<text x="220" y="74" text-anchor="middle" font-size="23" fill="#243456">上部空间</text>',
+    '<text x="220" y="150" text-anchor="middle" font-size="23" fill="#243456">下部空间</text></svg>',
+  ].join(''),
 }
+const inlineView = item => '\n\n```dsh-ui\n' + JSON.stringify({ items: [item] }) + '\n```'
 // ask_user takes options as { label } objects; the scenarios below list plain labels.
 const tool = (name, input) => ({
   type: 'tool_use',
@@ -222,27 +228,29 @@ function decide(body) {
   const activityAt = messages.findLastIndex(message => message.role === 'user' && !isResults(message))
   const activity = activityAt >= 0 ? textOf(messages[activityAt].content) : ''
   const flowMessage = /^(?:User: )?展示合成流程图\s*$/mu.test(activity)
-    || (/^(?:User: )?梳理合成供应链\s*$/mu.test(activity) && system.includes('include one SVG logic diagram by default'))
-  if (flowMessage && tools.has('show_view')) {
-    if (result) return [text('流程图正文：库存环节仍待核验。')]
-    return [tool('show_view', { title: '合成供应链流程', view: flowFixture })]
+    || (/^(?:User: )?梳理合成供应链\s*$/mu.test(activity) && system.includes('automatically choose dsh-ui type=diagram'))
+  if (flowMessage) return [text('流程图正文：库存环节仍待核验。' + inlineView(diagramFixture('合成供应链流程')))]
+  if (/^(?:User: )?解释合成设备剖面结构\s*$/mu.test(activity) && system.includes('automatically choose dsh-ui type=svg')) {
+    return [text('剖面正文：设备分为上部和下部空间。' + inlineView(svgFixture))]
   }
-  const repairFlow = /\[chemclaw-visual-delivery[^\n]*\][\s\S]*show_view type=flow/u.test(activity)
+  const repairFlow = /\[chemclaw-visual-delivery[^\n]*\][\s\S]*dsh-ui type=diagram/u.test(activity)
   const flowQuestion = repairFlow
     ? messages.slice(0, activityAt).findLast(message => message.role === 'user' && !isResults(message) && /为什么合成分布会是这样/u.test(textOf(message.content)))
     : messages[activityAt]
   const flowTopic = /^(为什么合成分布会是这样|我想知道合成产业链结构)(?:\?|？|\s|$)/mu.exec(textOf(flowQuestion?.content))?.[1]
-  if (flowTopic && tools.has('show_view')) {
-    const title = flowTopic === '为什么合成分布会是这样' ? '合成分布成因 SVG' : '合成产业链结构 SVG'
+  if (flowTopic) {
+    const title = flowTopic === '为什么合成分布会是这样' ? '合成分布成因图' : '合成产业链结构图'
     const receipt = textOf(result?.content)
-    if (/The view is (?:on screen|staged)/u.test(receipt)) return [text('合成分析正文：订单会反馈给上游。')]
-    const view = flowTopic === '我想知道合成产业链结构' ? wideFlowFixture : flowFixture
-    if (repairFlow || /Use show_view type=flow/u.test(receipt)) return [tool('show_view', { title, view })]
+    if (repairFlow || /dsh-ui type=diagram/u.test(receipt)) return [text('合成分析正文：库存仍待核验。' + inlineView(diagramFixture(title)))]
     if (flowTopic === '我想知道合成产业链结构' && !result && tools.has('validate_dsh_ui')) {
       return [tool('validate_dsh_ui', { spec: { items: [{ type: 'mermaid', code: 'graph TD\nA-->B' }] } })]
     }
     const spec = { items: [{ type: 'tabs', tabs: [{ label: '供应端', items: [{ type: 'text', text: '合成原因正文' }] }] }] }
     return [text('合成原因正文：原料影响生产，订单回传上游。\n\n```dsh-ui\n' + JSON.stringify(spec) + '\n```')]
+  }
+  if (/^旧版流程调用验收\s*$/mu.test(activity) && tools.has('show_view')) {
+    if (!result) return [tool('show_view', { title: '旧版试画', view: flowFixture })]
+    if (/dsh-ui type=diagram/u.test(textOf(result.content))) return [text('旧工具已转用内置图解。' + inlineView(diagramFixture('转用内置图解')))]
   }
   const classicView = activityAt >= 0 ? /^classic-native-(ready|invalid)(?:\n|$)/u.exec(textOf(messages[activityAt].content).trim())?.[1] : undefined
   if (classicView && tools.has('show_view')) {

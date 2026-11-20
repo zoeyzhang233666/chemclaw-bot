@@ -69,7 +69,7 @@ test('advanced-chart setting influences model selection, without disabling GenUI
   state.prefs.advancedCharts = false
   const disabled = section.text(context)
   assert.match(disabled, /Advanced charts are disabled in ChemClaw Settings/)
-  assert.match(disabled, /dated timelines/)
+  assert.match(disabled, /inline timelines/)
   assert.match(disabled, /seven advanced ECharts|advanced ECharts/i)
   state.prefs.advancedCharts = true
   assert.doesNotMatch(section.text(context), /Advanced charts are disabled in ChemClaw Settings/)
@@ -86,6 +86,12 @@ test('the visual contract follows the selected tool set and preserves ordinary M
   const allowed = section.text({ agent, toolSet: new Set(['show_view']) })
   assert.match(allowed, /Prefer show_view/)
   assert.match(allowed, /ordinary final answer in Markdown/)
+  assert.match(allowed, /When GenUI is unavailable/)
+  ctx.tools.get = (name, scope, toolSet) => scope === agent && toolSet.has(name) ? { name } : undefined
+  const withGenui = section.text({ agent, toolSet: new Set(['show_view', 'validate_dsh_ui']) })
+  assert.match(withGenui, /automatically choose dsh-ui type=diagram/)
+  assert.match(withGenui, /automatically choose dsh-ui type=svg/)
+  assert.doesNotMatch(withGenui, /show_view flow/)
   const restricted = section.text({ agent, toolSet: new Set() })
   assert.match(restricted, /Use inline dsh-ui for visual delivery/)
   assert.match(restricted, /EVERY user-facing final answer/)

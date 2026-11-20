@@ -38,11 +38,11 @@ or limits on analytical ability.
   `heatmap`; quantified flows → `sankey`; normalized dimensions with explicit
   maxima → `radar`; conversion stages → `funnel`; hierarchy → `treemap`;
   a value against a stated maximum → `gauge`.
-- Include one native `show_view` `flow` by default for explanations, decisions,
-  stages, branches, supply chains, dependencies and evidence chains. Supply
-  concise nodes and directed edges for automatic SVG layout. Use `uncertain`
-  for unconfirmed links and `feedback: true` for return arrows. Use GenUI `svg`
-  if `show_view` is unavailable. Use Mermaid only on explicit format requests.
+- Choose GenUI `diagram` automatically for relationships, decisions, branches,
+  and supply chains. Use `flowchart` for a short sequence and `architecture`
+  for branches that need positioned nodes. Use dashed links for hypotheses.
+  Choose GenUI `svg` for custom vector illustrations or spatial cross-sections.
+  Both go in an inline `dsh-ui` fence. Use Mermaid only on explicit format requests.
 - The complete bundled GenUI plugin also supplies `timeline` for dated events
   and milestones, `diagram` for specialized schedules, `plot` for functions, `scene3d` for spatial
   explanation, searchable/sortable/expandable `table`, layouts/cards, tabs,

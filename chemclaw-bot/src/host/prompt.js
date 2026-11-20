@@ -1,8 +1,8 @@
 ﻿// Prompt: one section whose text depends only on the rendering Session's own Bot
 // record, so the prefix stays byte-stable across turns and roster changes.
 
-import { GENUI_VIEW_POLICY, NATIVE_VIEW_POLICY, VIEW_POLICY } from './view-policy.js'
-import { nativeViewAvailable } from './native-view-session.js'
+import { GENUI_GRAPH_POLICY, GENUI_VIEW_POLICY, LEGACY_GRAPH_POLICY, NATIVE_VIEW_POLICY, VIEW_POLICY } from './view-policy.js'
+import { genuiViewAvailable, nativeViewAvailable } from './native-view-session.js'
 import { install as installVisualDelivery } from './visual-delivery.js'
 import { install as installDesktopRuntime } from './desktop-runtime.js'
 
@@ -87,7 +87,8 @@ export function install(rt) {
     text: context => {
       if (rt.roomOf(context?.agent?.id) || context?.agent?.session?.header?.parentSession !== undefined) return ''
       const router = nativeViewAvailable(ctx, context?.agent, context?.toolSet) ? NATIVE_VIEW_POLICY : GENUI_VIEW_POLICY
-      const policy = VIEW_POLICY + '\n' + router
+      const graphs = genuiViewAvailable(ctx, context?.agent, context?.toolSet) ? GENUI_GRAPH_POLICY : LEGACY_GRAPH_POLICY
+      const policy = [VIEW_POLICY, router, graphs].join('\n')
       return rt.state?.prefs?.advancedCharts === false
         ? policy + '\nAdvanced charts are disabled in ChemClaw Settings. Use an SVG chart or table in place of the seven advanced ECharts types. Explain the setting if the user requests one.'
         : policy

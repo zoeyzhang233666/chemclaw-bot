@@ -7,25 +7,15 @@ const transcript = "document.querySelector('[data-conversation-scroll]')?.innerT
 const editor = "[...document.querySelectorAll('[role=textbox][contenteditable=true], textarea')].filter(node => !node.closest('.bt-side')).at(-1)"
 const visible = marker => `(${transcript}).includes(${JSON.stringify(marker)})`
 const sessionRow = id => `[data-row-key="session:${id}"]`
-const titledFlowSvg = title => `([...document.querySelectorAll('svg[data-chemclaw-flow]')].find(svg => svg.closest('.bt-view')?.querySelector('.bt-view-title')?.textContent === ${JSON.stringify(title)}))`
-
-const svgFits = (selector, nodes, edges) => `(() => {
-  const svg = ${selector};
-  if (!svg || svg.querySelectorAll('.bt-flow-step').length !== ${nodes} || svg.querySelectorAll('.bt-flow-connection').length !== ${edges}) return false;
-  const figure = svg.closest('figure');
-  const visible = svg.getBoundingClientRect();
-  const frame = figure.getBoundingClientRect();
-  const canvas = svg.viewBox.baseVal;
-  const labels = [...svg.querySelectorAll('.bt-flow-connection text')].map(element => element.getBBox());
-  return visible.width >= 140 && visible.left >= frame.left - 1 && visible.right <= frame.right + 1
-    && figure.scrollWidth <= figure.clientWidth + 1 && Math.abs(visible.width - canvas.width) <= 1
-    && Math.abs(visible.height - canvas.height) <= 1
-    && labels.every((a, i) => labels.slice(i + 1).every(b =>
-      a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y))
-    && [...svg.querySelectorAll('.bt-flow-step, .bt-flow-connection')].every(element => {
-      const { x, y, width, height } = element.getBBox();
-      return x >= 1 && y >= 1 && x + width <= canvas.width - 1 && y + height <= canvas.height - 1;
-    });
+const diagram = title => `([...document.querySelectorAll('[data-genui-diagram]')].find(figure => figure.textContent.includes(${JSON.stringify(title)}))?.querySelector('svg'))`
+const svgImage = "document.querySelector('[data-genui-svg] img[alt=\"合成设备剖面\"]')"
+const svgReady = `${svgImage}?.complete && ${svgImage}.naturalWidth > 0 && ${svgImage}.src.startsWith('data:image/svg+xml')`
+const fits = selector => `(() => {
+  const graphic = ${selector};
+  if (!graphic) return false;
+  const { left, right, width, height } = graphic.getBoundingClientRect();
+  const { left: frameLeft, right: frameRight } = graphic.closest('[data-genui]').getBoundingClientRect();
+  return width > 100 && height > 30 && left >= frameLeft - 1 && right <= frameRight + 1;
 })()`
 
 function windowChecks(cdp) {
@@ -274,27 +264,27 @@ export async function checkClassicSessions(cdp) {
   try { await until(metricsFit, 'market figures stay intact in a narrow window') }
   finally { await cdp.call('Emulation.clearDeviceMetricsOverride') }
   await waitRunning(b, false)
-  const flow = "document.querySelector('svg[data-chemclaw-flow]')"
+  const supply = diagram('合成供应链流程')
   await send('梳理合成供应链')
-  await until(`${flow}?.textContent.includes('库存变化') && ${visible('流程图正文：库存环节仍待核验。')}`, 'automatic native SVG and Markdown in a standalone Classic Session')
-  assert.equal(await evaluate(`Boolean(${flow}.querySelector('[data-uncertain]'))`), true)
-  assert.equal(await evaluate(`Boolean(${flow}.querySelector('[data-feedback]'))`), true)
-  await until(svgFits(flow, 4, 4), 'compact Classic SVG includes the entire bottom feedback route')
+  await until(`${supply}?.textContent.includes('库存变化') && ${visible('流程图正文：库存环节仍待核验。')}`, 'automatic GenUI diagram and Markdown in a Classic Session')
   await waitRunning(b, false)
-  const titledFlow = title => `[...document.querySelectorAll('[data-classic-native-view]')].some(view => view.innerText.includes(${JSON.stringify(title)}) && view.querySelector('svg[data-chemclaw-flow]'))`
+  await send('解释合成设备剖面结构')
+  await until(`${svgReady} && ${visible('剖面正文')}`, 'automatic GenUI SVG image and text in Classic')
+  await waitRunning(b, false)
   await send('为什么合成分布会是这样？')
-  await until(`${titledFlow('合成分布成因 SVG')} && ${visible('合成原因正文')}`, 'semantic follow-up adds a native SVG even after a GenUI tab')
+  await until(`${diagram('合成分布成因图')} && ${visible('合成原因正文')}`, 'semantic follow-up adds a GenUI diagram after an unrelated tab')
   await waitRunning(b, false)
   await send('我想知道合成产业链结构')
-  await until(titledFlow('合成产业链结构 SVG'), 'Mermaid validation redirects to native SVG before publishing')
+  await until(diagram('合成产业链结构图'), 'Mermaid validation redirects to GenUI diagram')
   assert.equal(await evaluate("Boolean(document.querySelector('[data-genui] svg[id^=mermaid]'))"), false)
   await waitRunning(b, false)
-  const wideFlow = titledFlowSvg('合成产业链结构 SVG')
-  await until(svgFits(wideFlow, 7, 9), 'wide Classic SVG contains all nodes, edges and labels')
-  const wideHeight = await evaluate(`${wideFlow}.viewBox.baseVal.height`)
+  await send('旧版流程调用验收')
+  await until(diagram('转用内置图解'), 'legacy show_view flow requests use GenUI in new replies')
+  assert.equal(await evaluate("Boolean(document.querySelector('svg[data-chemclaw-flow]'))"), false)
+  await waitRunning(b, false)
   await cdp.call('Emulation.setDeviceMetricsOverride', { width: 560, height: 860, deviceScaleFactor: 1, mobile: false })
   try {
-    await until(`${svgFits(wideFlow, 7, 9)} && ${wideFlow}.viewBox.baseVal.height > ${wideHeight}`, 'Classic SVG reflows at readable size in a narrow reply')
+    await until(`${fits(supply)} && ${fits(svgImage)}`, 'both original GenUI components fit a narrow Classic reply')
   } finally { await cdp.call('Emulation.clearDeviceMetricsOverride') }
   await click('.bt-return')
   await show(expertSession, `[data-bot-id="${expert.id}"]`)
@@ -303,15 +293,13 @@ export async function checkClassicSessions(cdp) {
   assert.equal(await evaluate(`Boolean(${metrics}.closest('.bt-bubble'))`), false)
   await waitRunning(expertSession, false)
   await send('梳理合成供应链')
-  await until(`${flow}?.textContent.includes('库存变化')`, 'native SVG in the expert reply')
-  assert.equal(await evaluate("document.querySelectorAll('svg[data-chemclaw-flow]').length"), 1)
+  await until(`${supply}?.closest('.bt-rich-reply') && ${visible('流程图正文')}`, 'GenUI diagram outside the expert text bubble')
   await waitRunning(expertSession, false)
-  await send('我想知道合成产业链结构')
-  await until(`${visible('合成产业链结构 SVG')} && document.querySelectorAll('svg[data-chemclaw-flow]').length === 2`, 'expert Mermaid validation redirects to native SVG before publishing')
+  await send('解释合成设备剖面结构')
+  await until(`${svgReady} && ${svgImage}?.closest('.bt-rich-reply') && ${visible('剖面正文')}`, 'GenUI SVG image outside the expert text bubble')
   await waitRunning(expertSession, false)
-  await until(svgFits(wideFlow, 7, 9), 'expert SVG displays all branches and return routes')
   await cdp.call('Emulation.setDeviceMetricsOverride', { width: 560, height: 860, deviceScaleFactor: 1, mobile: false })
-  try { await until(svgFits(wideFlow, 7, 9), 'expert SVG also fits a narrow reply') }
+  try { await until(`${fits(supply)} && ${fits(svgImage)}`, 'both original GenUI components fit a narrow expert reply') }
   finally { await cdp.call('Emulation.clearDeviceMetricsOverride') }
   const legacy = "document.querySelector('iframe[title=\"旧版 SVG 样例\"]')"
   await send('视图旧SVG')
@@ -320,16 +308,19 @@ export async function checkClassicSessions(cdp) {
   await enterClassic()
   assert.equal(await current(), b)
   await show(expertSession)
-  await until(`${flow}?.textContent.includes('库存变化') && ${legacy}?.srcdoc.includes('<svg')`, 'both saved SVG views replay in Classic expert history')
+  await until(`${supply} && ${svgReady} && ${legacy}?.srcdoc.includes('<svg')`, 'GenUI diagrams, SVG images and legacy SVG replay in Classic expert history')
   assert.equal(await evaluate(visible('流程图正文：库存环节仍待核验。')), true)
   await click('.bt-return')
   await show(room.id, `[data-room-id="${room.id}"]`)
   await send('展示合成流程图')
-  await until(`${flow}?.textContent.includes('库存变化')`, 'committed SVG in the expert group reply')
+  await until(`${supply}?.textContent.includes('库存变化')`, 'committed GenUI diagram in the expert group reply')
+  await waitRunning(room.id, false)
+  await send('解释合成设备剖面结构')
+  await until(svgReady, 'committed GenUI SVG in the expert group reply')
   await waitRunning(room.id, false)
   await enterClassic()
   await show(room.id)
-  await until(`${flow}?.textContent.includes('库存变化')`, 'committed group SVG replays in Classic')
+  await until(`${supply}?.textContent.includes('库存变化') && ${svgReady}`, 'both committed group GenUI components replay in Classic')
   await show(b)
   console.log('check-packed: Classic Session isolation, background streams, and explicit team history passed')
   return { id: b, marker: bText, other: aText }
@@ -340,7 +331,7 @@ export async function checkClassicRestart(cdp, { id, marker, other }) {
   await until(classic, 'restored Classic mode')
   await until(`${selection} === ${JSON.stringify(id)} && ${visible(`收到：${marker}`)}`, 'restored native selection and reply')
   await until("document.querySelector('[data-classic-native-view]')?.innerText.includes('测试合计')", 'restored native card')
-  await until("document.querySelector('svg[data-chemclaw-flow]')?.textContent.includes('库存变化')", 'restored SVG flow')
+  await until(`${diagram('合成供应链流程')} && ${svgReady}`, 'restored GenUI diagram and SVG')
   assert.equal(await evaluate(visible(other)), false)
   assert.ok((await history(id)).includes(marker))
   console.log('check-packed: Classic mode restored its native Session after app restart')

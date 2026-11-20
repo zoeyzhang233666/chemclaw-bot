@@ -914,7 +914,7 @@ export function apply(ctx) {
     name: 'conversation.chat.turnTail', id: 'chemclaw-native-views', order: 10,
     inject: sessionId => {
       const chat = ctx.uiConversation.binding(sessionId).target('chat')
-      return { hooks: { roster, surface }, keyedHooks: {
+      return { actions, hooks: { roster, surface }, keyedHooks: {
         classicViewCalls: turn => chat.getSnapshot().nodes.turnDataSource(Number(turn), 'tool-call'),
       } }
     },

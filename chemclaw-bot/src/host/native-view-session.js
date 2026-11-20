@@ -8,3 +8,7 @@ export function isNativeViewSession(rt, agent) {
 export function nativeViewAvailable(ctx, agent, toolSet) {
   return typeof ctx.tools?.get !== 'function' || ctx.tools.get('show_view', agent, toolSet) !== undefined
 }
+
+export function genuiViewAvailable(ctx, agent, toolSet) {
+  return typeof ctx.tools?.get !== 'function' || ctx.tools.get('validate_dsh_ui', agent, toolSet) !== undefined
+}

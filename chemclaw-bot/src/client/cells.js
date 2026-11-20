@@ -61,7 +61,9 @@ export function Bubbles({ texts, genui, roster, selfId, actions, streaming, sess
 
 function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
   const rich = hasGenuiFence(text)
-  const { shown, folded, control } = useFold(text, { limit: fold, whole, live })
+  // The encoded graphic is not visible prose. Keep complete GenUI blocks mounted
+  // in group replies, where the ordinary text preview has a much lower limit.
+  const { shown, folded, control } = useFold(text, { limit: rich ? FOLD_HUGE : fold, whole, live })
   const linked = useArtifactLinks(shown, { sessionId, botId: selfId, live })
   const key = msgKey ? `${msgKey}:${index}` : undefined
   const body = h(MarkdownText, { text: linkMentions(linked, roster.bots, selfId), streaming: live, labels: mdLabels(), variant: 'compact', fileMentions: mentions })
@@ -315,7 +317,7 @@ function SpeakerHead({ bot, time }) {
 // One Bot message inside a group chat: avatar, name (with its group role), when it ran
 // and how long it took, bubble. The flat layout moves the avatar from beside the last
 // bubble to the head of the name row, so the text below runs the whole width.
-function GroupMessage({ bot, text, texts = [text], genui, room, roster, actions, msgKey, useUi, whole, time, duration, streaming }) {
+export function GroupMessage({ bot, text, texts = [text], genui, room, roster, actions, msgKey, useUi, whole, time, duration, streaming }) {
   const lead = h('button', { type: 'button', className: 'bt-lead', 'aria-label': t("Open {name}'s chat", { name: bot.name }), onClick: () => actions.openSession(bot.id) },
     h(BotMark, { bot, size: 22 }))
   const flat = layoutOf(roster.prefs) === 'flat'
