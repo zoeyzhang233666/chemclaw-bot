@@ -227,16 +227,20 @@ function decide(body) {
   const result = fresh ? undefined : blocks.find(block => block.type === 'tool_result')
   const activityAt = messages.findLastIndex(message => message.role === 'user' && !isResults(message))
   const activity = activityAt >= 0 ? textOf(messages[activityAt].content) : ''
+  const previousQuestion = () => messages.slice(0, activityAt).findLast(message => message.role === 'user' && !isResults(message)
+    && !textOf(message.content).startsWith('[chemclaw-visual-delivery'))
   if (/^GenUI check streamed SVG$/mu.test(activity)) {
     const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20"><rect width="40" height="20"/></svg>'
     return [{ ...text('先显示行情成因。\n\n```js\nconst readableExample = 2\n```\n\n```dsh-ui\n'
       + JSON.stringify({ type: 'svg', title: '合成成因矢量图', svg }) + '\n```'), slow: true }]
   }
   if (/^GenUI check broken SVG$/mu.test(activity)) {
-    return [text('图形失败时保留正文。' + inlineView({ type: 'svg', title: '合成损坏图' }))]
+    return [text('图形失败时保留正文。' + inlineView({ type: 'svg', title: '合成损坏图' })
+      + inlineView({ type: 'svg', title: '再次损坏的图', code: '<svg xmlns="http://www.w3.org/2000/svg"><text>失效的 XML</svg>' })
+      + '\n\n<chatml_chart_demo>')]
   }
-  if (/\[genui-fence-repair\]/u.test(activity) && /"合成损坏图"/u.test(activity)) {
-    return [text('图形已改为文字说明。' + inlineView({ type: 'text', text: '合成说明' }))]
+  if (activity.includes('The generated visual did not pass validation') && /^GenUI check broken SVG$/mu.test(textOf(previousQuestion()?.content))) {
+    return [text('合成损坏图自动恢复。' + inlineView({ ...flowFixture, title: '合成恢复流程' }))]
   }
   if (/^GenUI check bundled skill\s*$/mu.test(activity) && tools.has('skill')) {
     if (!result) return [tool('skill', { name: 'genui' })]
@@ -255,8 +259,6 @@ function decide(body) {
     return [tool('show_view', { audience: 'user', await_reply: false, title: '合成现货走势', view: { type: 'stack', children: [metric, chart] } })]
   }
   const methanol = /^甲醇价格$/mu
-  const previousQuestion = () => messages.slice(0, activityAt).findLast(message => message.role === 'user' && !isResults(message)
-    && !textOf(message.content).startsWith('[chemclaw-visual-delivery'))
   const methanolRepair = activity.includes('from verified evidence')
     && methanol.test(textOf(previousQuestion()?.content))
   if (tools.has('show_view') && (methanol.test(activity) || methanolRepair)) {
@@ -322,7 +324,7 @@ function decide(body) {
   }
   if (/^旧版流程调用验收\s*$/mu.test(activity) && tools.has('show_view')) {
     if (!result) return [tool('show_view', { title: '旧版试画', view: flowFixture })]
-    if (/dsh-ui type=diagram/u.test(textOf(result.content))) return [text('旧工具已转用内置图解。' + inlineView(diagramFixture('转用内置图解')))]
+    if (/The view is on screen/u.test(textOf(result.content))) return [text('原生流程备用渲染已交付。')]
   }
   const classicView = activityAt >= 0 ? /^classic-native-(ready|invalid)(?:\n|$)/u.exec(textOf(messages[activityAt].content).trim())?.[1] : undefined
   if (classicView && tools.has('show_view')) {

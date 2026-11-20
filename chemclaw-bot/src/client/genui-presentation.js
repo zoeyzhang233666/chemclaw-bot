@@ -6,6 +6,7 @@ const CODE = '[data-code-block-content]'
 const ASSISTANT = '[data-chat-flow-kind="assistant-step"][data-chat-node-key]'
 const SURFACE = '[data-genui-surface^="chemclaw-bot/"]'
 const OWNED = ':is([data-genui-artifact], [data-genui-panel], .genui-dom-fence, [data-genui-explicit-fence])'
+const RENDERED = '[data-genui-rendered]'
 const CSS = `
 .bt-genui-source{border:0!important;background:transparent!important;box-shadow:none!important}
 .bt-genui-source>:not(.bt-genui-status),.genui-dom-fence-diagnostic:has(+ .bt-genui-source),[data-genui-svg] [role=status]+pre{display:none!important}
@@ -35,7 +36,7 @@ export function installGenuiPresentation(ctx) {
   const collect = new Set()
 
   const clear = block => {
-    marked.get(block)?.remove()
+    marked.get(block)?.status.remove()
     marked.delete(block)
     block.classList.remove('bt-genui-source')
   }
@@ -45,7 +46,10 @@ export function installGenuiPresentation(ctx) {
   }
   const update = (content, readChat) => {
     const block = content.parentElement
-    if (!block?.isConnected || block.closest(OWNED)) return
+    if (!block?.isConnected || block.closest(OWNED) || block.matches(RENDERED)) {
+      if (marked.has(block)) clear(block)
+      return
+    }
     const body = content.querySelector('pre')?.textContent.trimEnd()
     const surface = block.closest(SURFACE)
     const local = surface && sources.get(surface)
@@ -61,18 +65,18 @@ export function installGenuiPresentation(ctx) {
       if (marked.has(block)) clear(block)
       return
     }
-    let status = marked.get(block)
+    let status = marked.get(block)?.status
     if (!status) {
       status = document.createElement('div')
       status.className = 'bt-genui-status'
       status.setAttribute('role', 'status')
-      marked.set(block, status)
       block.classList.add('bt-genui-source')
     }
+    marked.set(block, { status, owner: surface?.closest('.bt-astack') ?? surface ?? row ?? block })
     if (status.parentElement !== block) block.append(status)
     const live = local ? local.live : node.data.status === 'running'
     status.toggleAttribute('data-unavailable', !live)
-    const label = t(live ? 'Preparing the visual…' : 'The visual could not be displayed.')
+    const label = t(live ? 'Preparing the visual…' : 'The visual is unavailable. The answer text is still available.')
     if (status.textContent !== label) status.textContent = label
   }
   const find = node => {
@@ -94,6 +98,12 @@ export function installGenuiPresentation(ctx) {
     }
     for (const content of collect) update(content, readChat)
     collect.clear()
+    const notified = new Set()
+    for (const { status, owner } of marked.values()) {
+      const failed = status.hasAttribute('data-unavailable')
+      status.hidden = failed && notified.has(owner)
+      if (failed) notified.add(owner)
+    }
   }
   const observer = new MutationObserver(records => {
     let removed = false
@@ -107,7 +117,8 @@ export function installGenuiPresentation(ctx) {
   })
   find(document.body)
   flush()
-  observer.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['data-streaming', 'data-bt-genui-live'] })
+  observer.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true,
+    attributeFilter: ['data-streaming', 'data-bt-genui-live', 'data-genui-rendered'] })
   return () => {
     observer.disconnect()
     for (const block of marked.keys()) clear(block)

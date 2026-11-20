@@ -133,9 +133,11 @@ export async function checkClassicSessions(cdp) {
     assert.equal(await evaluate(rawVisible), false)
     assert.equal(await evaluate(visible('const readableExample = 2')), true)
     await send('GenUI check broken SVG')
-    await until(`${visible('图形失败时保留正文。')} && document.querySelector('.bt-genui-status[data-unavailable]')`, 'failed SVG keeps prose and a readable status')
+    await until(`${visible('图形失败时保留正文。')} && ${diagram('合成恢复流程')}`, 'rejected SVG stays out of the reply, and flow recovers automatically')
     await waitRunning(id, false)
     assert.equal(await evaluate(rawVisible), false)
+    assert.equal(await evaluate(visible('<chatml_chart_demo>')), false)
+    assert.equal(await evaluate("[...document.querySelectorAll('.bt-genui-status[data-unavailable]:not([hidden])')].some(node => node.getClientRects().length > 0)"), false)
   }
   const checkCapacity = async id => {
     await send('查询合成产能分布')
@@ -377,8 +379,7 @@ export async function checkClassicSessions(cdp) {
   assert.equal(await evaluate("Boolean(document.querySelector('[data-genui] svg[id^=mermaid]'))"), false)
   await waitRunning(b, false)
   await send('旧版流程调用验收')
-  await until(diagram('转用内置图解'), 'legacy show_view flow requests use GenUI in new replies')
-  assert.equal(await evaluate("Boolean(document.querySelector('svg[data-chemclaw-flow]'))"), false)
+  await until(`${visible('原生流程备用渲染已交付')} && document.querySelector('svg[data-chemclaw-flow]')`, 'legacy show_view flow remains available as a fallback')
   await waitRunning(b, false)
   await cdp.call('Emulation.setDeviceMetricsOverride', { width: 560, height: 860, deviceScaleFactor: 1, mobile: false })
   try {

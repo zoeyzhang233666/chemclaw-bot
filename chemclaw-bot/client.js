@@ -741,7 +741,7 @@ var ZH = {
   "Zoom out": "缩小",
   "Fit graphic": "适应窗口",
   "Preparing the visual…": "正在生成图形…",
-  "The visual could not be displayed.": "这张图未能显示，可以请我重新生成。",
+  "The visual is unavailable. The answer text is still available.": "图表暂不可用，仍可阅读正文。",
   Copy: "复制",
   Copied: "已复制",
   Content: "内容",
@@ -11024,7 +11024,7 @@ function repairDiagramLayout(node) {
   delete node.zones;
   return true;
 }
-function* genuiFences(text) {
+function* markdownFences(text) {
   const openings = new RegExp(OPEN);
   for (let opening; opening = openings.exec(text); ) {
     const ticks = opening[1];
@@ -11033,13 +11033,35 @@ function* genuiFences(text) {
     closing.lastIndex = start;
     const match = closing.exec(text);
     const end = match?.index ?? text.length;
-    if (UI_LANGUAGE.test(opening[2].trimStart())) yield { start: opening.index, body: text.slice(start, end).trimEnd(), end: match ? closing.lastIndex : end, closed: Boolean(match) };
+    yield {
+      language: opening[2].trimStart(),
+      start: opening.index,
+      body: text.slice(start, end).trimEnd(),
+      end: match ? closing.lastIndex : end,
+      closed: Boolean(match)
+    };
     openings.lastIndex = match ? closing.lastIndex + 1 : text.length + 1;
   }
 }
+function* genuiFences(text) {
+  for (const { language: language2, ...fence } of markdownFences(text)) {
+    if (UI_LANGUAGE.test(language2)) yield fence;
+  }
+}
+function stripGraphicControlLines(text) {
+  if (!text.includes("chatml_chart_demo")) return text;
+  const clean = (value2) => value2.replace(/^[ \t]*<\/?chatml_chart_demo>[ \t]*(?:\r?\n|$)/gmu, "");
+  let out = "";
+  let offset = 0;
+  for (const fence of markdownFences(text)) {
+    out += clean(text.slice(offset, fence.start)) + text.slice(fence.start, fence.end);
+    offset = fence.end;
+  }
+  return out + clean(text.slice(offset));
+}
 var isSvg = (code) => typeof code === "string" && code.length <= 12e3 && SVG.test(code);
 function repairGenuiGraphic(body) {
-  if (!body.includes('"svg"') && !body.includes('"diagram"')) return void 0;
+  if (!/"(?:svg|diagram|flow)"/u.test(body)) return void 0;
   let spec;
   try {
     spec = JSON.parse(body);
@@ -11054,6 +11076,32 @@ function repairGenuiGraphic(body) {
       delete node.svg;
       changed = true;
     }
+    if (node.type === "flow" && Array.isArray(node.nodes) && Array.isArray(node.edges) && node.nodes.length && node.nodes.every((item) => typeof item?.id === "string" && typeof item?.label === "string")) {
+      const ids = new Set(node.nodes.map((item) => item.id));
+      if (ids.size === node.nodes.length && node.edges.every((edge) => ids.has(edge?.from) && ids.has(edge?.to))) {
+        node.type = "diagram";
+        node.kind = node.nodes.length > 4 ? "architecture" : "flowchart";
+        node.title ??= node.caption;
+        delete node.caption;
+        node.nodes = node.nodes.map((item) => ({
+          id: item.id,
+          label: item.label,
+          description: item.description ?? item.detail,
+          sub: item.sub
+        }));
+        node.edges = node.edges.map((edge) => ({
+          from: edge.from,
+          to: edge.to,
+          label: edge.label,
+          kind: edge.uncertain || edge.feedback ? "dashed" : void 0
+        }));
+        changed = true;
+      }
+    }
+    if (node.type === "diagram" && node.kind === void 0 && Array.isArray(node.nodes)) {
+      node.kind = node.nodes.length > 4 || node.nodes.some((item) => item?.x !== void 0) ? "architecture" : "flowchart";
+      changed = true;
+    }
     if (repairDiagramLayout(node)) changed = true;
     for (const key of ["items", "children", "tabs"]) {
       if (Array.isArray(node[key])) for (const child of node[key]) repair(child, depth + 1);
@@ -11065,7 +11113,7 @@ function repairGenuiGraphic(body) {
 }
 var genuiMarkdown = (body) => "```dsh-ui\n" + body + "\n```";
 function repairGenuiGraphicFences(text) {
-  if (!text.includes('"svg"') && !text.includes('"diagram"')) return text;
+  if (!/"(?:svg|diagram|flow)"/u.test(text)) return text;
   let out = "";
   let offset = 0;
   for (const fence of genuiFences(text)) {
@@ -11154,6 +11202,7 @@ var CODE = "[data-code-block-content]";
 var ASSISTANT = '[data-chat-flow-kind="assistant-step"][data-chat-node-key]';
 var SURFACE = '[data-genui-surface^="chemclaw-bot/"]';
 var OWNED = ":is([data-genui-artifact], [data-genui-panel], .genui-dom-fence, [data-genui-explicit-fence])";
+var RENDERED = "[data-genui-rendered]";
 var CSS2 = `
 .bt-genui-source{border:0!important;background:transparent!important;box-shadow:none!important}
 .bt-genui-source>:not(.bt-genui-status),.genui-dom-fence-diagnostic:has(+ .bt-genui-source),[data-genui-svg] [role=status]+pre{display:none!important}
@@ -11178,7 +11227,7 @@ function installGenuiPresentation(ctx) {
   const marked = /* @__PURE__ */ new Map();
   const collect = /* @__PURE__ */ new Set();
   const clear = (block) => {
-    marked.get(block)?.remove();
+    marked.get(block)?.status.remove();
     marked.delete(block);
     block.classList.remove("bt-genui-source");
   };
@@ -11188,7 +11237,10 @@ function installGenuiPresentation(ctx) {
   };
   const update = (content, readChat) => {
     const block = content.parentElement;
-    if (!block?.isConnected || block.closest(OWNED)) return;
+    if (!block?.isConnected || block.closest(OWNED) || block.matches(RENDERED)) {
+      if (marked.has(block)) clear(block);
+      return;
+    }
     const body = content.querySelector("pre")?.textContent.trimEnd();
     const surface = block.closest(SURFACE);
     const local = surface && sources.get(surface);
@@ -11203,18 +11255,18 @@ function installGenuiPresentation(ctx) {
       if (marked.has(block)) clear(block);
       return;
     }
-    let status = marked.get(block);
+    let status = marked.get(block)?.status;
     if (!status) {
       status = document.createElement("div");
       status.className = "bt-genui-status";
       status.setAttribute("role", "status");
-      marked.set(block, status);
       block.classList.add("bt-genui-source");
     }
+    marked.set(block, { status, owner: surface?.closest(".bt-astack") ?? surface ?? row ?? block });
     if (status.parentElement !== block) block.append(status);
     const live = local ? local.live : node.data.status === "running";
     status.toggleAttribute("data-unavailable", !live);
-    const label = t(live ? "Preparing the visual…" : "The visual could not be displayed.");
+    const label = t(live ? "Preparing the visual…" : "The visual is unavailable. The answer text is still available.");
     if (status.textContent !== label) status.textContent = label;
   };
   const find = (node) => {
@@ -11239,6 +11291,12 @@ function installGenuiPresentation(ctx) {
     };
     for (const content of collect) update(content, readChat);
     collect.clear();
+    const notified = /* @__PURE__ */ new Set();
+    for (const { status, owner } of marked.values()) {
+      const failed = status.hasAttribute("data-unavailable");
+      status.hidden = failed && notified.has(owner);
+      if (failed) notified.add(owner);
+    }
   };
   const observer = new MutationObserver((records) => {
     let removed = false;
@@ -11254,7 +11312,13 @@ function installGenuiPresentation(ctx) {
   });
   find(document.body);
   flush();
-  observer.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["data-streaming", "data-bt-genui-live"] });
+  observer.observe(document.body, {
+    subtree: true,
+    childList: true,
+    characterData: true,
+    attributes: true,
+    attributeFilter: ["data-streaming", "data-bt-genui-live", "data-genui-rendered"]
+  });
   return () => {
     observer.disconnect();
     for (const block of marked.keys()) clear(block);
@@ -11300,7 +11364,8 @@ function Bubbles({ texts: texts2, genui, roster, selfId, actions, streaming, ses
     })
   );
 }
-function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
+function Bubble({ text: sourceText, index, genui, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
+  const text = stripGraphicControlLines(sourceText);
   const rich = hasGenuiFence(text);
   const { shown, folded, control } = useFold(text, { limit: rich ? FOLD_HUGE : fold, whole, live });
   const linked = useArtifactLinks(shown, { sessionId, botId: selfId, live });

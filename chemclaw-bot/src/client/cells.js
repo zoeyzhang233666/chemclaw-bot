@@ -26,6 +26,7 @@ import { layoutOf, thinkingShown } from './themes.js'
 import { toolActivityDetail, liveActivitySummary } from '../shared/tool-activity.js'
 import { assistantTextBlocks, hasGenuiFence } from './genui-surfaces.js'
 import { setGenuiMarkdownSource } from './genui-presentation.js'
+import { stripGraphicControlLines } from '../shared/genui-fences.js'
 
 export { clockLabel }
 
@@ -60,7 +61,8 @@ export function Bubbles({ texts, genui, roster, selfId, actions, streaming, sess
     }))
 }
 
-function Bubble({ text, index, genui, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
+function Bubble({ text: sourceText, index, genui, roster, selfId, actions, sessionId, msgKey, mentions, fold, picked, live, lead, whole }) {
+  const text = stripGraphicControlLines(sourceText)
   const rich = hasGenuiFence(text)
   // The encoded graphic is not visible prose. Keep complete GenUI blocks mounted
   // in group replies, where the ordinary text preview has a much lower limit.

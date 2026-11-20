@@ -26,7 +26,7 @@ function repairDiagramLayout(node) {
 
 // Match the protocol outside ordinary Markdown code fences, including an
 // unclosed fence while the model is still streaming it.
-export function* genuiFences(text) {
+function* markdownFences(text) {
   const openings = new RegExp(OPEN)
   for (let opening; (opening = openings.exec(text));) {
     const ticks = opening[1]
@@ -35,15 +35,34 @@ export function* genuiFences(text) {
     closing.lastIndex = start
     const match = closing.exec(text)
     const end = match?.index ?? text.length
-    if (UI_LANGUAGE.test(opening[2].trimStart())) yield { start: opening.index, body: text.slice(start, end).trimEnd(), end: match ? closing.lastIndex : end, closed: Boolean(match) }
+    yield { language: opening[2].trimStart(), start: opening.index, body: text.slice(start, end).trimEnd(),
+      end: match ? closing.lastIndex : end, closed: Boolean(match) }
     openings.lastIndex = match ? closing.lastIndex + 1 : text.length + 1
   }
+}
+
+export function* genuiFences(text) {
+  for (const { language, ...fence } of markdownFences(text)) {
+    if (UI_LANGUAGE.test(language)) yield fence
+  }
+}
+
+export function stripGraphicControlLines(text) {
+  if (!text.includes('chatml_chart_demo')) return text
+  const clean = value => value.replace(/^[ \t]*<\/?chatml_chart_demo>[ \t]*(?:\r?\n|$)/gmu, '')
+  let out = ''
+  let offset = 0
+  for (const fence of markdownFences(text)) {
+    out += clean(text.slice(offset, fence.start)) + text.slice(fence.start, fence.end)
+    offset = fence.end
+  }
+  return out + clean(text.slice(offset))
 }
 
 const isSvg = code => typeof code === 'string' && code.length <= 12_000 && SVG.test(code)
 
 export function repairGenuiGraphic(body) {
-  if (!body.includes('"svg"') && !body.includes('"diagram"')) return undefined
+  if (!/"(?:svg|diagram|flow)"/u.test(body)) return undefined
   let spec
   try { spec = JSON.parse(body) } catch { return undefined }
   let changed = false
@@ -52,6 +71,27 @@ export function repairGenuiGraphic(body) {
     if (node.type === 'svg' && isSvg(node.svg) && (node.code === undefined || isSvg(node.code))) {
       node.code ??= node.svg
       delete node.svg
+      changed = true
+    }
+    if (node.type === 'flow' && Array.isArray(node.nodes) && Array.isArray(node.edges)
+      && node.nodes.length && node.nodes.every(item => typeof item?.id === 'string' && typeof item?.label === 'string')) {
+      const ids = new Set(node.nodes.map(item => item.id))
+      if (ids.size === node.nodes.length && node.edges.every(edge => ids.has(edge?.from) && ids.has(edge?.to))) {
+        node.type = 'diagram'
+        node.kind = node.nodes.length > 4 ? 'architecture' : 'flowchart'
+        node.title ??= node.caption
+        delete node.caption
+        node.nodes = node.nodes.map(item => ({
+          id: item.id, label: item.label, description: item.description ?? item.detail, sub: item.sub,
+        }))
+        node.edges = node.edges.map(edge => ({
+          from: edge.from, to: edge.to, label: edge.label, kind: edge.uncertain || edge.feedback ? 'dashed' : undefined,
+        }))
+        changed = true
+      }
+    }
+    if (node.type === 'diagram' && node.kind === undefined && Array.isArray(node.nodes)) {
+      node.kind = node.nodes.length > 4 || node.nodes.some(item => item?.x !== undefined) ? 'architecture' : 'flowchart'
       changed = true
     }
     if (repairDiagramLayout(node)) changed = true
@@ -67,7 +107,7 @@ export function repairGenuiGraphic(body) {
 export const genuiMarkdown = body => '```dsh-ui\n' + body + '\n```'
 
 export function repairGenuiGraphicFences(text) {
-  if (!text.includes('"svg"') && !text.includes('"diagram"')) return text
+  if (!/"(?:svg|diagram|flow)"/u.test(text)) return text
   let out = ''
   let offset = 0
   for (const fence of genuiFences(text)) {

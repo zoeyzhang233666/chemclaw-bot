@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { ADVANCED_CHART_KINDS } from '../shared/advanced-charts.js'
-import { genuiFences, genuiMarkdown, repairGenuiGraphicFences } from '../shared/genui-fences.js'
+import { genuiFences, genuiMarkdown, repairGenuiGraphicFences, stripGraphicControlLines } from '../shared/genui-fences.js'
+import { checkedGenuiText } from './genui-delivery.js'
 import { asksForRelationships, capacityDataRequest, capacityMeasurementsInAnswer, isQuantitativeLookup, needsFlowDiagram, needsSvgIllustration } from './flow-intent.js'
 import { marketQuoteIntent, mixedOverlayRequested, spotPriceRequest } from './market-quote-intent.js'
 import { genuiViewAvailable, nativeViewAvailable } from './native-view-session.js'
@@ -277,7 +278,7 @@ function genuiKinds(text, native = false) {
 
 export function missingRequestedKinds(requested, delivered, genui = true) {
   return [...requested].filter(kind => kind === 'flow' && genui
-    ? !(delivered.has('diagram') || delivered.has('svg'))
+    ? !(delivered.has('diagram') || delivered.has('svg') || delivered.has('flow'))
     : !delivered.has(kind))
 }
 
@@ -378,20 +379,22 @@ export function visualReminder(turn, native) {
 export function install(rt) {
   const { ctx } = rt
   const turns = new Map()
-  // The closing block is authoritative. Repair a known field alias there so
-  // both renderers and GenUI's own feedback receive the same canonical SVG.
+  // Validate the authoritative closing block before it reaches either renderer.
   ctx.on('llm/stream', (options, next) => {
     if (options.sessionId === undefined || options.purpose !== undefined || rt.ownRequest?.(options)) return next()
     return (async function* () {
       for await (const chunk of next()) {
         if (chunk.type === 'block-end' && chunk.block.type === 'text') {
           const entry = turns.get(String(options.sessionId))
-          let text = repairGenuiGraphicFences(chunk.block.text)
+          let text = repairGenuiGraphicFences(stripGraphicControlLines(chunk.block.text))
           if (entry && dataOnly(entry) && !nativePairDelivered(entry) && options.tools?.some(tool => tool.name === 'show_view')) {
             const filtered = removeQuantitativeDiagrams(text, entry.question)
             entry.withheldDiagram ||= filtered !== text
             text = filtered
           }
+          const checked = await checkedGenuiText(ctx, text, options.signal)
+          if (entry && checked.failed) entry.rejectedFence = true
+          text = checked.text
           if (text !== chunk.block.text) {
             yield { ...chunk, block: { ...chunk.block, text } }
             continue
@@ -401,7 +404,7 @@ export function install(rt) {
       }
     })()
   })
-  const fresh = turn => ({ turn, text: '', question: '', visual: false, publicSearchTried: false, nativeMetric: false, nativeChart: false, nativeComparisons: new Set(), nativeDataRequest: false, spotReadout: undefined, spotLine: false, withheldDiagram: false, mixedVisualCommitted: false, mixedOverlayRequired: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
+  const fresh = turn => ({ turn, text: '', question: '', visual: false, publicSearchTried: false, nativeMetric: false, nativeChart: false, nativeComparisons: new Set(), nativeDataRequest: false, spotReadout: undefined, spotLine: false, withheldDiagram: false, rejectedFence: false, mixedVisualCommitted: false, mixedOverlayRequired: false, invalidGenuiChart: false, human: false, textOnly: false, marketHistory: false, quoteIntent: 'unspecified', multiAssetMarket: false, marketChartNudged: false, marketChartCommitted: false, marketOhlcStatus: 'untried', reminded: false, repairing: false, requested: new Set(), kinds: new Set(), calls: new Map() })
   const stateOf = id => {
     if (!turns.has(id)) turns.set(id, fresh(rt.live?.get(id)?.turn))
     return turns.get(id)
@@ -470,7 +473,7 @@ export function install(rt) {
     } else if (event.type === 'user/message') {
       const source = event.data?.source
       const text = textOf(event.data?.content)
-      if (source?.form === 'notice' && text.startsWith(VISUAL_NOTICE)) { entry.reminded = true; return }
+      if (source?.form === 'notice' && (text.startsWith(VISUAL_NOTICE) || text.startsWith('[genui-fence-repair #'))) { entry.reminded = true; return }
       if (source?.kind === 'user') {
         entry.human = true
         entry.question = text
@@ -494,6 +497,7 @@ export function install(rt) {
         entry.nativeComparisons.clear()
         entry.spotLine = false
         entry.withheldDiagram = false
+        entry.rejectedFence = false
         entry.invalidGenuiChart = false
         entry.kinds = new Set()
         entry.requested = new Set(requestedChartKinds(text))
@@ -595,7 +599,7 @@ export function install(rt) {
     if (signal.aborted || session.header?.parentSession !== undefined || rt.roomOf?.(id)) return
     restore(session)
     const entry = turns.get(id)
-    if (!entry || entry.turn !== turn || entry.reminded || !(entry.text.trim() || entry.withheldDiagram)) return
+    if (!entry || entry.turn !== turn || entry.reminded || !(entry.text.trim() || entry.withheldDiagram || entry.rejectedFence)) return
     const native = nativeViewAvailable(ctx, agent)
     const genui = genuiViewAvailable(ctx, agent)
     const prose = entry.text.replace(SPEC_FENCES, '')
@@ -606,7 +610,7 @@ export function install(rt) {
     const enabledRequests = new Set([...entry.requested].filter(kind => rt.state?.prefs?.advancedCharts !== false || !ADVANCED_CHART_KINDS.includes(kind)))
     if (!genui) { enabledRequests.delete('svg'); enabledRequests.delete('diagram') }
     const specified = ['mermaid', 'svg', 'diagram'].some(kind => enabledRequests.has(kind))
-    if (!specified && genui && needsSvgIllustration(entry.question)) enabledRequests.add('svg')
+    if (!specified && genui && needsSvgIllustration(entry.question) && !entry.rejectedFence) enabledRequests.add('svg')
     else if (!specified && !dataOnly(entry) && (native || genui)
       && (entry.kinds.has('mermaid') || needsFlowDiagram(entry.question, entry.text, entry.nativeMetric || entry.nativeChart))) enabledRequests.add('flow')
     const missing = missingRequestedKinds(enabledRequests, entry.kinds, genui)
@@ -623,13 +627,13 @@ export function install(rt) {
     if (native && dataPriority(entry)) {
       const spotHistory = entry.spotReadout === 'history'
       if (!entry.nativeMetric && (entry.nativeDataRequest || quantities > 0 || (entry.nativeChart && !entry.mixedOverlayRequired)
-        || tableDelivered || entry.withheldDiagram || entry.spotReadout)) {
+        || tableDelivered || entry.withheldDiagram || entry.rejectedFence || entry.kinds.has('flow') || entry.spotReadout)) {
         missingData.push('headline metric cards')
       }
       if (spotHistory && !entry.spotLine && !partialHistory) missingData.push('the dated spot chart')
       else if (breakdown && entry.nativeComparisons.size < 2) missingData.push('the missing production comparisons')
       else if (!spotHistory && !entry.nativeChart && !entry.marketHistory
-        && (entry.nativeDataRequest || quantities > 1 || tableDelivered || entry.withheldDiagram)) missingData.push('the data chart')
+        && (entry.nativeDataRequest || quantities > 1 || tableDelivered || entry.withheldDiagram || entry.rejectedFence)) missingData.push('the data chart')
     }
     const knownMismatch = entry.visual && entry.kinds.size > 0 && missing.length > 0
     const missingGraphic = missing.some(kind => ['flow', 'svg', 'diagram'].includes(kind))
@@ -650,6 +654,8 @@ export function install(rt) {
       const reminder = missingPublicEvidence ? sourceReminder(turn, native, entry.textOnly) : mixedIncomplete
         ? `${VISUAL_NOTICE} turn=${turn}]\nThe user requested a dated spot/futures overlay with basis, but no successfully staged native show_view contains both the same-date spot/futures lines AND a basis series. In a Bot or group use ONE native show_view stack with (1) a 2-series line chart, and (2) a basis line (spot minus futures), if separately verified dated observations allow it. Do not output a dsh-ui fence, raw view JSON, standalone futures chart or regional spot bars. If spot history is unavailable, do NOT fabricate prices: give a clear partial-data explanation or table instead. Do not repeat research. Only one correction.`
         : missingData.length && (!missingCapacity || breakdown) ? numericReminder(turn, entry, missingData, breakdown)
+        : entry.rejectedFence && (!entry.visual || missingGraphic)
+          ? `${VISUAL_NOTICE} turn=${turn}]\nThe generated visual did not pass validation. Recover it once in this turn using the existing answer and evidence. ${native ? 'Use native show_view for data, or show_view type=flow with nodes and edges for the relationship.' : 'Use a short GenUI diagram with kind=flowchart, nodes and edges.'} If no valid visual can be built, give a brief structured explanation in Markdown. Do not resend the failed markup, add a demo tag, or ask the user to retry.`
         : knownMismatch || missingGraphic || missingCapacity ? requestedViewReminder(turn, native, missing, entry.requested, genui)
       : entry.invalidGenuiChart && native
         ? `${VISUAL_NOTICE} turn=${turn}]\nThe previous GenUI chart lacks drawable data. Use one native show_view chart with the verified observations in this answer, or a factual table when data is missing. Do not repeat research or invent data.`

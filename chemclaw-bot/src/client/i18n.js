@@ -511,7 +511,7 @@ const ZH = {
   'Zoom out': '缩小',
   'Fit graphic': '适应窗口',
   'Preparing the visual…': '正在生成图形…',
-  'The visual could not be displayed.': '这张图未能显示，可以请我重新生成。',
+  'The visual is unavailable. The answer text is still available.': '图表暂不可用，仍可阅读正文。',
   Copy: '复制',
   Copied: '已复制',
   Content: '内容',

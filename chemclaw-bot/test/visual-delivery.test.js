@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { install, hasInlineGenui, textOnlyRequested, VISUAL_NOTICE, requestedChartKinds, deliveredViewKinds, missingRequestedKinds, marketHistoryRequest, marketPriceVisual, redundantMarketSourceQuestion, multiAssetMarketRequest, genuiChartPayloadsUsable, nativeChartPayloadsUsable, mixedMarketVisualStatus, stripUnrenderedMixedViewText } from '../src/host/visual-delivery.js'
 import { fakeContext } from './fake-ctx.js'
-import { genuiFences, genuiMarkdown, repairGenuiGraphicFences } from '../src/shared/genui-fences.js'
+import { genuiFences, genuiMarkdown, repairGenuiGraphicFences, stripGraphicControlLines } from '../src/shared/genui-fences.js'
 
 const content = text => [{ type: 'text', text }]
 const fence = (panel = false) => '```dsh-ui\n' + JSON.stringify({ panel, items: [{ type: 'text', text: 'Result' }] }) + '\n```'
@@ -56,6 +56,64 @@ test('first-pass GenUI or a successfully delivered show_view adds no correction'
 
 const svgCode = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0 0 L2 2"/></svg>'
 const diagramFence = '```dsh-ui\n' + JSON.stringify({ items: [{ type: 'diagram', kind: 'flowchart', nodes: [{ id: 'a', label: '生产' }, { id: 'b', label: '销售' }], edges: [{ from: 'a', to: 'b' }] }] }) + '\n```'
+const unsupportedGraphic = { type: 'svg', title: '未填写的矢量图' }
+
+function installFixtureValidator(ctx) {
+  ctx.tools.executable = name => name === 'validate_dsh_ui' ? {} : undefined
+  ctx.tools.execute = async ({ calls }) => {
+    const raw = JSON.parse(calls[0].arguments).spec
+    let verdict = 'status=invalid'
+    try {
+      const parsed = JSON.parse(raw)
+      if (parsed.items?.length && parsed.items.every(item => ['diagram', 'text', 'svg'].includes(item.type))) verdict = 'status=valid'
+    } catch { /* bad syntax */ }
+    return { results: [{ result: { isError: false, value: '[genui-validation]\n' + verdict } }] }
+  }
+}
+
+const settleModelText = async (ctx, text) => {
+  const hook = ctx.listeners.get('llm/stream')[0]
+  const chunks = await Array.fromAsync(hook({ sessionId: 's' }, async function* () {
+    yield { type: 'block-end', block: { type: 'text', text } }
+  }))
+  return chunks[0].block.text
+}
+
+test('duplicate broken graphics are withheld before display, with one bounded recovery', async () => {
+  const f = setup()
+  installFixtureValidator(f.ctx)
+  f.start(); f.user('请画供应链流程图')
+  const broken = genuiMarkdown(JSON.stringify({ items: [unsupportedGraphic] }))
+  const invalidXml = genuiMarkdown(JSON.stringify({ items: [{ ...unsupportedGraphic, code: '<svg><text>销售</svg>' }] }))
+  const response = await settleModelText(f.ctx, '核对生产再销售。\n\n' + broken + '\n\n' + invalidXml + '\n\n<chatml_chart_demo>')
+  assert.equal(response, '核对生产再销售。')
+  f.answer(response); f.stop()
+  assert.match(f.notices[0].content[0].text, /Recover it once/)
+  assert.equal(await settleModelText(f.ctx, broken), '')
+  f.stop()
+  assert.equal(f.notices.length, 1)
+})
+
+test('legacy inline flow is normalized and valid neighbors survive a rejected graphic', async () => {
+  const f = setup()
+  installFixtureValidator(f.ctx)
+  f.start(); f.user('请画供应链流程图')
+  const legacy = { type: 'flow', title: '生产和销售', nodes: [{ id: 'a', label: '生产' }, { id: 'b', label: '销售' }],
+    edges: [{ from: 'a', to: 'b', label: '通常', uncertain: true }] }
+  const original = genuiMarkdown(JSON.stringify({ items: [legacy, unsupportedGraphic] }))
+  const result = await settleModelText(f.ctx, original)
+  const [item] = JSON.parse([...genuiFences(result)][0].body).items
+  assert.equal(item.type, 'diagram')
+  assert.equal(item.edges[0].kind, 'dashed')
+  assert.doesNotMatch(result, /未填写/)
+  f.answer(result); f.stop()
+  assert.deepEqual(f.notices, [])
+})
+
+test('standalone demo markers are removed outside examples only', () => {
+  const example = '```html\n<chatml_chart_demo>\n```'
+  assert.equal(stripGraphicControlLines('说明\n<chatml_chart_demo>\n' + example + '\n</chatml_chart_demo>'), '说明\n' + example + '\n')
+})
 const spotQuestion = '纯碱最近一个月现货价格'
 const spotMetric = { type: 'metric', label: '纯碱现货', value: '1123 元/吨' }
 const spotLine = { type: 'chart', kind: 'line', categories: ['2026-10-23', '2026-11-19'], series: [{ name: '轻质纯碱现货', values: [1118, 1123] }] }
@@ -338,7 +396,7 @@ test('native panels count only in native Agent mode; Bot panels get an inline re
   assert.equal(hasInlineGenui(fence().replace('dsh-ui', 'DSH-UI>')), true)
 })
 
-test('malformed and incomplete GenUI fences are left to upstream repair without a competing correction', () => {
+test('absence of a local validator does not start competing repairs of malformed GenUI fences', () => {
   for (const text of ['```dsh-ui\n{broken\n```', '```dsh-ui\n{"items":[]}', '```dsh-ui\n{"items":[]}\n```']) {
     const f = setup(); f.start(); f.user('Answer'); f.answer(text); f.stop()
     assert.deepEqual(f.notices, [])
