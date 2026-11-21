@@ -459,11 +459,13 @@ export function install(rt) {
     // boundary is shared with tests for successful and failed required saves.
     persistenceGate.assertWritable(room.id)
     try {
-      return await publishSavedGroupReply({
+      const posted = await publishSavedGroupReply({
         room, round, member, visible, duration,
         append: appendRoom, save: rt.save,
         commitDraft: () => { if (sessionId) rt.commitRoomDraft?.(sessionId) },
       })
+      if (posted) rt.imGroupReply?.(room.id, member, visible)
+      return posted
     } catch (error) {
       // Do not resume this room from an in-memory seq/log after an uncertain
       // state save. Another room is unaffected, and no existing files are removed.
@@ -624,6 +626,8 @@ export function install(rt) {
     const lines = []
     for (const message of agent?.inbox?.[list] ?? []) {
       if (message.source?.kind !== 'user') continue
+      // IM requests need their DSH event to establish the origin of the next round.
+      if (typeof message.source.rpcId === 'string' && message.source.rpcId.startsWith('im:')) break
       const content = Array.isArray(message.content) ? message.content : []
       const text = textOf(content)
       if (rt.skillRequest?.(text, rt.roomOf(agent.id))) break
@@ -648,6 +652,7 @@ export function install(rt) {
     const waiting = waitingLines(agent)
     await rt.contextRecovery?.userInput(room.id, waiting.map(line => ({ id: line.id, source: { kind: 'user' } })))
     if (waiting.length === 0) return
+    rt.withholdImReply?.(room.id)
     // Append the full batch first, without consuming DSH's inbox, publishing
     // round replies, or scheduling new member calls.
     for (const line of waiting) appendRoom(room, { who: 'User', text: line.text })
@@ -1074,6 +1079,8 @@ export function install(rt) {
         pendingReply = { kind, botId: sender.id, name: sender.name, color: sender.color, time: Date.now() }
         logged = room.seq
       } else {
+        // An out-of-round result has no verified claim on this IM conversation.
+        rt.withholdImReply?.(room.id)
         const line = [text, ...files.map(fileLine)].filter(Boolean).join('\n')
         appendRoom(room, { who: sender.name, botId: sender.id, text: line, ...(files.length > 0 ? { files } : {}) })
         pendingReply = { botId: sender.id, name: sender.name, color: sender.color, text: line, time: Date.now() }

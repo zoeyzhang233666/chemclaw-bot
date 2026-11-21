@@ -85,7 +85,8 @@
     }
   },
   "devDependencies": {
-    "esbuild": "0.28.2"
+    "esbuild": "0.28.2",
+    "qrcode-generator": "2.0.4"
   },
   "dependencies": {
     "@changfenhuang/dsh-genui": "0.16.0",
