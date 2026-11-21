@@ -2,16 +2,19 @@
 // direct chats reach that Bot, platform group chats can be bound to a ChemClaw group.
 // The platform adapters (im/platforms/) own the wire; this module owns pairing,
 // routing, cards and the send queues. Only the dsh holding the team lock connects.
-import { randomBytes, randomUUID } from 'node:crypto'
+import { createHash, randomBytes, randomUUID } from 'node:crypto'
 import { chmod, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { replaceFile } from '../files.js'
 import { viewCardText } from '../parts.js'
+import { artifactReferences } from '../../shared/artifact-links.js'
 import { imPlatform, IM_PLATFORMS } from '../../shared/im-platforms.js'
 import { REPLY_KIND, SOURCE_KIND } from '../constants.js'
 import { extractLocalMarkdownImages, prepareOutboundReply } from './outbound-images.js'
+import { extractImVisuals, renderImSvg } from './inline-images.js'
 import { adapters } from './platforms/index.js'
 import { readReplyImage } from './reply-image.js'
+import { imViewSummary, renderImViewImage } from './view-image.js'
 
 const RECONCILE_MS = 15_000
 const RUNTIME_SAVE_MS = 400
@@ -447,10 +450,15 @@ export function install(rt) {
       const conn = Object.values(connections()).find(item => item.id === connId)
       bound = conn === undefined ? undefined : bindingOf(conn, chatKey)
     }
-    origins.set(sessionId, { connId, chatKey, senderId, binding: bound, at: Date.now() })
+    const delivery = previous?.delivery ?? { replies: new Map(), images: new Set() }
+    origins.set(sessionId, { connId, chatKey, senderId, binding: bound, delivery, at: Date.now() })
   }
   const dropOrigin = (sessionId) => {
-    if (origins.has(sessionId) && !withheldOrigins.has(sessionId)) withheldOrigins.set(sessionId, false)
+    const entry = origins.get(sessionId)
+    if (entry) {
+      entry.delivery.revoked = true
+      if (!withheldOrigins.has(sessionId)) withheldOrigins.set(sessionId, false)
+    }
     origins.delete(sessionId)
     mixed.add(sessionId)
   }
@@ -481,7 +489,7 @@ export function install(rt) {
     // The chat may have been unbound or pointed at another Bot or group while the work
     // it started keeps running; that work's late lines must not follow the old origin.
     if (entry.binding === undefined || bindingOf(conn, entry.chatKey) !== entry.binding) return undefined
-    return { conn, chatKey: entry.chatKey, chat, senderId: entry.senderId, binding: entry.binding }
+    return { conn, chatKey: entry.chatKey, chat, senderId: entry.senderId, binding: entry.binding, delivery: entry.delivery }
   }
   const rememberRequest = (requestId, conn, chatKey, senderId, binding = bindingOf(conn, chatKey)) => {
     // The binding is captured when the message arrives, not when it is admitted: a chat
@@ -498,8 +506,8 @@ export function install(rt) {
   }
 
   const failClass = (error) => {
-    if (error?.permanent === true || (typeof error?.status === 'number' && error.status >= 400 && error.status < 500 && error.status !== 429)) return 'permanent'
     if (error?.unknown === true || error?.stopped === true) return 'drop'
+    if (error?.permanent === true || (typeof error?.status === 'number' && error.status >= 400 && error.status < 500 && error.status !== 429)) return 'permanent'
     return 'retry'
   }
 
@@ -551,7 +559,7 @@ export function install(rt) {
           continue
         }
         const job = queue.jobs[0]
-        if (job.origin && !originStillValid(conn.id, chatKey, runner, job.origin.senderId, job.origin.binding)) {
+        if (job.origin && (job.origin.delivery?.revoked || !originStillValid(conn.id, chatKey, runner, job.origin.senderId, job.origin.binding))) {
           queue.jobs.shift()
           await Promise.resolve(job.onDrop?.()).catch(() => {})
           continue
@@ -598,6 +606,10 @@ export function install(rt) {
               clearPendingSend(conn.id, chatKey, settled)
             }
             break
+          }
+          if (job.fallbackText !== undefined && (how === 'permanent' || (how === 'retry' && job.attempts + 1 >= SEND_ATTEMPTS))) {
+            queue.jobs[0] = { chat: job.chat, text: job.fallbackText, origin: job.origin, attempts: 0 }
+            continue
           }
           if (how === 'retry') {
             job.attempts += 1
@@ -683,37 +695,122 @@ export function install(rt) {
     if (binding !== undefined && bindingOf(liveConn, chatKey) !== binding) return undefined
     return liveConn
   }
-  const sendReply = (origin, body, { sessionId, botId, prefix = '' } = {}) => {
+  const sendNewImage = (origin, conn, job) => {
+    const hash = createHash('sha256').update(job.image.data).digest('hex')
+    const { images } = origin.delivery
+    if (images.has(hash)) return
+    images.add(hash)
+    if (images.size > 64) images.delete(images.values().next().value)
+    enqueue(conn, origin.chatKey, job)
+  }
+  const newProse = (origin, speaker, body) => {
+    const normalized = body.replace(/\s+/gu, ' ').trim()
+    if (!normalized) return ''
+    const replies = origin.delivery.replies.get(speaker) ?? []
+    if (replies.includes(normalized)) return ''
+    const prefix = replies.find(prior => prior.length >= 40 && normalized.startsWith(prior + ' '))
+    replies.unshift(normalized)
+    if (replies.length > 16) replies.pop()
+    origin.delivery.replies.set(speaker, replies)
+    if (!prefix) return body
+    // A visual repair can repeat the earlier message before adding new prose.
+    // Preserve the formatting of the newly added paragraphs.
+    const paragraphs = body.split(/\n(?:[ \t]*\n)+/u)
+    for (let index = 1; index < paragraphs.length; index++) {
+      const head = paragraphs.slice(0, index).join(' ').replace(/\s+/gu, ' ').trim()
+      if (head === prefix) return paragraphs.slice(index).join('\n\n')
+    }
+    return body
+  }
+  const imageNotice = label => {
+    const hint = langKey() === 'zh' ? '图片未能送达，请在 ChemClaw 电脑版查看。' : 'Image unavailable here. Open ChemClaw to view it.'
+    return label ? `${label}\n${hint}` : hint
+  }
+  const supportedImagePath = path => typeof path === 'string' && /\.(?:png|jpe?g|gif|webp)$/iu.test(path)
+  const sendReply = (origin, body, { sessionId, botId, prefix = '', presented = [] } = {}) => {
     const { conn, chatKey, chat, senderId, binding } = origin
     const where = { key: chatKey, kind: chat.kind, title: chat.title }
     const stageKey = `${conn.id}:${chatKey}`
     const runner = runners.get(conn.id)
-    const authorization = { senderId, binding }
-    body = rt.redactSecrets(body)
+    const authorization = { senderId, binding, delivery: origin.delivery }
+    const { text: prose, visuals } = extractImVisuals(rt.redactSecrets(body))
+    body = prose
+    const paths = [...new Set([...presented, ...artifactReferences(body).map(ref => ref.value)].filter(supportedImagePath))].slice(0, 8)
     const maybeImages = (typeof runner?.handle?.sendImage === 'function' || runner?.handle === undefined)
-      && extractLocalMarkdownImages(body).length > 0
+      && (paths.length > 0 || visuals.length > 0 || extractLocalMarkdownImages(body).length > 0)
+    const sendTextReply = (live, message) => {
+      const fresh = newProse(origin, botId, message)
+      if (fresh !== '') enqueue(live, chatKey, { chat: where, text: `${prefix}${fresh}`, origin: authorization })
+    }
     if (!maybeImages && !outboundStages.has(stageKey)) {
-      enqueue(conn, chatKey, { chat: where, text: `${prefix}${body}`, origin: authorization })
+      sendTextReply(conn, [body, ...visuals.map(item => imageNotice(item.title))].filter(Boolean).join('\n\n'))
       return
     }
     afterStage(conn, chatKey, async () => {
       const before = originStillValid(conn.id, chatKey, runner, senderId, binding)
-      if (before === undefined) return
+      if (before === undefined || origin.delivery.revoked) return
       if (!maybeImages || typeof runner?.handle?.sendImage !== 'function') {
-        enqueue(before, chatKey, { chat: where, text: `${prefix}${body}`, origin: authorization })
+        sendTextReply(before, [body, ...visuals.map(item => imageNotice(item.title))].filter(Boolean).join('\n\n'))
         return
       }
       const prepared = await prepareOutboundReply(body, {
         resolveImage: path => readReplyImage(rt, { sessionId, botId, path }),
       })
-      for (const failure of prepared.failed) {
-        rt.warn('chemclaw-bot: im outbound image %s skipped: %s', failure.path, failure.reason)
+      for (const path of paths) {
+        try {
+          const file = await readReplyImage(rt, { sessionId, botId, path })
+          prepared.images.push({ data: Buffer.from(file.bytes, 'base64'), mediaType: file.mime, name: file.name })
+        } catch (error) {
+          if (presented.includes(path)) prepared.text += `\n\n${imageNotice()}`
+          rt.warn('chemclaw-bot: IM file image unavailable: %s', failMessage(error))
+        }
+      }
+      const missing = []
+      for (const visual of visuals) {
+        let image
+        try { image = await renderImSvg(visual.code, rt.redactSecrets) }
+        catch (error) { rt.warn('chemclaw-bot: IM inline image unavailable: %s', failMessage(error)) }
+        if (image) prepared.images.push({ ...image, alt: visual.title })
+        else missing.push(imageNotice(visual.title))
       }
       const liveConn = originStillValid(conn.id, chatKey, runner, senderId, binding)
-      if (liveConn === undefined) return
-      const fullText = prepared.text !== '' ? `${prefix}${prepared.text}` : (prepared.images.length > 0 && prefix !== '' ? prefix.trimEnd() : '')
-      if (fullText !== '') enqueue(liveConn, chatKey, { chat: where, text: fullText, origin: authorization })
-      for (const image of prepared.images) enqueue(liveConn, chatKey, { chat: where, image, origin: authorization })
+      if (liveConn === undefined || origin.delivery.revoked) return
+      sendTextReply(liveConn, prepared.text.trim())
+      for (const image of prepared.images) sendNewImage(origin, liveConn, {
+        chat: where, image, origin: authorization, fallbackText: imageNotice(image.alt),
+      })
+      if (missing.length) sendTextReply(liveConn, [...new Set(missing)].join('\n\n'))
+    })
+  }
+
+  const imDisplayView = (sessionId, card, member) => {
+    const origin = originOf(sessionId)
+    if (origin === undefined) return
+    const { conn, chatKey, chat, senderId, binding } = origin
+    const runner = runners.get(conn.id)
+    const where = { key: chatKey, kind: chat.kind, title: chat.title }
+    const authorization = { senderId, binding, delivery: origin.delivery }
+    const lang = langKey()
+    const summary = imViewSummary(card, lang)
+    const fallbackText = rt.redactSecrets(member ? `${member.name}\n${summary}` : summary)
+    const serialized = JSON.stringify(card)
+    if (typeof runner?.handle?.sendImage !== 'function' || rt.redactSecrets(serialized) !== serialized) {
+      enqueueAfterStage(conn, chatKey, { chat: where, text: fallbackText, origin: authorization })
+      return
+    }
+    afterStage(conn, chatKey, async () => {
+      if (origin.delivery.revoked || !originStillValid(conn.id, chatKey, runner, senderId, binding)) return
+      let image
+      try {
+        image = await rt.renderImViewImage(card, lang, rt.redactSecrets)
+      } catch (error) {
+        rt.warn('chemclaw-bot: IM view image unavailable: %s', failMessage(error))
+      }
+      const liveConn = originStillValid(conn.id, chatKey, runner, senderId, binding)
+      if (liveConn === undefined || origin.delivery.revoked) return
+      const job = { chat: where, origin: authorization }
+      if (image) sendNewImage(origin, liveConn, { ...job, image, fallbackText })
+      else enqueue(liveConn, chatKey, { ...job, text: fallbackText })
     })
   }
 
@@ -1550,16 +1647,21 @@ export function install(rt) {
       // Group replies reach IM after the round commits them.
       return
     }
-    if (event.type !== 'assistant/message' && event.type !== 'tool/call') return
+    if (event.type === 'deliverables/presented') {
+      const origin = originOf(id)
+      const files = event.data?.files
+      if (origin && Array.isArray(files)) sendReply(origin, '', { sessionId: id, botId, presented: files.map(file => file?.path) })
+      return
+    }
+    if (event.type !== 'assistant/message') return
     const origin = originOf(session.id)
     for (const item of rt.displayItems(session.id, [event])) {
-      if (item.kind !== 'bot' && item.kind !== 'view') continue
+      if (item.kind !== 'bot') continue
       if (origin === undefined) {
         warnWithheldOrigin(session.id)
         continue
       }
-      const body = item.kind === 'bot' ? item.text : viewCardText({ title: item.title, view: item.view }) || (item.title ?? '')
-      sendReply(origin, body, { sessionId: session.id, botId })
+      sendReply(origin, item.text, { sessionId: session.id, botId })
     }
   })
 
@@ -1571,6 +1673,11 @@ export function install(rt) {
       return
     }
     sendReply(origin, body, { sessionId: roomId, botId: bot.id, prefix: `**${bot.name}**: ` })
+  }
+
+  const imImageDeliveryOf = id => {
+    const origin = originOf(id) ?? originOf(rt.groupOwners.get(id)?.roomId)
+    return origin && typeof runners.get(origin.conn.id)?.handle?.sendImage === 'function'
   }
 
   const imApproval = (kind, data) => {
@@ -1614,5 +1721,6 @@ export function install(rt) {
     return [id, { state: status.state, ...(status.error !== undefined ? { error: status.error } : {}), at: status.at }]
   }))
 
-  Object.assign(rt, { imView, imStatusView, imViaView, imEndpoint, imGroupReply, imApproval, imStateSaved, withholdImReply: dropOrigin })
+  Object.assign(rt, { imView, imStatusView, imViaView, imEndpoint, imGroupReply, imApproval, imStateSaved,
+    imDisplayView, imImageDeliveryOf, renderImViewImage, withholdImReply: dropOrigin })
 }

@@ -1,5 +1,6 @@
 import { constants } from 'node:fs'
 import { open } from 'node:fs/promises'
+import { basename } from 'node:path'
 import { resolveArtifacts } from '../artifact-paths.js'
 
 import { detectImageMediaType } from './platforms/media.js'
@@ -19,7 +20,7 @@ export async function readReplyImage(rt, { sessionId, botId, path }) {
     const bytes = data.subarray(0, bytesRead)
     const mime = detectImageMediaType(bytes)
     if (!mime) throw new Error('Unsupported IM image format')
-    return { mime, bytes: bytes.toString('base64') }
+    return { mime, name: basename(files[path]), bytes: bytes.toString('base64') }
   } finally {
     await file.close()
   }

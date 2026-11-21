@@ -7154,29 +7154,7 @@ function loadChartEngine() {
   return pending;
 }
 
-// src/client/chart-options.js
-function candlestickTooltip(params) {
-  const points = Array.isArray(params) ? params : [params];
-  const candle = points.find((point) => point?.seriesType === "candlestick");
-  const values = candle?.data?.value ?? candle?.data;
-  if (!Array.isArray(values) || values.length < 4) return "";
-  const print = (value2) => typeof value2 === "number" && Number.isFinite(value2) ? value2.toLocaleString(void 0, { maximumFractionDigits: 6 }) : "-";
-  const date = String(candle.axisValue ?? candle.name ?? "");
-  const lines = [
-    date,
-    `${t("Opening price")}：${print(values[0])}`,
-    `${t("Closing price")}：${print(values[1])}`,
-    `${t("Highest price")}：${print(values[3])}`,
-    `${t("Lowest price")}：${print(values[2])}`
-  ];
-  for (const point of points) {
-    if (point?.seriesType === "line" && /^MA(?:5|10|20)$/.test(point.seriesName ?? ""))
-      lines.push(`${point.seriesName}：${print(point.data)}`);
-    if (point?.seriesType === "bar" && point?.seriesName === "Volume")
-      lines.push(`${t("Trading volume")}：${print(point.data?.value ?? point.data)}`);
-  }
-  return lines.join("\n");
-}
+// src/shared/chart-options.js
 var number = (value2, lookup) => {
   const result = resolve(value2, lookup);
   return typeof result === "number" && Number.isFinite(result) ? result : null;
@@ -7224,7 +7202,7 @@ function tableCsv(table) {
   };
   return [table.columns, ...table.rows].map((row) => row.map(cell).join(",")).join("\n");
 }
-function advancedChartOption(data, theme) {
+function advancedChartOption(data, theme, { candleName = "OHLC", candleTooltip } = {}) {
   const { categories, series, unit = "" } = data;
   const label = { color: theme.ink, fontFamily: theme.font, fontSize: 11 };
   const axis = { axisLabel: { color: theme.muted, fontSize: 10, hideOverlap: true }, axisLine: { lineStyle: { color: theme.line } }, splitLine: { lineStyle: { color: theme.line, type: "dashed" } }, nameTextStyle: label };
@@ -7258,7 +7236,7 @@ function advancedChartOption(data, theme) {
       connectNulls: false
     }));
     const candle = {
-      name: t("OHLC"),
+      name: candleName,
       type: "candlestick",
       xAxisIndex: 0,
       yAxisIndex: 0,
@@ -7269,9 +7247,9 @@ function advancedChartOption(data, theme) {
     const yAxis = { ...axis, type: "value", name: unit, scale: true };
     return {
       ...base,
-      tooltip: { ...base.tooltip, trigger: "axis", axisPointer: { type: "cross" }, formatter: candlestickTooltip },
+      tooltip: { ...base.tooltip, trigger: "axis", axisPointer: { type: "cross" }, formatter: candleTooltip },
       axisPointer: { link: [{ xAxisIndex: volume ? [0, 1] : [0] }] },
-      legend: means.length ? { ...legend, data: [t("OHLC"), ...means.map((item) => item.name)] } : void 0,
+      legend: means.length ? { ...legend, data: [candleName, ...means.map((item) => item.name)] } : void 0,
       grid: volume ? [{ left: 64, right: 16, top: 48, height: "54%" }, { left: 64, right: 16, top: "76%", height: "10%" }] : [{ left: 64, right: 16, top: 48, bottom: 68 }],
       xAxis: volume ? [{ ...xAxis, gridIndex: 0, axisLabel: { show: false } }, { ...xAxis, gridIndex: 1 }] : [{ ...xAxis, gridIndex: 0 }],
       yAxis: volume ? [{ ...yAxis, gridIndex: 0 }, { ...axis, type: "value", gridIndex: 1, scale: true, splitNumber: 2 }] : [{ ...yAxis, gridIndex: 0 }],
@@ -7400,6 +7378,33 @@ function advancedChartOption(data, theme) {
   }] };
 }
 
+// src/client/chart-options.js
+function candlestickTooltip(params) {
+  const points = Array.isArray(params) ? params : [params];
+  const candle = points.find((point) => point?.seriesType === "candlestick");
+  const values = candle?.data?.value ?? candle?.data;
+  if (!Array.isArray(values) || values.length < 4) return "";
+  const print = (value2) => typeof value2 === "number" && Number.isFinite(value2) ? value2.toLocaleString(void 0, { maximumFractionDigits: 6 }) : "-";
+  const date = String(candle.axisValue ?? candle.name ?? "");
+  const lines = [
+    date,
+    `${t("Opening price")}：${print(values[0])}`,
+    `${t("Closing price")}：${print(values[1])}`,
+    `${t("Highest price")}：${print(values[3])}`,
+    `${t("Lowest price")}：${print(values[2])}`
+  ];
+  for (const point of points) {
+    if (point?.seriesType === "line" && /^MA(?:5|10|20)$/.test(point.seriesName ?? ""))
+      lines.push(`${point.seriesName}：${print(point.data)}`);
+    if (point?.seriesType === "bar" && point?.seriesName === "Volume")
+      lines.push(`${t("Trading volume")}：${print(point.data?.value ?? point.data)}`);
+  }
+  return lines.join("\n");
+}
+function advancedChartOption2(data, theme) {
+  return advancedChartOption(data, theme, { candleName: t("OHLC"), candleTooltip: candlestickTooltip });
+}
+
 // src/client/widget-advanced-chart.js
 var import_react9 = require("react");
 function chartTheme(element) {
@@ -7490,7 +7495,7 @@ function AdvancedChart({ node, lookup, registerChart, refreshCharts }) {
         const current = chartTheme(plot.current);
         const key = JSON.stringify(current);
         if (lastTheme !== key) {
-          instance.setOption(advancedChartOption(data, current), { notMerge: true });
+          instance.setOption(advancedChartOption2(data, current), { notMerge: true });
           lastTheme = key;
         }
         instance.resize();
@@ -10934,7 +10939,7 @@ function ArtifactFiles({ files, openFile }) {
 }
 
 // src/shared/artifact-links.js
-var EXTENSION = /\.(?:html?|xlsx?|csv|tsv|pptx?|docx?|pdf|md|txt|json|png|jpe?g|svg|webp)$/i;
+var EXTENSION = /\.(?:html?|xlsx?|csv|tsv|pptx?|docx?|pdf|md|txt|json|png|jpe?g|svg|webp|gif)$/i;
 function artifactPath(value2) {
   if (typeof value2 !== "string" || value2.length > 2048 || /[\x00-\x1f]/.test(value2)) return void 0;
   let path = value2.replace(/#L\d+(?:-L\d+)?$/, "");

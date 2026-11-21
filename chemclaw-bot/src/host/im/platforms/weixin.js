@@ -148,6 +148,17 @@ export default {
       setRuntime({ contextTokens: next })
     }
 
+    const recentInbound = new Set(Array.isArray(runtime().recentInbound) ? runtime().recentInbound.slice(-256) : [])
+    const postMessage = async msg => {
+      try {
+        return await call('sendmessage', { msg })
+      } catch (error) {
+        // A lost response can follow an accepted message. Retry explicit rate
+        // limits and keep ambiguous deliveries out of the automatic retry queue.
+        if (!error.permanent && error.status !== 429 && !(error.status >= 400 && error.status < 500)) error.unknown = true
+        throw error
+      }
+    }
     const deliver = async (msg) => {
       const userId = String(msg.from_user_id ?? '')
       if (userId === '') return
@@ -236,7 +247,19 @@ export default {
           handlers.onStatus({ state: 'ready' })
           for (const msg of answer.msgs ?? []) {
             if (stopped || generation !== gen) return
-            await deliver(msg).catch(error => env.log?.warn?.('ds-bot im: weixin message failed: %s', error?.message ?? error))
+            const id = msg.message_id || msg.client_id
+            const key = id ? JSON.stringify([msg.from_user_id, String(id).slice(0, 128)]) : undefined
+            if (key && recentInbound.has(key)) continue
+            try {
+              await deliver(msg)
+              if (key && !stopped) {
+                recentInbound.add(key)
+                if (recentInbound.size > 256) recentInbound.delete(recentInbound.values().next().value)
+                setRuntime({ recentInbound: [...recentInbound] })
+              }
+            } catch (error) {
+              env.log?.warn?.('ds-bot im: weixin message failed: %s', error?.message ?? error)
+            }
           }
           if (stopped || generation !== gen) return
           if (answer.get_updates_buf !== undefined && answer.get_updates_buf !== runtime().cursor) {
@@ -301,19 +324,21 @@ export default {
         const parts = []
         for (const chunkText of chunks) {
           const clientId = `ds-bot-${randomBytes(8).toString('hex')}`
-          const answer = await call('sendmessage', {
-            msg: {
-              from_user_id: '', to_user_id: chat.key, client_id: clientId,
-              message_type: 2, message_state: 2,
-              item_list: [{ type: 1, text_item: { text: chunkText } }],
-              ...(contextToken ? { context_token: contextToken } : {}),
-            },
+          const answer = await postMessage({
+            from_user_id: '', to_user_id: chat.key, client_id: clientId,
+            message_type: 2, message_state: 2,
+            item_list: [{ type: 1, text_item: { text: chunkText } }],
+            ...(contextToken ? { context_token: contextToken } : {}),
+          }).catch(error => {
+            error.parts = parts
+            if (parts.length) error.unknown = true
+            throw error
           })
           if (Number(answer.ret) !== 0 && answer.ret !== undefined) {
             // WeChat may already have accepted earlier chunks. Hand them back on
             // the error so the host can still remember them for quoted replies:
             // a later failure must not lose the ids of delivered messages.
-            throw fail(`WeChat refused the reply (${answer.errmsg ?? answer.ret})`, { permanent: true, parts })
+            throw fail(`WeChat refused the reply (${answer.errmsg ?? answer.ret})`, { permanent: true, unknown: parts.length > 0, parts })
           }
           messageId = clientId
           addId(ids, clientId)
@@ -400,30 +425,22 @@ export default {
         if (!downloadParam) throw fail('WeChat upload returned no download parameter', { permanent: true })
         const clientId = `ds-bot-${randomBytes(8).toString('hex')}`
         const contextToken = contextTokens()[chat.key]
-        let answer
-        try {
-          answer = await call('sendmessage', {
-            msg: {
-              from_user_id: '', to_user_id: chat.key, client_id: clientId,
-              message_type: 2, message_state: 2,
-              item_list: [{
-                type: 2,
-                image_item: {
-                  media: {
-                    encrypt_query_param: downloadParam,
-                    aes_key: Buffer.from(aesKey.toString('hex')).toString('base64'),
-                    encrypt_type: 1,
-                  },
-                  mid_size: encrypted.byteLength,
-                },
-              }],
-              ...(contextToken ? { context_token: contextToken } : {}),
+        const answer = await postMessage({
+          from_user_id: '', to_user_id: chat.key, client_id: clientId,
+          message_type: 2, message_state: 2,
+          item_list: [{
+            type: 2,
+            image_item: {
+              media: {
+                encrypt_query_param: downloadParam,
+                aes_key: Buffer.from(aesKey.toString('hex')).toString('base64'),
+                encrypt_type: 1,
+              },
+              mid_size: encrypted.byteLength,
             },
-          })
-        } catch (error) {
-          if (error?.timeout === true) error.unknown = true
-          throw error
-        }
+          }],
+          ...(contextToken ? { context_token: contextToken } : {}),
+        })
         const sendCode = answer?.ret ?? answer?.errcode
         if (sendCode !== undefined && Number(sendCode) !== 0) {
           throw fail(`WeChat refused the image (${answer.errmsg ?? sendCode})`, { permanent: true })
@@ -562,9 +579,9 @@ async function request(env, baseUrl, token, endpoint, body, timeoutMs = POLL_TIM
   let parsed
   try { parsed = text === '' ? {} : JSON.parse(text) } catch { parsed = undefined }
   const json = parsed !== null && typeof parsed === 'object' ? parsed : undefined
-  if (response.status === 429 || json?.ret === 429) throw fail('WeChat rate limited the request', { retryAfter: Number(response.headers.get('retry-after')) })
+  if (response.status === 429 || json?.ret === 429) throw fail('WeChat rate limited the request', { status: 429, retryAfter: Number(response.headers.get('retry-after')) })
   if (response.status === 401 || response.status === 403) throw fail('WeChat refused the token', { permanent: true })
-  if (!response.ok) throw fail(`WeChat answered ${response.status}`)
+  if (!response.ok) throw fail(`WeChat answered ${response.status}`, { status: response.status })
   // A caller that reads fields from the answer (getupdates) needs a real JSON
   // object; anyone else keeps the old empty answer on a malformed body.
   if (json === undefined) {

@@ -141,10 +141,12 @@ test('getupdates keeps the cursor and context_token in runtime and delivers text
   const messages = []
   fake.replies.updates = (params) => {
     if (params.get_updates_buf === 'c1') return { ret: 0, msgs: [], get_updates_buf: 'c1' }
+    const text = { from_user_id: 'u1', message_id: 'server-1', client_id: 'm1', context_token: 'tok-u1', item_list: [{ type: 1, text_item: { text: 'hello' } }] }
     return {
       ret: 0, get_updates_buf: 'c1',
       msgs: [
-        { from_user_id: 'u1', client_id: 'm1', context_token: 'tok-u1', item_list: [{ type: 1, text_item: { text: 'hello' } }] },
+        text,
+        { ...text, client_id: 'replayed-m1' },
         { from_user_id: 'u1', client_id: 'm2', context_token: 'tok-u1', item_list: [{ type: 3, voice_item: { text: 'a voice transcript' } }] },
       ],
     }
@@ -157,6 +159,7 @@ test('getupdates keeps the cursor and context_token in runtime and delivers text
   assert.equal(messages[0].chat.kind, 'direct')
   assert.equal(messages[0].text, 'hello')
   assert.equal(messages[1].text, 'a voice transcript')
+  assert.equal(runtime.recentInbound.length, 2)
 })
 
 test('send goes through sendmessage with the stored context_token, chunked at the limit', async (t) => {

@@ -12,7 +12,7 @@ import { adapters } from '../src/host/im/platforms/index.js'
 // messages, actions and statuses. `fail` makes send throw once per call queued.
 // `quote` says the platform hands back quoted replies, so the host keeps what it
 // sent; it is off by default, like most platforms.
-const fakeAdapter = ({ buttons = true, quote = false } = {}) => {
+const fakeAdapter = ({ buttons = true, quote = false, sendImage } = {}) => {
   const sent = []
   const edited = []
   const typed = []
@@ -47,6 +47,10 @@ const fakeAdapter = ({ buttons = true, quote = false } = {}) => {
           return { messageId }
         },
         edit: async (chat, messageId, body) => { edited.push({ chat, messageId, ...body }) },
+        ...(sendImage && { sendImage: async (chat, image) => {
+          await sendImage(image)
+          sent.push({ chat, image, messageId: String(++nextMessage) })
+        } }),
         typing: async (chat) => { typed.push(chat) },
         stop: () => { adapter.stopped = (adapter.stopped ?? 0) + 1 },
       }
@@ -451,6 +455,74 @@ const pairedConn = async (s) => {
   await s.rt.save()
   return { conn, one }
 }
+
+const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+yVJ8AAAAASUVORK5CYII=', 'base64')
+
+test('an accepted display view sends one image only to its IM origin, with an ordered fallback on rejection', async (t) => {
+  let rejected = false
+  const s = await start({ adapter: fakeAdapter({ sendImage: () => {
+    if (rejected) throw Object.assign(new Error('upload rejected'), { permanent: true })
+  } }) })
+  t.after(s.stop)
+  const { one } = await pairedConn(s)
+  one.paired.push({ id: 'u2', name: 'U2', at: 1 })
+  one.chats['dm-u2'] = { kind: 'direct', title: 'U2', at: 1 }
+  await s.rt.save()
+  s.rt.renderImViewImage = async () => ({ data: PNG, name: 'card.png', mediaType: 'image/png' })
+  const show = (title, view = { type: 'metric', label: 'Close', value: 952 }, more = {}) => s.ctx.registeredTools.get('show_view')
+    .execute({ title, view, ...more }, { agent: { id: 'a' } })
+  await show('Desktop only')
+  await dm(s, 'u1', 'show a chart')
+  s.imTurn()
+  s.fake.sent.length = 0
+  await show('Team only', undefined, { audience: 'team' })
+  await show('Malformed', { type: 'chart' })
+  await show('Weekly results')
+  await show('Weekly results')
+  await s.flush()
+  assert.deepEqual(s.fake.sent.map(entry => [entry.chat.key, entry.image?.mediaType]), [['dm-u1', 'image/png']])
+
+  rejected = true
+  await dm(s, 'u1', 'show it again')
+  s.imTurn()
+  s.fake.sent.length = 0
+  await show('Weekly results')
+  s.emitEvent('a', 'assistant/message', { message: { content: [{ type: 'text', text: 'The report is ready.' }] } })
+  await s.flush()
+  assert.deepEqual(s.fake.sent.map(entry => entry.text), [
+    'Weekly results\n• Close  952\nOpen ChemClaw to see the full view.',
+    'The report is ready.',
+  ])
+})
+
+test('IM uploads workspace pictures once and sends repeated prose once per turn even with a desktop code fence', async (t) => {
+  const workspace = mkdtempSync(join(tmpdir(), 'chemclaw-im-workspace-'))
+  t.after(() => rmSync(workspace, { recursive: true, force: true }))
+  writeFileSync(join(workspace, 'plot.png'), PNG)
+  const s = await start({ adapter: fakeAdapter({ sendImage: () => {} }) })
+  t.after(s.stop)
+  s.rt.ctx.sessionController.inspect = async () => ({ meta: { cwd: workspace } })
+  await pairedConn(s)
+  await dm(s, 'u1', 'send an image')
+  s.imTurn()
+  s.fake.sent.length = 0
+  const statement = 'Here is the requested report with the latest reading and a chart.'
+  const say = value => s.emitEvent('a', 'assistant/message', { message: { content: [{ type: 'text', text: value }] } })
+  say(statement)
+  say(statement + '\n\nOne extra observation.\n\n' + '```dsh-ui\n{"items":[{"type":"html"}]}\n```')
+  say('![Plot](plot.png)')
+  s.emitEvent('a', 'deliverables/presented', { files: [{ path: join(workspace, 'plot.png') }] })
+  for (let index = 0; index < 40 && !s.fake.sent.find(entry => entry.image); index++) await s.flush()
+  await s.flush()
+  assert.deepEqual(s.fake.sent.filter(entry => entry.text).map(entry => entry.text), [
+    statement, 'One extra observation.', 'Image unavailable here. Open ChemClaw to view it.',
+  ])
+  assert.deepEqual(s.fake.sent.filter(entry => entry.image).map(entry => entry.image.data), [PNG])
+  await dm(s, 'u1', 'reply again')
+  s.imTurn()
+  say(statement)
+  assert.equal(s.fake.sent.filter(entry => entry.text === statement).length, 2)
+})
 
 test('reply origin: an IM turn answers its own chat, and only that chat', async (t) => {
   const s = await start()

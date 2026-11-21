@@ -371,10 +371,11 @@ export function install(rt) {
     pendingViews.delete(sessionId)
     return completed && entry !== undefined && entry.turn === turn ? entry.views : []
   }
-  const postViews = (round, member, views = []) => {
+  const postViews = (round, member, views = [], forward) => {
     for (const item of views) {
       if (round.replies.some(reply => reply.kind === 'view' && reply.id === item.id)) continue
       round.replies.push({ kind: 'view', botId: member.id, name: member.name, color: member.color, ...item, time: Date.now() })
+      forward?.(item)
     }
   }
 
@@ -772,7 +773,7 @@ export function install(rt) {
           appendRoom(room, { who: 'ChemClaw', kind: 'notice', reason: 'missed', names: [member.name], minutes: Math.round(ROOM_REPLY_TIMEOUT_MS / 60000) })
         }
       }
-      postViews(round, member, reply?.views)
+      postViews(round, member, reply?.views, item => rt.imDisplayView?.(room.id, item, member))
       const spoken = committedFinal ? [...said, final] : said
       if (spoken.length === 0) continue
       // Only the admin's "@all" calls everyone, so a member cannot set off a storm.
