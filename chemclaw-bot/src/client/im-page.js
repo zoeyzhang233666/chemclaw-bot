@@ -430,7 +430,7 @@ export const IM_CSS = `
 .bt-im-banner{padding:10px 12px;border-radius:12px;background:var(--bt-danger-soft);color:var(--bt-danger);font-size:12px;line-height:16px}
 .bt-im-qr-row{display:flex;justify-content:center;padding:20px 12px 24px}
 .bt-im-qr-box{display:flex;flex-direction:column;align-items:center;gap:12px}
-.bt-im-qr-frame{--bt-qr-paper:#fff;--bt-qr-ink:#141414;position:relative;width:184px;height:184px;padding:8px;box-sizing:border-box;border-radius:12px;background:var(--bt-qr-paper);box-shadow:inset 0 0 0 1px var(--bt-line)}
+.bt-im-qr-frame{position:relative;width:184px;height:184px;padding:8px;box-sizing:border-box;border-radius:12px;background:var(--bt-qr-paper);box-shadow:inset 0 0 0 1px var(--bt-line)}
 .bt-im-qr-paper{fill:var(--bt-qr-paper)}
 .bt-im-qr-ink{fill:var(--bt-qr-ink)}
 .bt-im-qr{display:block;width:100%;height:100%;animation:bt-veil-in .22s ease-out}

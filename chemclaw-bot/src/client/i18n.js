@@ -23,6 +23,7 @@ const ZH = {
   'Direct message': '私聊',
   Enabled: '启用',
   'Send the IM bot a message to connect your account': '给 IM 机器人发一条消息，即可连接你的账号',
+  'Remove?': '确认移除？',
   'Remove IM bot': '移除 IM 机器人',
   'Remove this IM bot? Its accounts and chats are removed too.': '确认移除这个 IM 机器人？它的账号和聊天也会一起移除。',
   'Scan with WeChat': '用微信扫码',

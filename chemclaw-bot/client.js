@@ -231,6 +231,7 @@ var ZH = {
   "Direct message": "私聊",
   Enabled: "启用",
   "Send the IM bot a message to connect your account": "给 IM 机器人发一条消息，即可连接你的账号",
+  "Remove?": "确认移除？",
   "Remove IM bot": "移除 IM 机器人",
   "Remove this IM bot? Its accounts and chats are removed too.": "确认移除这个 IM 机器人？它的账号和聊天也会一起移除。",
   "Scan with WeChat": "用微信扫码",
@@ -3094,7 +3095,7 @@ function useLinger(value2, ms) {
 var SKIN_FOOT = ':is(div,footer):not([class*="_footArea"]):has(> div > [data-slot="sidebar.footer.action"] > .bt-connect-wrap)';
 var SHARED_START_CSS = `
 [data-genui-surface^="chemclaw-bot/"]{min-width:0;--dsw-alias-brand-primary:var(--bt-accent);--dsw-alias-state-business-primary:var(--bt-accent);--dsw-alias-bg-base:var(--bt-main);--dsw-alias-bg-layer-1:var(--bt-card);--dsw-alias-bg-layer-2:var(--bt-main);--dsw-alias-label-primary:var(--bt-ink);--dsw-alias-label-secondary:var(--bt-ink-2);--dsw-alias-label-tertiary:var(--bt-ink-3);--dsw-alias-border-l1:var(--bt-line-2);--dsw-alias-border-l2:var(--bt-line)}
-body{--bt-ink:#141414;--bt-danger:#e02135;--bt-ink-2:rgba(20,20,20,.6);--bt-ink-3:rgba(20,20,20,.36);--bt-bubble:#eeeeee;--bt-sidebar:#f7f7f7;--bt-main:#fcfcfc;--bt-line:rgba(20,20,20,.08);--bt-line-2:rgba(20,20,20,.15);--bt-line-weak:rgba(20,20,20,.1);--bt-hover:rgba(119,119,119,.09);--bt-active:rgba(119,119,119,.17);--bt-card:#ffffff;--bt-accent:#4d6bfe;--bt-green:#00c972;--bt-star:#ff9800;--bt-user:#070707;--bt-user-ink:#fcfcfc;--bt-tag-bg:rgba(20,20,20,.06);--bt-tag-ink:rgba(20,20,20,.56);--bt-knob:#ffffff;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+body{--bt-ink:#141414;--bt-danger:#e02135;--bt-ink-2:rgba(20,20,20,.6);--bt-ink-3:rgba(20,20,20,.36);--bt-bubble:#eeeeee;--bt-sidebar:#f7f7f7;--bt-main:#fcfcfc;--bt-line:rgba(20,20,20,.08);--bt-line-2:rgba(20,20,20,.15);--bt-line-weak:rgba(20,20,20,.1);--bt-hover:rgba(119,119,119,.09);--bt-active:rgba(119,119,119,.17);--bt-card:#ffffff;--bt-accent:#4d6bfe;--bt-green:#00c972;--bt-star:#ff9800;--bt-user:#070707;--bt-user-ink:#fcfcfc;--bt-tag-bg:rgba(20,20,20,.06);--bt-tag-ink:rgba(20,20,20,.56);--bt-knob:#ffffff;--bt-qr-paper:#fff;--bt-qr-ink:#141414;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
 /* iOS waits out a double-tap zoom on buttons; the plugin's own controls never zoom. */
 :is(.bt-tool,.bt-uaction,.bt-menu button,.bt-menu-item,.bt-icon-btn,.bt-round,.bt-pill,.bt-account,.bt-set-row,.bt-settings-item,.bt-react-strip button,.bt-palette-row,.bt-palette-clear,.bt-tab,.bt-ptab,.bt-ptab-x,.bt-bcard-x,.bt-plus,.bt-q-btn,.bt-q-x,.bt-x,.bt-nc-send,.bt-send,.bt-soft,.bt-mini,.bt-shape,.bt-swatch,.bt-color,.bt-newchat,.bt-task-day,.bt-task-remove,.bt-fb-btn){touch-action:manipulation}
 body[data-ds-dark-theme]{--bt-ink:#f2f2f2;--bt-ink-2:rgba(242,242,242,.6);--bt-ink-3:rgba(242,242,242,.36);--bt-bubble:#262626;--bt-sidebar:#1b1b1b;--bt-main:#141414;--bt-line:rgba(255,255,255,.08);--bt-line-2:rgba(255,255,255,.15);--bt-line-weak:rgba(255,255,255,.1);--bt-hover:rgba(160,160,160,.12);--bt-active:rgba(160,160,160,.2);--bt-card:#1f1f1f;--bt-user:#f2f2f2;--bt-user-ink:#141414;--bt-tag-bg:rgba(255,255,255,.09);--bt-tag-ink:rgba(242,242,242,.62)}
@@ -22590,7 +22591,7 @@ var IM_CSS = `
 .bt-im-banner{padding:10px 12px;border-radius:12px;background:var(--bt-danger-soft);color:var(--bt-danger);font-size:12px;line-height:16px}
 .bt-im-qr-row{display:flex;justify-content:center;padding:20px 12px 24px}
 .bt-im-qr-box{display:flex;flex-direction:column;align-items:center;gap:12px}
-.bt-im-qr-frame{--bt-qr-paper:#fff;--bt-qr-ink:#141414;position:relative;width:184px;height:184px;padding:8px;box-sizing:border-box;border-radius:12px;background:var(--bt-qr-paper);box-shadow:inset 0 0 0 1px var(--bt-line)}
+.bt-im-qr-frame{position:relative;width:184px;height:184px;padding:8px;box-sizing:border-box;border-radius:12px;background:var(--bt-qr-paper);box-shadow:inset 0 0 0 1px var(--bt-line)}
 .bt-im-qr-paper{fill:var(--bt-qr-paper)}
 .bt-im-qr-ink{fill:var(--bt-qr-ink)}
 .bt-im-qr{display:block;width:100%;height:100%;animation:bt-veil-in .22s ease-out}
