@@ -5,7 +5,11 @@ preview_dir="${CHEMCLAW_PREVIEW_DIR:-$HOME/Documents/Codex/ChemClaw-source-previ
 app_node="/Applications/ChemClaw.app/Contents/Resources/primary-runtime/dependencies/node/bin"
 export CHEMCLAW_PREVIEW_DIR="$preview_dir"
 export PATH="$preview_dir/tools/bin:$HOME/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
-if ! command -v node >/dev/null; then
+node_supported() {
+  command -v node >/dev/null &&
+    node -e 'process.exit(Number(process.versions.node.split(".")[0]) < 24 ? 1 : 0)'
+}
+if ! node_supported; then
   export PATH="$app_node:$PATH"
 fi
 
@@ -18,7 +22,7 @@ keep_error_visible() {
 }
 trap keep_error_visible EXIT
 
-if ! command -v node >/dev/null || ! node -e 'process.exit(Number(process.versions.node.split(".")[0]) < 24 ? 1 : 0)'; then
+if ! node_supported; then
   printf '需要 Node.js 24 或更新版本。请安装 Node.js 24 LTS，或将 ChemClaw 放在「应用程序」中。\n' >&2
   exit 1
 fi
@@ -214,7 +218,7 @@ async function main() {
       await ensureDependencies(source, 'app', 'electron/package.json')
     }
     const env = { ...process.env, CHEMCLAW_LAUNCH_HOME: home, CHEMCLAW_NO_PICKER: '1' }
-    await run(process.execPath, [launcher, '--source', source, '--no-picker', ...flags], source, env)
+    await run(process.execPath, [launcher, '--no-picker', ...flags], source, env)
   } finally {
     unlock()
   }
