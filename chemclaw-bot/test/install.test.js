@@ -146,6 +146,8 @@ test('apply registers listeners, tools, and effects in a fixed order', (t) => {
     'on llm/stream',
     'effect chemclaw-bot: update check',
     'effect chemclaw-bot: dsh update install',
+    'on session/event',
+    'effect chemclaw-bot: im',
     'on agent/status',
     'on session/event',
     'on agent/assistant-stream',

@@ -736,11 +736,15 @@ export function install(rt) {
         return result
       }
       const awaitReply = args.await_reply ?? checked.interactive
-      if (!awaitReply) { rt.noteVisualDelivery?.(id, view); return 'The view is on screen.' }
-      // A hidden Bot-to-Bot turn shows none of its calls, so its card goes to the
-      // composer dock, which takes a card without a call.
       const turn = rt.live.get(id)?.turn
       const hidden = turn !== undefined && (state.exchangeTurns[id] ?? []).includes(turn)
+      if (!awaitReply) {
+        rt.noteVisualDelivery?.(id, view)
+        if (!hidden && args.audience !== 'team') rt.imDisplayView?.(id, { title, view })
+        return 'The view is on screen.'
+      }
+      // A hidden Bot-to-Bot turn shows none of its calls, so its card goes to the
+      // composer dock, which takes a card without a call.
       state.views[id] = {
         id: randomUUID(),
         ...(exec.callId && !hidden ? { callId: exec.callId } : {}),

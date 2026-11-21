@@ -23,7 +23,7 @@ const record = value => value !== null && typeof value === 'object' && !Array.is
 // Missing fields belong to older teams; present but unusable indexes must never
 // be migrated into an empty team and saved over the only copy.
 function validIndexes(saved) {
-  for (const key of ['bots', 'rooms', 'prefs', 'exchangeTurns', 'switching']) {
+  for (const key of ['bots', 'rooms', 'prefs', 'exchangeTurns', 'switching', 'im']) {
     if (Object.hasOwn(saved, key) && !record(saved[key])) return false
   }
   if (Object.hasOwn(saved, 'exchanges') && (!Array.isArray(saved.exchanges) || saved.exchanges.some(entry => !record(entry)))) return false
@@ -377,6 +377,7 @@ export function install(rt) {
         seen = stamp()
         rt.capabilitiesStateSaved?.()
         rt.stateSaved?.()
+        rt.imStateSaved?.()
       } catch (error) {
         await unlink(temp).catch(() => {})
         throw error

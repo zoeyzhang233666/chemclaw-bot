@@ -1,3 +1,4 @@
+import { imPlatform, viaOf } from '../shared/im-platforms.js'
 import { createElement as h, Fragment, useEffect, useRef, useState } from 'react'
 import * as ui from '@deepseek-ai/dsh-client-ui-primitives'
 import { mentionSpans } from '../shared/mentions.js'
@@ -107,6 +108,7 @@ export function UserMessageCell({ node, sessionId, useRoster, actions, renderMes
   const { text, attachments, rest } = contentParts(data.content)
   const referenceLabels = data.referenceLabels ?? []
   const references = openFile && openSkill ? { openFile, openSkill } : undefined
+  const via = imPlatform(viaOf(data.source) ?? roster.imVia?.[sessionId]?.[data.seq])
   const steering = node.kind === 'steering'
   const groupTime = roster.roomsById?.[sessionId] && Number.isFinite(data.time) ? messageClock(data.time) : undefined
   const { shown, folded, control } = useFold(text, { markdown: false })
@@ -133,6 +135,7 @@ export function UserMessageCell({ node, sessionId, useRoster, actions, renderMes
         control,
         rest.map((block, index) => (ui.JsonBlock ? h(ui.JsonBlock, { key: index, label: t('Content'), payload: block }) : null))) : null,
       referenceLabels.length > 0 ? h('div', { className: 'bt-urefs' }, t('Referenced {labels}', { labels: referenceLabels.join(t(', ')) })) : null,
+      via ? h('div', { className: 'bt-utime' }, t('via {platform}', { platform: t(via.name) })) : null,
       groupTime ? h('div', { className: 'bt-utime', title: clockLabel(data.time) }, groupTime) : null),
     text === '' ? null : h('div', { className: 'bt-utools', 'data-open': toolsOpen || undefined }, h(CopyButton, { text })))
 }
