@@ -40,3 +40,15 @@ Baseline `state.json`, chats, skills, and secrets stay untouched when previewing
 ## Multi-PR note
 
 Only when more than one independent PR is included does the launcher build `cursor-chembot-preview-integration-next`, validate, then swap to `cursor-chembot-preview-integration`. Conflicts keep the previous good entry.
+
+## macOS GitHub source preview
+
+Double-click `启动 ChemClaw 源码.command` in Finder to select an open PR. The newest open PR appears first. The picker also accepts an arbitrary PR number and can preview the GitHub main branch.
+
+```bash
+./启动\ ChemClaw\ 源码.command --list
+./启动\ ChemClaw\ 源码.command 162 --info
+./启动\ ChemClaw\ 源码.command latest
+```
+
+Each launch fetches the selected GitHub ref. The launcher uses detached source checkouts and separate data per PR under `~/Documents/Codex/ChemClaw-source-preview`. Set `CHEMCLAW_PREVIEW_DIR` to use a different preview folder. Node.js 24 and npm are needed for a build. The first launch installs the pinned dependencies and prepares the bundled runtime. Keep the Terminal window open while using the app.

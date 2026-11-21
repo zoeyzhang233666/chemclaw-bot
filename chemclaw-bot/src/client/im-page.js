@@ -13,8 +13,25 @@ import { BotAvatar } from './mark.js'
 import { Caret, useAnchoredMenu } from './model-menu.js'
 import { CheckIcon, ChatsIcon, ChevronLeftIcon, ChevronRightIcon } from './icons.js'
 import { hostText, t } from './i18n.js'
+import weixinIcon from './im-icons/weixin.jpg'
+import qqIcon from './im-icons/qq.jpg'
+import feishuIcon from './im-icons/feishu.jpg'
+import wecomIcon from './im-icons/wecom.jpg'
+import dingtalkIcon from './im-icons/dingtalk.jpg'
+import telegramIcon from './im-icons/telegram.jpg'
+import discordIcon from './im-icons/discord.jpg'
+import slackIcon from './im-icons/slack.jpg'
 
-const MONOGRAMS = { weixin: '微', qq: 'Q', feishu: '飞', dingtalk: '钉', wecom: '企', telegram: 'T', discord: 'D', slack: 'S' }
+const APP_ICONS = {
+  weixin: weixinIcon,
+  qq: qqIcon,
+  feishu: feishuIcon,
+  wecom: wecomIcon,
+  dingtalk: dingtalkIcon,
+  telegram: telegramIcon,
+  discord: discordIcon,
+  slack: slackIcon,
+}
 const PLATFORM_ORDER = ['weixin', 'qq', 'feishu', 'wecom', 'dingtalk', 'telegram', 'discord', 'slack']
 
 const GUIDES = {
@@ -65,7 +82,7 @@ const GUIDES = {
 const platformOf = id => IM_PLATFORMS.find(entry => entry.id === id) ?? { id, name: id, fields: [] }
 
 function ImMark({ id }) {
-  return h('span', { className: 'bt-im-icon', 'aria-hidden': true }, MONOGRAMS[id])
+  return h('img', { className: 'bt-im-icon', src: APP_ICONS[id], width: 36, height: 36, alt: '', draggable: false })
 }
 
 function stateOf(conn, status) {
@@ -387,7 +404,7 @@ export const IM_CSS = `
 .bt-im-platform:disabled{cursor:default;opacity:.55}
 .bt-im-platform:focus-visible{outline:2px solid var(--bt-accent);outline-offset:2px}
 .bt-im-platform .bt-chevron{flex:none;color:var(--bt-ink-2)}
-.bt-im-icon{display:grid;place-items:center;flex:none;width:36px;height:36px;border-radius:10px;background:color-mix(in srgb,var(--bt-accent) 13%,var(--bt-main));color:var(--bt-ink);font-size:15px;font-weight:600}
+.bt-im-icon{display:block;flex:none;border-radius:10px;object-fit:contain;outline:1px solid var(--bt-line);outline-offset:-1px}
 .bt-im-sub-head{display:flex;align-items:center;gap:8px}
 .bt-im-sub-head h3{margin:0;color:var(--bt-ink);font-size:15px;font-weight:600}
 @container (max-width:380px){.bt-im-grid{grid-template-columns:1fr}.bt-im-chat{flex-wrap:wrap}}
