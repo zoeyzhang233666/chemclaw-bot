@@ -7,13 +7,13 @@ import { chmod, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { replaceFile } from '../files.js'
 import { viewCardText } from '../parts.js'
-import { artifactReferences } from '../../shared/artifact-links.js'
+import { artifactPath, artifactReferences } from '../../shared/artifact-links.js'
 import { imPlatform, IM_PLATFORMS } from '../../shared/im-platforms.js'
 import { REPLY_KIND, SOURCE_KIND } from '../constants.js'
 import { extractLocalMarkdownImages, prepareOutboundReply } from './outbound-images.js'
 import { extractImVisuals, renderImSvg } from './inline-images.js'
 import { adapters } from './platforms/index.js'
-import { readReplyImage } from './reply-image.js'
+import { readReplyFile, readReplyImage } from './reply-image.js'
 import { imViewSummary, renderImViewImage } from './view-image.js'
 
 const RECONCILE_MS = 15_000
@@ -450,7 +450,7 @@ export function install(rt) {
       const conn = Object.values(connections()).find(item => item.id === connId)
       bound = conn === undefined ? undefined : bindingOf(conn, chatKey)
     }
-    const delivery = previous?.delivery ?? { replies: new Map(), images: new Set() }
+    const delivery = previous?.delivery ?? { replies: new Map(), attachments: new Set() }
     origins.set(sessionId, { connId, chatKey, senderId, binding: bound, delivery, at: Date.now() })
   }
   const dropOrigin = (sessionId) => {
@@ -572,6 +572,11 @@ export function install(rt) {
               throw Object.assign(new Error('This IM platform cannot send images'), { permanent: true })
             }
             sent = await runner.handle.sendImage(job.chat, job.image)
+          } else if (job.file !== undefined) {
+            if (typeof runner.handle.sendFile !== 'function') {
+              throw Object.assign(new Error('This IM platform cannot send files'), { permanent: true })
+            }
+            sent = await runner.handle.sendFile(job.chat, job.file)
           } else {
             sent = await runner.handle.send(job.chat, job)
           }
@@ -643,7 +648,7 @@ export function install(rt) {
         // Failing to remember the message must not look like a failed send: it
         // would be retried and the chat would get the message twice.
         if (remembersSent) {
-          await rememberSent(conn.id, chatKey, job.text, sent).catch(error => rt.warn('chemclaw-bot: im sent message not remembered: %s', error))
+          await rememberSent(conn.id, chatKey, job.text ?? job.file?.name, sent).catch(error => rt.warn('chemclaw-bot: im sent message not remembered: %s', error))
         }
         const settled = queue.stoppedSend
         queue.stoppedSend = undefined
@@ -695,12 +700,13 @@ export function install(rt) {
     if (binding !== undefined && bindingOf(liveConn, chatKey) !== binding) return undefined
     return liveConn
   }
-  const sendNewImage = (origin, conn, job) => {
-    const hash = createHash('sha256').update(job.image.data).digest('hex')
-    const { images } = origin.delivery
-    if (images.has(hash)) return
-    images.add(hash)
-    if (images.size > 64) images.delete(images.values().next().value)
+  const sendNewAttachment = (origin, conn, job) => {
+    const hash = createHash('sha256').update((job.file ?? job.image).data).digest('hex')
+    const key = job.file ? JSON.stringify([job.file.name, hash]) : hash
+    const { attachments } = origin.delivery
+    if (attachments.has(key)) return
+    attachments.add(key)
+    if (attachments.size > 64) attachments.delete(attachments.values().next().value)
     enqueue(conn, origin.chatKey, job)
   }
   const newProse = (origin, speaker, body) => {
@@ -726,6 +732,11 @@ export function install(rt) {
     const hint = langKey() === 'zh' ? '图片未能送达，请在 ChemClaw 电脑版查看。' : 'Image unavailable here. Open ChemClaw to view it.'
     return label ? `${label}\n${hint}` : hint
   }
+  const fileNotice = path => {
+    const name = String(path).split(/[\\/]/u).at(-1)
+    const hint = langKey() === 'zh' ? '文件未能送达，请在 ChemClaw 电脑版查看。' : 'File unavailable here. Open ChemClaw to view it.'
+    return rt.redactSecrets(`${name}\n${hint}`)
+  }
   const supportedImagePath = path => typeof path === 'string' && /\.(?:png|jpe?g|gif|webp)$/iu.test(path)
   const sendReply = (origin, body, { sessionId, botId, prefix = '', presented = [] } = {}) => {
     const { conn, chatKey, chat, senderId, binding } = origin
@@ -735,28 +746,36 @@ export function install(rt) {
     const authorization = { senderId, binding, delivery: origin.delivery }
     const { text: prose, visuals } = extractImVisuals(rt.redactSecrets(body))
     body = prose
-    const paths = [...new Set([...presented, ...artifactReferences(body).map(ref => ref.value)].filter(supportedImagePath))].slice(0, 8)
+    const refs = artifactReferences(body)
+    const paths = [...new Set([...presented, ...refs.map(ref => ref.value)].filter(supportedImagePath))].slice(0, 8)
+    const filesSupported = typeof runner?.handle?.sendFile === 'function'
+    const fileRefs = filesSupported
+      ? refs.filter(ref => body[ref.start] === '[' && !ref.suffix && !supportedImagePath(ref.value)) : []
+    const filePaths = filesSupported
+      ? [...new Set([...presented, ...fileRefs.map(ref => ref.value)].filter(path =>
+        artifactPath(path) !== undefined && !supportedImagePath(path) && rt.redactSecrets(path) === path))].slice(0, 8)
+      : []
+    for (const ref of fileRefs.reverse()) {
+      if (filePaths.includes(ref.value)) body = body.slice(0, ref.start) + ref.label + body.slice(ref.end)
+    }
     const maybeImages = (typeof runner?.handle?.sendImage === 'function' || runner?.handle === undefined)
       && (paths.length > 0 || visuals.length > 0 || extractLocalMarkdownImages(body).length > 0)
     const sendTextReply = (live, message) => {
       const fresh = newProse(origin, botId, message)
       if (fresh !== '') enqueue(live, chatKey, { chat: where, text: `${prefix}${fresh}`, origin: authorization })
     }
-    if (!maybeImages && !outboundStages.has(stageKey)) {
+    if (!maybeImages && filePaths.length === 0 && !outboundStages.has(stageKey)) {
       sendTextReply(conn, [body, ...visuals.map(item => imageNotice(item.title))].filter(Boolean).join('\n\n'))
       return
     }
     afterStage(conn, chatKey, async () => {
       const before = originStillValid(conn.id, chatKey, runner, senderId, binding)
       if (before === undefined || origin.delivery.revoked) return
-      if (!maybeImages || typeof runner?.handle?.sendImage !== 'function') {
-        sendTextReply(before, [body, ...visuals.map(item => imageNotice(item.title))].filter(Boolean).join('\n\n'))
-        return
-      }
-      const prepared = await prepareOutboundReply(body, {
+      const imagesSupported = maybeImages && typeof runner?.handle?.sendImage === 'function'
+      const prepared = imagesSupported ? await prepareOutboundReply(body, {
         resolveImage: path => readReplyImage(rt, { sessionId, botId, path }),
-      })
-      for (const path of paths) {
+      }) : { text: body, images: [] }
+      for (const path of imagesSupported ? paths : []) {
         try {
           const file = await readReplyImage(rt, { sessionId, botId, path })
           prepared.images.push({ data: Buffer.from(file.bytes, 'base64'), mediaType: file.mime, name: file.name })
@@ -768,18 +787,33 @@ export function install(rt) {
       const missing = []
       for (const visual of visuals) {
         let image
-        try { image = await renderImSvg(visual.code, rt.redactSecrets) }
-        catch (error) { rt.warn('chemclaw-bot: IM inline image unavailable: %s', failMessage(error)) }
+        if (imagesSupported) {
+          try { image = await renderImSvg(visual.code, rt.redactSecrets) }
+          catch (error) { rt.warn('chemclaw-bot: IM inline image unavailable: %s', failMessage(error)) }
+        }
         if (image) prepared.images.push({ ...image, alt: visual.title })
         else missing.push(imageNotice(visual.title))
       }
       const liveConn = originStillValid(conn.id, chatKey, runner, senderId, binding)
       if (liveConn === undefined || origin.delivery.revoked) return
       sendTextReply(liveConn, prepared.text.trim())
-      for (const image of prepared.images) sendNewImage(origin, liveConn, {
+      for (const image of prepared.images) sendNewAttachment(origin, liveConn, {
         chat: where, image, origin: authorization, fallbackText: imageNotice(image.alt),
       })
-      if (missing.length) sendTextReply(liveConn, [...new Set(missing)].join('\n\n'))
+      for (const path of filePaths) {
+        if (origin.delivery.revoked || !originStillValid(conn.id, chatKey, runner, senderId, binding)) return
+        try {
+          const file = await readReplyFile(rt, { sessionId, botId, path })
+          const ready = originStillValid(conn.id, chatKey, runner, senderId, binding)
+          if (ready === undefined || origin.delivery.revoked) return
+          sendNewAttachment(origin, ready, { chat: where, file, origin: authorization, fallbackText: fileNotice(file.name) })
+        } catch (error) {
+          missing.push(fileNotice(path))
+          rt.warn('chemclaw-bot: IM file unavailable: %s', failMessage(error))
+        }
+      }
+      const ready = originStillValid(conn.id, chatKey, runner, senderId, binding)
+      if (ready && !origin.delivery.revoked && missing.length) sendTextReply(ready, [...new Set(missing)].join('\n\n'))
     })
   }
 
@@ -809,7 +843,7 @@ export function install(rt) {
       const liveConn = originStillValid(conn.id, chatKey, runner, senderId, binding)
       if (liveConn === undefined || origin.delivery.revoked) return
       const job = { chat: where, origin: authorization }
-      if (image) sendNewImage(origin, liveConn, { ...job, image, fallbackText })
+      if (image) sendNewAttachment(origin, liveConn, { ...job, image, fallbackText })
       else enqueue(liveConn, chatKey, { ...job, text: fallbackText })
     })
   }

@@ -356,7 +356,7 @@ test('Feishu sendImage uploads multipart to /open-apis/im/v1/images and delivers
   assert.deepEqual(JSON.parse(payload.content), { image_key: 'img_v3_key1' })
 })
 
-test('WeChat sendImage encrypts AES-128-ECB, uploads to CDN, and sends type=2 image_item', async (t) => {
+test('WeChat sends images and original file attachments through the encrypted CDN', async (t) => {
   const calls = []
   let uploadedCipher = null
   const http = createServer((req, res) => {
@@ -404,6 +404,31 @@ test('WeChat sendImage encrypts AES-128-ECB, uploads to CDN, and sends type=2 im
   assert.equal(sendReq.msg.item_list[0].type, 2)
   assert.equal(sendReq.msg.item_list[0].image_item.mid_size, uploadedCipher.byteLength)
   assert.equal(sendReq.msg.item_list[0].image_item.media.encrypt_query_param, 'dl-param-99')
+
+  for (const [name, source] of [
+    ['趋势图.svg', '<svg xmlns="http://www.w3.org/2000/svg"><text>示例</text></svg>'],
+    ['报告.html', '<!doctype html><meta charset="utf-8"><p>原始报告</p>'],
+  ]) {
+    const data = Buffer.from(source)
+    const chat = { key: 'u1', kind: 'direct' }
+    const sent = await handle.sendFile(chat, { data, name })
+    const upload = JSON.parse(calls.findLast(call => call.path === '/ilink/bot/getuploadurl').buf)
+    const { msg } = JSON.parse(calls.findLast(call => call.path === '/ilink/bot/sendmessage').buf)
+    const item = msg.item_list[0]
+    assert.equal(upload.media_type, 3)
+    assert.equal(upload.rawsize, data.length)
+    assert.equal(upload.filesize, uploadedCipher.length)
+    assert.equal(msg.client_id, sent.messageId)
+    assert.equal(msg.context_token, 'ctx-1')
+    assert.equal(item.type, 4)
+    assert.equal(item.file_item.file_name, name)
+    assert.equal(item.file_item.len, String(data.length))
+    assert.equal(item.file_item.media.encrypt_query_param, 'dl-param-99')
+    const key = Buffer.from(item.file_item.media.aes_key, 'base64').toString()
+    assert.equal(key, upload.aeskey)
+    const decrypt = createDecipheriv('aes-128-ecb', Buffer.from(key, 'hex'), null)
+    assert.deepEqual(Buffer.concat([decrypt.update(uploadedCipher), decrypt.final()]), data)
+  }
 })
 
 test('Telegram, Discord, Slack, and DingTalk sendImage hit their native upload/send endpoints', async (t) => {

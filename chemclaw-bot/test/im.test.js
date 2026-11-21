@@ -12,7 +12,7 @@ import { adapters } from '../src/host/im/platforms/index.js'
 // messages, actions and statuses. `fail` makes send throw once per call queued.
 // `quote` says the platform hands back quoted replies, so the host keeps what it
 // sent; it is off by default, like most platforms.
-const fakeAdapter = ({ buttons = true, quote = false, sendImage } = {}) => {
+const fakeAdapter = ({ buttons = true, quote = false, sendImage, sendFile } = {}) => {
   const sent = []
   const edited = []
   const typed = []
@@ -50,6 +50,10 @@ const fakeAdapter = ({ buttons = true, quote = false, sendImage } = {}) => {
         ...(sendImage && { sendImage: async (chat, image) => {
           await sendImage(image)
           sent.push({ chat, image, messageId: String(++nextMessage) })
+        } }),
+        ...(sendFile && { sendFile: async (chat, file) => {
+          await sendFile(file)
+          sent.push({ chat, file, messageId: String(++nextMessage) })
         } }),
         typing: async (chat) => { typed.push(chat) },
         stop: () => { adapter.stopped = (adapter.stopped ?? 0) + 1 },
@@ -522,6 +526,47 @@ test('IM uploads workspace pictures once and sends repeated prose once per turn 
   s.imTurn()
   say(statement)
   assert.equal(s.fake.sent.filter(entry => entry.text === statement).length, 2)
+})
+
+test('IM sends real SVG and HTML attachments only to the originating chat', async (t) => {
+  const workspace = mkdtempSync(join(tmpdir(), 'chemclaw-im-documents-'))
+  const outside = mkdtempSync(join(tmpdir(), 'chemclaw-im-outside-'))
+  t.after(() => {
+    rmSync(workspace, { recursive: true, force: true })
+    rmSync(outside, { recursive: true, force: true })
+  })
+  const svg = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><text>原图</text></svg>')
+  const html = Buffer.from('<!doctype html>\n<p>原始报告</p>\n')
+  writeFileSync(join(workspace, '趋势 图.svg'), svg)
+  writeFileSync(join(workspace, '报告.html'), html)
+  writeFileSync(join(workspace, '拒收.htm'), html)
+  writeFileSync(join(outside, '报告.html'), Buffer.from('outside'))
+  const s = await start({ adapter: fakeAdapter({ sendFile: file => {
+    if (file.name === '拒收.htm') throw Object.assign(new Error('rejected'), { permanent: true })
+  } }) })
+  t.after(s.stop)
+  s.rt.ctx.sessionController.inspect = async () => ({ meta: { cwd: workspace } })
+  const { one } = await pairedConn(s)
+  one.paired.push({ id: 'u2', name: 'U2', at: 1 })
+  one.chats['dm-u2'] = { kind: 'direct', title: 'U2', at: 1 }
+  await s.rt.save()
+  const present = (...paths) => s.emitEvent('a', 'deliverables/presented', { files: paths.map(path => ({ path })) })
+  present(join(workspace, '趋势 图.svg'))
+  await dm(s, 'u1', 'send an SVG and HTML file')
+  s.imTurn()
+  s.fake.sent.length = 0
+  present(join(workspace, '趋势 图.svg'), join(outside, '报告.html'))
+  s.emitEvent('a', 'assistant/message', { message: { content: [{
+    type: 'text', text: '[趋势图](<./趋势 图.svg>) 和 [交互报告](./报告.html)\n\n`拒收.htm` 是一个引用。',
+  }] } })
+  present(join(workspace, '拒收.htm'))
+  for (let index = 0; index < 40 && !s.fake.sent.some(entry => entry.text?.startsWith('拒收.htm\n')); index++) await s.flush()
+  assert.deepEqual(s.fake.sent.filter(entry => entry.file).map(entry => [entry.chat.key, entry.file.name, entry.file.data]), [
+    ['dm-u1', '趋势 图.svg', svg], ['dm-u1', '报告.html', html],
+  ])
+  assert.ok(s.fake.sent.every(entry => entry.chat.key === 'dm-u1'))
+  assert.ok(s.fake.sent.some(entry => entry.text?.startsWith('报告.html\nFile unavailable')))
+  assert.ok(s.fake.sent.some(entry => entry.text?.startsWith('拒收.htm\nFile unavailable')))
 })
 
 test('reply origin: an IM turn answers its own chat, and only that chat', async (t) => {

@@ -53,6 +53,8 @@ const IM_IMAGE_POLICY = [
   'Summarize briefly after delivery. Avoid repeating earlier prose or claiming that a filename, code or a desktop panel means the recipient has received an image.',
 ].join('\n')
 
+const FILE_DELIVERY_POLICY = 'When the user asks for an actual SVG or HTML file, save the requested format in the conversation workspace and call present with the actual file path. Link the file in the final response with its workspace path if present is unavailable. For HTML meant to be opened locally, include the required visual assets in the HTML. Share a separate preview only when useful.'
+
 export function install(rt) {
   const { ctx } = rt
 
@@ -94,8 +96,9 @@ export function install(rt) {
       if (rt.roomOf(context?.agent?.id) || context?.agent?.session?.header?.parentSession !== undefined) return ''
       const router = nativeViewAvailable(ctx, context?.agent, context?.toolSet) ? NATIVE_VIEW_POLICY : GENUI_VIEW_POLICY
       const graphs = genuiViewAvailable(ctx, context?.agent, context?.toolSet) ? GENUI_GRAPH_POLICY : LEGACY_GRAPH_POLICY
-      const guidance = rt.imImageDeliveryOf?.(context?.agent?.id) ? [IM_IMAGE_POLICY] : []
-      const policy = [VIEW_POLICY, router, graphs, ...guidance].join('\n')
+      const policy = [VIEW_POLICY, router, graphs, FILE_DELIVERY_POLICY,
+        rt.imImageDeliveryOf?.(context?.agent?.id) ? IM_IMAGE_POLICY : '',
+      ].filter(Boolean).join('\n')
       return rt.state?.prefs?.advancedCharts === false
         ? policy + '\nAdvanced charts are disabled in ChemClaw Settings. In place of the seven advanced ECharts types, use a suitable basic native chart when it can communicate the same evidence. If the user expressly requests a disabled chart type, explain the setting and show the supported figures.'
         : policy

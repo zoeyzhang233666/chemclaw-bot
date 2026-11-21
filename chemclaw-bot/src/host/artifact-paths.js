@@ -7,7 +7,7 @@ const inside = (path, root) => {
   return rest === '' || (!rest.startsWith('..') && !isAbsolute(rest))
 }
 
-export async function resolveArtifacts(rt, { sessionId, botId, values }, signal) {
+export async function resolveArtifacts(rt, { sessionId, botId, values, exact = false }, signal) {
   if (!Array.isArray(values) || values.length > 40 || values.some(value => typeof value !== 'string')) throw new Error('Name up to 40 workspace files')
   const room = rt.roomOf(sessionId)
   const bot = rt.botOf(botId ?? rt.selfOf(sessionId))
@@ -32,9 +32,9 @@ export async function resolveArtifacts(rt, { sessionId, botId, values }, signal)
   for (const value of values) {
     const path = artifactPath(value)
     if (!path) continue
-    const exact = [...new Set((await Promise.all((isAbsolute(path) ? [path] : allowed.map(root => resolve(root, path))).map(existing))).filter(Boolean))]
-    if (exact.length === 1) files[value] = exact[0]
-    else if (exact.length === 0 && !path.split('/').includes('..')) pending.set(value, basename(path))
+    const matched = [...new Set((await Promise.all((isAbsolute(path) ? [path] : allowed.map(root => resolve(root, path))).map(existing))).filter(Boolean))]
+    if (matched.length === 1) files[value] = matched[0]
+    else if (!exact && matched.length === 0 && !path.split('/').includes('..')) pending.set(value, basename(path))
   }
   if (!pending.size) return { files, truncated: false }
   // Legacy replies often name just the basename. Search only these workspaces,
