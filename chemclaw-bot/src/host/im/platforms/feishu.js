@@ -7,7 +7,7 @@
 // by PATCH. The tiny protobuf codec below implements only this frame shape.
 // Protocol ported from @larksuiteoapi/node-sdk (MIT, see NOTICE).
 import { chunkMarkdown } from '../format.js'
-import { retryDelay, retryWait } from './retry.js'
+import { retryDelay, retryWait, sendChunks } from './retry.js'
 
 const TEXT_LIMIT = 4000
 const SOCKET_TIMEOUT = 30_000
@@ -436,11 +436,11 @@ export default {
     })
 
     return {
-      send: async (chat, { text, buttons }) => {
+      send: async (chat, job) => {
+        const { text, buttons } = job
         const chunks = chunkMarkdown(String(text ?? ''), TEXT_LIMIT)
-        let messageId
-        for (const [index, chunk] of chunks.entries()) {
-          const interactive = buttons !== undefined && index === chunks.length - 1
+        return sendChunks(job, chunks, async (chunk, last, previousId) => {
+          const interactive = buttons !== undefined && last
           const sent = await rest('/open-apis/im/v1/messages?receive_id_type=chat_id', {
             body: {
               receive_id: chat.key,
@@ -448,9 +448,8 @@ export default {
               content: interactive ? card(chunk, buttons) : JSON.stringify({ text: chunk }),
             },
           })
-          messageId = String(sent?.data?.message_id ?? messageId ?? '')
-        }
-        return { messageId }
+          return String(sent?.data?.message_id ?? previousId ?? '')
+        })
       },
       sendImage: async (chat, image) => {
         const bytes = Buffer.isBuffer(image?.data) ? image.data : Buffer.from(image?.data ?? [])

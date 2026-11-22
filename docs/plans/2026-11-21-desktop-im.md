@@ -11,3 +11,5 @@
 微信等支持图片上传的平台将只读图表、指标卡和表格作为图片发送。工作区图片可通过 `present` 或 Markdown 图片发送，也支持将内嵌的静态 SVG 转成图片。图片发送失败时会给出文字提示，交互表单在桌面端打开。回复去重以当前轮次为范围，微信轮询重放也会按消息 ID 去重。
 
 微信也支持发送工作区中的 SVG、HTML 等交付件。专家通过 `present` 交付或在回复中链接文件后，ChemClaw 以微信文件消息发送原文件名和内容。单个附件最大 50 MB。[微信 iLink 协议文档](https://github.com/Tencent/openclaw-weixin/blob/main/docs/protocol_zh_CN.md#消息模型)
+
+本地图片可通过微信、飞书 / Lark、钉钉、Telegram、Discord 和 Slack 发送。QQ 和企业微信收到只读卡片的文字摘要。普通文件原件由微信通道投递，其他通道会提示到电脑版查看。分段回复在重试时从已确认送达的位置继续。

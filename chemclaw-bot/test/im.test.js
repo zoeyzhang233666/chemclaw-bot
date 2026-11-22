@@ -585,6 +585,24 @@ test('reply origin: an IM turn answers its own chat, and only that chat', async 
   assert.deepEqual(s.fake.sent.map(entry => entry.chat.key), ['dm-u1'])
 })
 
+test('an IM channel without attachment delivery tells the originating chat where to find presented files', async (t) => {
+  const s = await start()
+  t.after(s.stop)
+  await pairedConn(s)
+  await dm(s, 'u1', 'send the report')
+  s.imTurn()
+  s.fake.sent.length = 0
+  s.emitEvent('a', 'deliverables/presented', { files: [{ path: 'report.html' }, { path: 'chart.png' }] })
+  s.emitEvent('a', 'assistant/message', { message: { content: [{
+    type: 'text', text: 'Details in [the report](./report.html).',
+  }] } })
+  await s.flush()
+  assert.deepEqual(s.fake.sent.map(entry => [entry.chat.key, entry.text]), [[
+    'dm-u1',
+    'report.html\nThis channel cannot send this attachment. Open ChemClaw to view it.\n\nchart.png\nThis channel cannot send this attachment. Open ChemClaw to view it.',
+  ], ['dm-u1', 'Details in the report.']])
+})
+
 test('reply origin: a Web turn does not reach IM', async (t) => {
   const s = await start()
   t.after(s.stop)

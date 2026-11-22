@@ -4,6 +4,7 @@
 // edits. A message in an `im` channel is direct; `app_mention` is the group
 // trigger. Buttons are Block Kit actions; block_actions come back as
 // interactive envelopes. Wire details ported from dsh-im (MIT, see NOTICE).
+import { sendChunks } from './retry.js'
 import { chunkMarkdown } from '../format.js'
 
 const API = 'https://slack.com/api/'
@@ -164,18 +165,17 @@ export default {
     }
 
     return {
-      send: async (chat, { text, buttons }) => {
+      send: async (chat, job) => {
+        const { text, buttons } = job
         const chunks = chunkMarkdown(text, TEXT_LIMIT)
-        let messageId
-        for (const [index, chunk] of chunks.entries()) {
+        return sendChunks(job, chunks, async (chunk, last, previousId) => {
           const result = await api('chat.postMessage', {
             channel: chat.key,
             text: chunk,
-            blocks: blocksFor(toMrkdwn(chunk), index === chunks.length - 1 ? buttons : undefined),
+            blocks: blocksFor(toMrkdwn(chunk), last ? buttons : undefined),
           })
-          messageId = String(result?.ts ?? messageId ?? '')
-        }
-        return { messageId }
+          return String(result?.ts ?? previousId ?? '')
+        })
       },
       sendImage: async (chat, image) => {
         const bytes = Buffer.isBuffer(image?.data) ? image.data : Buffer.from(image?.data ?? [])

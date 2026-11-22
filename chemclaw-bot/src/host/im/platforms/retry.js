@@ -11,3 +11,18 @@ export const retryWait = ms => new Promise((resolve) => {
   const timer = setTimeout(resolve, ms)
   timer.unref?.()
 })
+
+// The IM queue retains the same job across retries and reconnects. A successful
+// prefix must stay delivered even if a later chunk fails or the handle restarts.
+const acceptedChunks = new WeakMap()
+
+export async function sendChunks(job, chunks, send) {
+  const { count = 0, messageId: previousId } = acceptedChunks.get(job) ?? {}
+  let messageId = previousId
+  for (let index = count; index < chunks.length; index++) {
+    messageId = await send(chunks[index], index === chunks.length - 1, messageId)
+    acceptedChunks.set(job, { count: index + 1, messageId })
+  }
+  acceptedChunks.delete(job)
+  return { messageId }
+}

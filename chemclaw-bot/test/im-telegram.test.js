@@ -140,6 +140,25 @@ test('send renders HTML, chunks long text, buttons go on the last chunk', async 
   } finally { api.close() }
 })
 
+test('a retry after a later chunk is rate limited does not send the accepted chunk twice', async (t) => {
+  const api = await fakeApi()
+  const handle = telegram.connect({ token: 'TOKEN' }, env(api.api), { onMessage: () => {}, onAction: () => {}, onStatus: () => {} })
+  t.after(() => { handle.stop(); api.close() })
+  let calls = 0
+  api.replies.sendMessage = () => {
+    calls += 1
+    return calls === 2 ? { error: 429, description: 'retry', parameters: { retry_after: 1 } } : { result: { message_id: calls } }
+  }
+  const chat = { key: '5' }
+  const job = { text: 'First paragraph. '.repeat(260) + '\n\n' + 'Second paragraph. '.repeat(130) }
+  await assert.rejects(handle.send(chat, job), error => error.status === 429)
+  await handle.send(chat, job)
+  const chunks = api.calls.filter(call => call.method === 'sendMessage')
+  assert.equal(chunks.filter(call => call.params.text === chunks[0].params.text).length, 1)
+  assert.notEqual(chunks[0].params.text, chunks[1].params.text)
+  assert.equal(chunks[1].params.text, chunks[2].params.text)
+})
+
 test('a chunk Telegram cannot parse goes again as plain text', async () => {
   const api = await fakeApi()
   try {

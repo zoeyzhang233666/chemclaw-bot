@@ -1,7 +1,7 @@
 // Telegram Bot API adapter: getUpdates long polling in, sendMessage out. Parts of the
 // protocol mapping follow dsh-im (MIT, © 2026 xmanrui — see NOTICE).
 import { chunkTelegram } from '../format.js'
-import { retryDelay, retryWait } from './retry.js'
+import { retryDelay, retryWait, sendChunks } from './retry.js'
 
 const CLOUD_API = 'https://api.telegram.org'
 const TEXT_LIMIT = 4096
@@ -233,11 +233,11 @@ export default {
     }
     void poll()
 
-    const send = async (chat, { text, buttons }) => {
+    const send = async (chat, job) => {
+      const { text, buttons } = job
       const chunks = chunkTelegram(text, TEXT_LIMIT)
-      let messageId
-      for (const [index, chunk] of chunks.entries()) {
-        const markup = index === chunks.length - 1 && buttons?.length > 0
+      return sendChunks(job, chunks, async (chunk, last, previousId) => {
+        const markup = last && buttons?.length > 0
           ? { reply_markup: { inline_keyboard: buttons.map(button => [{ text: button.label, callback_data: button.data }]) } }
           : {}
         const sendOne = async (body) => {
@@ -252,9 +252,8 @@ export default {
           }
         }
         const sent = await sendOne(chunk.html)
-        messageId = sent?.message_id ?? messageId
-      }
-      return { messageId }
+        return sent?.message_id ?? previousId
+      })
     }
 
     const sendImage = async (chat, image) => {

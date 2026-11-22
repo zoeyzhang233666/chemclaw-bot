@@ -8,6 +8,7 @@
 // The gateway takes a WebSocket on its root path only (/wss answers 403) and
 // matches Connection / Upgrade case-sensitively, so the socket comes from `ws`:
 // Node's built-in WebSocket sends those header names in lowercase.
+import { sendChunks } from './retry.js'
 import { createDecipheriv } from 'node:crypto'
 import { chunkMarkdown } from '../format.js'
 
@@ -236,13 +237,13 @@ export default {
     void open()
 
     return {
-      send: async (chat, { text, buttons }) => {
+      send: async (chat, job) => {
+        const { text, buttons } = job
         const chunks = chunkMarkdown(String(text ?? ''), TEXT_LIMIT)
-        let messageId
-        for (const [index, chunk] of chunks.entries()) {
+        return sendChunks(job, chunks, async (chunk, last, previousId) => {
           const body = { msgtype: 'markdown', markdown: { content: chunk } }
           // Buttons ride a template card on the last chunk.
-          if (index === chunks.length - 1 && buttons?.length > 0) {
+          if (last && buttons?.length > 0) {
             body.msgtype = 'template_card'
             body.template_card = {
               card_type: 'text_notice',
@@ -254,13 +255,11 @@ export default {
           const reqId = lastReqId.get(chat.key)
           if (reqId !== undefined) {
             sendFrame({ cmd: 'aibot_respond_msg', headers: { req_id: reqId }, body })
-            messageId = undefined
-          } else {
-            const result = await request('aibot_send_msg', { ...body, chatid: chat.kind === 'group' ? chat.key : undefined, userid: chat.kind === 'direct' ? chat.key : undefined })
-            messageId = String(result?.msgid ?? messageId ?? '')
+            return undefined
           }
-        }
-        return { messageId }
+          const result = await request('aibot_send_msg', { ...body, chatid: chat.kind === 'group' ? chat.key : undefined, userid: chat.kind === 'direct' ? chat.key : undefined })
+          return String(result?.msgid ?? previousId ?? '')
+        })
       },
       stop: () => {
         stopped = true

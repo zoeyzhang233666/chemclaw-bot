@@ -738,6 +738,12 @@ export function install(rt) {
     return rt.redactSecrets(`${name}\n${hint}`)
   }
   const supportedImagePath = path => typeof path === 'string' && /\.(?:png|jpe?g|gif|webp)$/iu.test(path)
+  const attachmentNotice = path => {
+    const name = String(path).split(/[\\/]/u).at(-1)
+    const hint = langKey() === 'zh' ? '此通道暂不支持发送该附件，请在 ChemClaw 电脑版查看。'
+      : 'This channel cannot send this attachment. Open ChemClaw to view it.'
+    return rt.redactSecrets(`${name}\n${hint}`)
+  }
   const sendReply = (origin, body, { sessionId, botId, prefix = '', presented = [] } = {}) => {
     const { conn, chatKey, chat, senderId, binding } = origin
     const where = { key: chatKey, kind: chat.kind, title: chat.title }
@@ -749,23 +755,33 @@ export function install(rt) {
     const refs = artifactReferences(body)
     const paths = [...new Set([...presented, ...refs.map(ref => ref.value)].filter(supportedImagePath))].slice(0, 8)
     const filesSupported = typeof runner?.handle?.sendFile === 'function'
-    const fileRefs = filesSupported
-      ? refs.filter(ref => body[ref.start] === '[' && !ref.suffix && !supportedImagePath(ref.value)) : []
+    const fileRefs = refs.filter(ref => body[ref.start] === '[' && !ref.suffix && !supportedImagePath(ref.value))
+    const documents = [...new Set([...presented, ...fileRefs.map(ref => ref.value)].filter(path =>
+      artifactPath(path) !== undefined && !supportedImagePath(path) && rt.redactSecrets(path) === path))].slice(0, 8)
     const filePaths = filesSupported
-      ? [...new Set([...presented, ...fileRefs.map(ref => ref.value)].filter(path =>
-        artifactPath(path) !== undefined && !supportedImagePath(path) && rt.redactSecrets(path) === path))].slice(0, 8)
+      ? documents
       : []
     for (const ref of fileRefs.reverse()) {
-      if (filePaths.includes(ref.value)) body = body.slice(0, ref.start) + ref.label + body.slice(ref.end)
+      if (documents.includes(ref.value)) body = body.slice(0, ref.start) + ref.label + body.slice(ref.end)
     }
-    const maybeImages = (typeof runner?.handle?.sendImage === 'function' || runner?.handle === undefined)
+    const imagesSupported = typeof runner?.handle?.sendImage === 'function'
+    const missing = [
+      ...(!filesSupported ? documents : []),
+      ...(!imagesSupported && runner?.handle !== undefined ? presented.filter(supportedImagePath) : []),
+    ].map(attachmentNotice)
+    const maybeImages = (imagesSupported || runner?.handle === undefined)
       && (paths.length > 0 || visuals.length > 0 || extractLocalMarkdownImages(body).length > 0)
     const sendTextReply = (live, message) => {
       const fresh = newProse(origin, botId, message)
       if (fresh !== '') enqueue(live, chatKey, { chat: where, text: `${prefix}${fresh}`, origin: authorization })
     }
+    const sendNotices = (live, notices) => {
+      const text = notices.map(notice => newProse(origin, botId, notice)).filter(Boolean).join('\n\n')
+      if (text !== '') enqueue(live, chatKey, { chat: where, text: `${prefix}${text}`, origin: authorization })
+    }
     if (!maybeImages && filePaths.length === 0 && !outboundStages.has(stageKey)) {
-      sendTextReply(conn, [body, ...visuals.map(item => imageNotice(item.title))].filter(Boolean).join('\n\n'))
+      sendTextReply(conn, body)
+      sendNotices(conn, [...visuals.map(item => imageNotice(item.title)), ...missing])
       return
     }
     afterStage(conn, chatKey, async () => {
@@ -784,7 +800,6 @@ export function install(rt) {
           rt.warn('chemclaw-bot: IM file image unavailable: %s', failMessage(error))
         }
       }
-      const missing = []
       for (const visual of visuals) {
         let image
         if (imagesSupported) {
@@ -813,7 +828,7 @@ export function install(rt) {
         }
       }
       const ready = originStillValid(conn.id, chatKey, runner, senderId, binding)
-      if (ready && !origin.delivery.revoked && missing.length) sendTextReply(ready, [...new Set(missing)].join('\n\n'))
+      if (ready && !origin.delivery.revoked) sendNotices(ready, missing)
     })
   }
 

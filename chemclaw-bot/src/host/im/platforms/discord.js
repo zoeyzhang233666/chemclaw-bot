@@ -3,6 +3,7 @@
 // `mentions`. Buttons are components; interactions come back as
 // INTERACTION_CREATE and are answered with a deferred update (type 6).
 // Wire details ported from dsh-im (MIT, see NOTICE).
+import { sendChunks } from './retry.js'
 import { chunkMarkdown } from '../format.js'
 
 const API = 'https://discord.com/api/v10'
@@ -223,17 +224,16 @@ export default {
     })()
 
     return {
-      send: async (chat, { text, buttons }) => {
+      send: async (chat, job) => {
+        const { text, buttons } = job
         const chunks = chunkMarkdown(String(text ?? ''), TEXT_LIMIT)
-        let messageId
-        for (const [index, chunk] of chunks.entries()) {
-          const components = index === chunks.length - 1 && buttons?.length > 0
+        return sendChunks(job, chunks, async (chunk, last, previousId) => {
+          const components = last && buttons?.length > 0
             ? [{ type: 1, components: buttons.slice(0, 5).map(button => ({ type: 2, style: 1, label: button.label.slice(0, 80), custom_id: button.data })) }]
             : []
           const sent = await rest(`/channels/${chat.key}/messages`, { body: { content: chunk, components } })
-          messageId = String(sent?.id ?? messageId ?? '')
-        }
-        return { messageId }
+          return String(sent?.id ?? previousId ?? '')
+        })
       },
       sendImage: async (chat, image) => {
         const bytes = Buffer.isBuffer(image?.data) ? image.data : Buffer.from(image?.data ?? [])

@@ -10,7 +10,7 @@ import {
   createChatQueue, detectImageMediaType, discardBody,
   FILE_LIMIT, IMAGE_LIMIT, isHttpUrl, mediaSignal, readCappedBytes,
 } from './media.js'
-import { retryDelay, retryWait } from './retry.js'
+import { retryDelay, retryWait, sendChunks } from './retry.js'
 
 const GATEWAY = 'https://api.dingtalk.com'
 const OAPI = 'https://oapi.dingtalk.com'
@@ -65,10 +65,9 @@ export default {
       data: JSON.stringify(data),
     })
 
-    const markdown = async (chat, text) => {
-      const chunks = chunkMarkdown(String(text ?? ''), TEXT_LIMIT)
-      let messageId
-      for (const chunk of chunks) {
+    const markdown = async (chat, job) => {
+      const chunks = chunkMarkdown(String(job.text ?? ''), TEXT_LIMIT)
+      return sendChunks(job, chunks, async (chunk, _last, previousId) => {
         const hook = sessionWebhooks.get(chat.key)
         if (hook !== undefined && hook.until > Date.now()) {
           const response = await env.fetch(hook.url, {
@@ -78,24 +77,21 @@ export default {
           })
           const body = await response.json().catch(() => ({}))
           if (body.errcode !== 0) throw Object.assign(new Error(String(body.errmsg ?? 'DingTalk refused the reply')), { permanent: true })
-          messageId = String(body.processQueryKey ?? messageId ?? '')
-          continue
+          return String(body.processQueryKey ?? previousId ?? '')
         }
         if (chat.kind === 'direct') {
           const answer = await robot(env, await ensureToken(), clientId, '/v1.0/robot/oToMessages/batchSend', {
             robotCode: clientId, userIds: [chat.key],
             msgKey: 'sampleMarkdown', msgParam: JSON.stringify({ title: chunk.slice(0, 30), text: chunk }),
           })
-          messageId = String(answer?.processQueryKey ?? messageId ?? '')
-        } else {
-          const answer = await robot(env, await ensureToken(), clientId, '/v1.0/robot/groupMessages/send', {
-            robotCode: clientId, openConversationId: chat.key,
-            msgKey: 'sampleMarkdown', msgParam: JSON.stringify({ title: chunk.slice(0, 30), text: chunk }),
-          })
-          messageId = String(answer?.processQueryKey ?? messageId ?? '')
+          return String(answer?.processQueryKey ?? previousId ?? '')
         }
-      }
-      return { messageId }
+        const answer = await robot(env, await ensureToken(), clientId, '/v1.0/robot/groupMessages/send', {
+          robotCode: clientId, openConversationId: chat.key,
+          msgKey: 'sampleMarkdown', msgParam: JSON.stringify({ title: chunk.slice(0, 30), text: chunk }),
+        })
+        return String(answer?.processQueryKey ?? previousId ?? '')
+      })
     }
 
     const downloadCodeBytes = async (downloadCode, limit, robotCode = clientId) => {
@@ -320,7 +316,7 @@ export default {
     })()
 
     return {
-      send: async (chat, { text }) => markdown(chat, text),
+      send: markdown,
       sendImage: async (chat, image) => {
         const bytes = Buffer.isBuffer(image?.data) ? image.data : Buffer.from(image?.data ?? [])
         if (bytes.byteLength === 0) throw Object.assign(new Error('Empty image'), { permanent: true })
