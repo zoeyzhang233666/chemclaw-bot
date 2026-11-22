@@ -109,6 +109,30 @@ test('C2C is direct, a group @ is a mention, heartbeats are answered', async (t)
   assert.ok(await until(() => fake.packets.filter(packet => packet.op === 1).length === 1), 'server heartbeat request gets an op-1 reply')
 })
 
+test('QQ gateway replays do not start a second turn, even after reconnecting the adapter', async (t) => {
+  const fake = await fakeQq()
+  const runtime = {}
+  const messages = []
+  const handlers = { onMessage: msg => { messages.push(msg.messageId) }, onAction: () => {}, onStatus: () => {} }
+  let handle = qq.connect(FIELDS, env(fake, runtime), handlers)
+  t.after(() => { handle.stop(); fake.close() })
+  const packet = id => ({ op: 0, t: 'C2C_MESSAGE_CREATE', s: 2, d: { id, content: 'same text', author: { user_openid: 'u1' } } })
+  const ws = await until(() => fake.sockets[0])
+  fake.push(ws, packet('m1'))
+  fake.push(ws, packet('m1'))
+  fake.push(ws, packet('m2'))
+  await until(() => messages.includes('m2'))
+  assert.deepEqual(messages, ['m1', 'm2'])
+
+  handle.stop()
+  handle = qq.connect(FIELDS, env(fake, runtime), handlers)
+  const reconnected = await until(() => fake.sockets[1])
+  fake.push(reconnected, packet('m1'))
+  fake.push(reconnected, packet('m3'))
+  await until(() => messages.includes('m3'))
+  assert.deepEqual(messages, ['m1', 'm2', 'm3'])
+})
+
 test('send replies passively with msg_id and a climbing msg_seq; a refusal is permanent', async (t) => {
   const fake = await fakeQq()
   const messages = []
@@ -233,12 +257,69 @@ test('a retried reply resends only the chunks QQ did not take', async (t) => {
   const job = { text: `${'a'.repeat(1500)}\n\n${'b'.repeat(1500)}\n\n${'c'.repeat(1500)}` }
   await assert.rejects(() => handle.send({ key: 'u1', kind: 'direct' }, job))
   const sent = await handle.send({ key: 'u1', kind: 'direct' }, job)
-  const posts = fake.calls.filter(call => call.path === '/v2/users/u1/messages').map(call => call.params.markdown.content[0])
-  assert.deepEqual(posts, ['a', 'b', 'b', 'c'], 'the delivered first chunk is not posted again')
-  assert.equal(sent.messageId, 'id-4')
+  const posts = fake.calls.filter(call => call.path === '/v2/users/u1/messages')
+  assert.deepEqual(posts.map(call => call.params.markdown.content[0]), ['a', 'b', 'b', 'c'], 'the delivered first chunk is not posted again')
+  assert.deepEqual(posts.map(call => call.params.msg_seq), [1, 2, 2, 3])
+  assert.equal(sent.messageId, 'id-3')
   // A finished job starts over if it is ever sent again.
   await handle.send({ key: 'u1', kind: 'direct' }, job)
   assert.equal(fake.calls.filter(call => call.path === '/v2/users/u1/messages').length, 7)
+})
+
+test('QQ retries an uncertain text send with the same reply ID even after a new user message', async (t) => {
+  const fake = await fakeQq()
+  const messages = []
+  const handle = qq.connect(FIELDS, env(fake), { onMessage: msg => { messages.push(msg.messageId) }, onAction: () => {}, onStatus: () => {} })
+  t.after(() => { handle.stop(); fake.close() })
+  const ws = await until(() => fake.sockets[0])
+  const push = id => fake.push(ws, { op: 0, t: 'C2C_MESSAGE_CREATE', s: 2, d: { id, content: 'hi', author: { user_openid: 'u1' } } })
+  push('m1')
+  await until(() => messages.includes('m1'))
+  const accepted = new Set()
+  fake.replies['/v2/users/u1/messages'] = ({ msg_id, msg_seq }) => {
+    const key = `${msg_id}:${msg_seq}`
+    if (accepted.has(key)) return { error: 409, status: 409, message: 'already accepted' }
+    accepted.add(key)
+    return { result: {}, status: 502 }
+  }
+  const job = { text: 'one response' }
+  const chat = { key: 'u1', kind: 'direct' }
+  await assert.rejects(() => handle.send(chat, job), { status: 502 })
+  push('m2')
+  await until(() => messages.includes('m2'))
+  await assert.rejects(() => handle.send(chat, job), { status: 409 })
+  assert.deepEqual([...accepted], ['m1:1'])
+})
+
+test('QQ uploads images and original files as passive media messages, with one upload across retries', async (t) => {
+  const fake = await fakeQq()
+  const handle = qq.connect(FIELDS, env(fake), { onMessage: () => {}, onAction: () => {}, onStatus: () => {} })
+  t.after(() => { handle.stop(); fake.close() })
+  await until(() => fake.packets.some(packet => packet.op === 2))
+  const png = Buffer.from('89504e470d0a1a0a0000000d49484452', 'hex')
+  const doc = Buffer.from('<!doctype html>\n<p>文件原文</p>\n')
+  fake.replies['/v2/users/u1/files'] = { result: { file_info: 'artifacts-1', ttl: 50 } }
+  fake.replies['/v2/groups/g1/files'] = { result: { file_info: 'group-image', ttl: 50 } }
+  const user = { key: 'u1', kind: 'direct', replyTo: 'request-1' }
+  const group = { key: 'g1', kind: 'group', replyTo: 'request-2' }
+  await handle.sendImage(user, { data: png, name: '图.png' })
+  const file = { data: doc, name: '分析报告.html' }
+  fake.replies['/v2/users/u1/messages'] = { result: {}, status: 429 }
+  await assert.rejects(() => handle.sendFile(user, file), { status: 429 })
+  delete fake.replies['/v2/users/u1/messages']
+  await handle.sendFile(user, file)
+  await handle.sendImage(group, { data: png, name: '图.png' })
+  const uploads = fake.calls.filter(call => call.path.endsWith('/files'))
+  assert.deepEqual(uploads.map(({ path, params }) => [path, params]), [
+    ['/v2/users/u1/files', { file_type: 1, file_data: png.toString('base64'), srv_send_msg: false }],
+    ['/v2/users/u1/files', { file_type: 4, file_data: doc.toString('base64'), srv_send_msg: false, file_name: '分析报告.html' }],
+    ['/v2/groups/g1/files', { file_type: 1, file_data: png.toString('base64'), srv_send_msg: false }],
+  ])
+  const messages = fake.calls.filter(call => call.path.endsWith('/messages'))
+  assert.deepEqual(messages.map(call => [call.params.msg_id, call.params.msg_seq, call.params.msg_type, call.params.media.file_info]), [
+    ['request-1', 1, 7, 'artifacts-1'], ['request-1', 2, 7, 'artifacts-1'],
+    ['request-1', 2, 7, 'artifacts-1'], ['request-2', 1, 7, 'group-image'],
+  ])
 })
 
 test('a dropped socket reconnects and resumes', async (t) => {

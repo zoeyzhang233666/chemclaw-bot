@@ -15,12 +15,16 @@ import { retryDelay, retryWait } from './retry.js'
 const API = 'https://api.sgroup.qq.com'
 const TOKEN_API = 'https://bots.qq.com'
 const TEXT_LIMIT = 2000
+const ONE_SHOT_LIMIT = 20 * 1024 * 1024
+const RECENT_LIMIT = 256
 // GROUP_AND_C2C covers C2C_MESSAGE_CREATE and GROUP_AT_MESSAGE_CREATE.
 const INTENTS = 1 << 25
 
-// Chunks QQ already took, by reply job: a retry of the same job (after a backoff
-// or from Try again) resumes after them instead of posting them a second time.
-const delivered = new WeakMap()
+// The send queue retains the job on retry. QQ uses msg_id + msg_seq as its
+// duplicate key, so the currently attempted chunk must keep that pair too.
+const textJobs = new WeakMap()
+const mediaJobs = new WeakMap()
+const routeFor = chat => `/v2/${chat.kind === 'direct' ? 'users' : 'groups'}/${encodeURIComponent(chat.key)}`
 
 const IMAGE_EXTS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp'])
 
@@ -133,9 +137,64 @@ export default {
     let sessionId
     // Passive replies reuse the inbound msg_id with a msg_seq that climbs
     // per id — outside the window the platform refuses (permanent).
-    const msgSeq = new Map()
+    const runtime = env.runtime?.get() ?? {}
+    const seen = new Set(Array.isArray(runtime.qqInbound) ? runtime.qqInbound.slice(-RECENT_LIMIT) : [])
+    const msgSeq = new Map(Array.isArray(runtime.qqSeq) ? runtime.qqSeq.slice(-RECENT_LIMIT) : [])
     const lastMsgId = new Map()
     const inOrder = createChatQueue()
+    const messageOf = chat => chat.replyTo ?? lastMsgId.get(chat.key)
+    const nextReply = (chat, msgId) => {
+      if (!msgId) return {}
+      const key = JSON.stringify([chat.kind, chat.key, msgId])
+      const seq = (msgSeq.get(key) ?? 0) + 1
+      msgSeq.delete(key)
+      msgSeq.set(key, seq)
+      if (msgSeq.size > RECENT_LIMIT) msgSeq.delete(msgSeq.keys().next().value)
+      env.runtime?.set({ qqSeq: [...msgSeq] })
+      return { msg_id: msgId, msg_seq: seq }
+    }
+    const post = async (chat, reply, body) => {
+      try {
+        return await api(env, token, `${routeFor(chat)}/messages`, {
+          method: 'POST', body: { ...body, ...reply }, signal: mediaSignal(stopping.signal, 30_000),
+        })
+      } catch (error) {
+        if (!reply.msg_id && (error.status === undefined || error.status >= 500)) error.unknown = true
+        throw error
+      }
+    }
+
+    const sendMedia = async (chat, attachment, type) => {
+      const { data, name } = attachment
+      if (!Buffer.isBuffer(data) || data.length === 0 || data.length > ONE_SHOT_LIMIT) {
+        throw Object.assign(new Error('QQ requires a non-empty attachment up to 20 MB'), { permanent: true })
+      }
+      if (type === 1 && !['image/png', 'image/jpeg'].includes(detectImageMediaType(data))) {
+        throw Object.assign(new Error('QQ image messages require PNG or JPEG'), { permanent: true })
+      }
+      let job = mediaJobs.get(attachment)
+      if (!job) {
+        job = { reply: nextReply(chat, messageOf(chat)) }
+        mediaJobs.set(attachment, job)
+      }
+      if (!job.fileInfo || job.expiresAt <= Date.now()) {
+        const upload = await api(env, token, `${routeFor(chat)}/files`, {
+          method: 'POST', signal: mediaSignal(stopping.signal, 60_000),
+          body: {
+            file_type: type, file_data: data.toString('base64'), srv_send_msg: false,
+            ...(type === 4 ? { file_name: name } : {}),
+          },
+        })
+        if (typeof upload.file_info !== 'string' || upload.file_info === '') {
+          throw Object.assign(new Error('QQ returned no attachment receipt'), { permanent: true })
+        }
+        job.fileInfo = upload.file_info
+        job.expiresAt = Number(upload.ttl) > 0 ? Date.now() + Number(upload.ttl) * 1000 : Infinity
+      }
+      const sent = await post(chat, job.reply, { msg_type: 7, content: ' ', media: { file_info: job.fileInfo } })
+      mediaJobs.delete(attachment)
+      return { messageId: String(sent?.id ?? '') }
+    }
 
     const send = packet => { if (socket?.readyState === 1) socket.send(JSON.stringify(packet)) }
     const heartbeat = () => send({ op: 1, d: sequence ?? null })
@@ -181,10 +240,12 @@ export default {
       if (!c2c && !group) return
       const d = packet.d ?? {}
       const key = String(c2c ? d.author?.user_openid ?? d.channel_id ?? '' : d.group_openid ?? d.channel_id ?? '')
-      lastMsgId.set(key, String(d.id ?? ''))
       const sender = c2c ? d.author?.user_openid : d.author?.member_openid ?? d.author?.id
+      const id = String(d.id ?? '')
+      const seenKey = id === '' ? undefined : JSON.stringify([packet.t, key, id])
       await inOrder(key, async () => {
-        if (stopped) return
+        if (stopped || (seenKey !== undefined && seen.has(seenKey))) return
+        lastMsgId.set(key, id)
         const { images, files } = await downloadAttachments(d, env, stopping.signal)
         if (stopped) return
         await handlers.onMessage({
@@ -192,8 +253,13 @@ export default {
           sender: { id: String(sender ?? ''), name: String(sender ?? '') },
           text: textOf(d),
           images, files,
-          mentioned: group, messageId: String(d.id ?? ''),
+          mentioned: group, messageId: id,
         })
+        if (!stopped && seenKey !== undefined) {
+          seen.add(seenKey)
+          if (seen.size > RECENT_LIMIT) seen.delete(seen.values().next().value)
+          env.runtime?.set({ qqInbound: [...seen] })
+        }
       })
     }
 
@@ -286,39 +352,34 @@ export default {
 
     return {
       send: async (chat, message) => {
-        const text = String(message.text ?? '')
-        const chunks = chunkMarkdown(toQqMarkdown(text), TEXT_LIMIT)
-        const msgId = lastMsgId.get(chat.key)
-        const base = chat.kind === 'direct' ? `/v2/users/${chat.key}/messages` : `/v2/groups/${chat.key}/messages`
-        const done = delivered.get(message)?.text === text ? delivered.get(message) : undefined
-        let count = done?.count ?? 0
-        let messageId = done?.messageId
-        for (const chunk of chunks.slice(count)) {
-          const seq = (msgSeq.get(msgId) ?? 0) + 1
-          msgSeq.set(msgId, seq)
-          const reply = msgId ? { msg_id: msgId, msg_seq: seq } : {}
-          let sent
-          try {
-            sent = await api(env, token, base, {
-              method: 'POST',
-              body: { markdown: { content: chunk }, msg_type: 2, ...reply },
-            })
-          } catch (error) {
-            // 40034090 is the platform refusing the markdown itself (no permission
-            // for it). Any other refusal is about this reply and is not retried.
-            if (Number(error?.bizCode) !== 40034090) throw error
-            sent = await api(env, token, base, {
-              method: 'POST',
-              body: { content: toPlain(chunk), msg_type: 0, ...reply },
-            })
-          }
-          messageId = String(sent?.id ?? messageId ?? '')
-          count += 1
-          delivered.set(message, { text, count, messageId })
+        let job = textJobs.get(message)
+        if (!job) {
+          job = { msgId: messageOf(chat), count: 0 }
+          textJobs.set(message, job)
         }
-        delivered.delete(message)
-        return { messageId }
+        const chunks = chunkMarkdown(toQqMarkdown(String(message.text ?? '')), TEXT_LIMIT)
+        for (const chunk of chunks.slice(job.count)) {
+          job.reply ??= nextReply(chat, job.msgId)
+          let sent
+          if (!job.plain) {
+            try {
+              sent = await post(chat, job.reply, { markdown: { content: chunk }, msg_type: 2 })
+            } catch (error) {
+              if (Number(error?.bizCode) !== 40034090) throw error
+              job.plain = true
+            }
+          }
+          if (job.plain) sent = await post(chat, job.reply, { content: toPlain(chunk), msg_type: 0 })
+          job.messageId = String(sent?.id ?? job.messageId ?? '')
+          job.count += 1
+          job.reply = undefined
+          job.plain = false
+        }
+        textJobs.delete(message)
+        return { messageId: job.messageId }
       },
+      sendImage: (chat, image) => sendMedia(chat, image, 1),
+      sendFile: (chat, file) => sendMedia(chat, file, 4),
       stop: () => {
         stopped = true
         stopping.abort()
@@ -332,11 +393,12 @@ export default {
   },
 }
 
-async function api(env, token, path, { method = 'GET', body } = {}) {
+async function api(env, token, path, { method = 'GET', body, signal } = {}) {
   const response = await env.fetch(`${apiBase(env)}${path}`, {
     method,
     headers: { authorization: `QQBot ${token}`, 'content-type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),
+    signal,
   })
   const json = await response.json().catch(() => ({}))
   const bizCode = [json.err_code, json.code].find(code => code !== undefined && Number(code) !== 0)

@@ -12,4 +12,6 @@
 
 微信也支持发送工作区中的 SVG、HTML 等交付件。专家通过 `present` 交付或在回复中链接文件后，ChemClaw 以微信文件消息发送原文件名和内容。单个附件最大 50 MB。[微信 iLink 协议文档](https://github.com/Tencent/openclaw-weixin/blob/main/docs/protocol_zh_CN.md#消息模型)
 
-本地图片可通过微信、飞书 / Lark、钉钉、Telegram、Discord 和 Slack 发送。QQ 和企业微信收到只读卡片的文字摘要。普通文件原件由微信通道投递，其他通道会提示到电脑版查看。分段回复在重试时从已确认送达的位置继续。
+本地图片可通过微信、QQ、飞书 / Lark、钉钉、Telegram、Discord 和 Slack 发送。企业微信收到只读卡片的文字摘要。微信和 QQ 可发送文件原件，其他通道会提示到电脑版查看。分段回复在重试时从已确认送达的位置继续。
+
+QQ 使用原消息 ID 和固定的回复序号重试，重复推送按原消息 ID 忽略。图片以 PNG 或 JPEG 发送。文件和图片通过官方 SDK 所用的直传接口上传，单个附件最大 20 MB。QQ 的账号权限、文件格式和会话限制由服务端校验。[QQ 消息接口](https://github.com/tencent-connect/bot-docs/blob/main/docs/develop/api-v2/server-inter/message/send-receive/send.md) · [腾讯 QQ SDK 媒体说明](https://github.com/tencent-connect/qqbot-nodejs/blob/main/USAGE.md#10-媒体上传与发送)

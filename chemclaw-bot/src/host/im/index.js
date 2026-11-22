@@ -434,7 +434,7 @@ export function install(rt) {
   const requests = new Map()
   const consumedRequests = new Set()
   const withheldOrigins = new Map()
-  const claimOrigin = (sessionId, connId, chatKey, senderId, binding) => {
+  const claimOrigin = (sessionId, connId, chatKey, senderId, binding, replyTo) => {
     if (sessionId === undefined || connId === undefined) return
     if (mixed.has(sessionId)) {
       if (!withheldOrigins.has(sessionId)) withheldOrigins.set(sessionId, false)
@@ -451,7 +451,7 @@ export function install(rt) {
       bound = conn === undefined ? undefined : bindingOf(conn, chatKey)
     }
     const delivery = previous?.delivery ?? { replies: new Map(), attachments: new Set() }
-    origins.set(sessionId, { connId, chatKey, senderId, binding: bound, delivery, at: Date.now() })
+    origins.set(sessionId, { connId, chatKey, senderId, binding: bound, delivery, replyTo: replyTo ?? previous?.replyTo, at: Date.now() })
   }
   const dropOrigin = (sessionId) => {
     const entry = origins.get(sessionId)
@@ -489,12 +489,12 @@ export function install(rt) {
     // The chat may have been unbound or pointed at another Bot or group while the work
     // it started keeps running; that work's late lines must not follow the old origin.
     if (entry.binding === undefined || bindingOf(conn, entry.chatKey) !== entry.binding) return undefined
-    return { conn, chatKey: entry.chatKey, chat, senderId: entry.senderId, binding: entry.binding, delivery: entry.delivery }
+    return { conn, chatKey: entry.chatKey, chat, senderId: entry.senderId, binding: entry.binding, delivery: entry.delivery, replyTo: entry.replyTo }
   }
-  const rememberRequest = (requestId, conn, chatKey, senderId, binding = bindingOf(conn, chatKey)) => {
+  const rememberRequest = (requestId, conn, chatKey, senderId, binding = bindingOf(conn, chatKey), replyTo) => {
     // The binding is captured when the message arrives, not when it is admitted: a chat
     // rebound while the message waits in the queue still answers the target that asked.
-    requests.set(requestId, { connId: conn.id, chatKey, senderId, binding, at: Date.now() })
+    requests.set(requestId, { connId: conn.id, chatKey, senderId, binding, replyTo, at: Date.now() })
   }
   // The Session a Bot writes into now, for a card that carries no Session of its own.
   const chatOfBot = botId => rt.botOf(botId) === undefined ? undefined : rt.chatOf(botId)
@@ -745,8 +745,8 @@ export function install(rt) {
     return rt.redactSecrets(`${name}\n${hint}`)
   }
   const sendReply = (origin, body, { sessionId, botId, prefix = '', presented = [] } = {}) => {
-    const { conn, chatKey, chat, senderId, binding } = origin
-    const where = { key: chatKey, kind: chat.kind, title: chat.title }
+    const { conn, chatKey, chat, senderId, binding, replyTo } = origin
+    const where = { key: chatKey, kind: chat.kind, title: chat.title, ...(replyTo ? { replyTo } : {}) }
     const stageKey = `${conn.id}:${chatKey}`
     const runner = runners.get(conn.id)
     const authorization = { senderId, binding, delivery: origin.delivery }
@@ -835,9 +835,9 @@ export function install(rt) {
   const imDisplayView = (sessionId, card, member) => {
     const origin = originOf(sessionId)
     if (origin === undefined) return
-    const { conn, chatKey, chat, senderId, binding } = origin
+    const { conn, chatKey, chat, senderId, binding, replyTo } = origin
     const runner = runners.get(conn.id)
-    const where = { key: chatKey, kind: chat.kind, title: chat.title }
+    const where = { key: chatKey, kind: chat.kind, title: chat.title, ...(replyTo ? { replyTo } : {}) }
     const authorization = { senderId, binding, delivery: origin.delivery }
     const lang = langKey()
     const summary = imViewSummary(card, lang)
@@ -1045,7 +1045,7 @@ export function install(rt) {
         || binding === undefined || bindingOf(current, msg.chat.key) !== binding || rt.readOnly() !== undefined) return
     const requestId = `im:${conn.platform}:${randomUUID()}`
     // The turn this starts belongs to this chat: its replies go back here and nowhere else.
-    rememberRequest(requestId, current, msg.chat.key, msg.sender.id, binding)
+    rememberRequest(requestId, current, msg.chat.key, msg.sender.id, binding, conn.platform === 'qq' ? msg.messageId : undefined)
     try {
       await rt.sendUser({ sessionId, content, requestId })
     } catch (error) {
@@ -1680,7 +1680,7 @@ export function install(rt) {
             if (seqs.length > 200) delete recent[seqs[0]]
             imVia.set(id, recent)
           }
-          claimOrigin(id, asked.connId, asked.chatKey, asked.senderId, asked.binding)
+          claimOrigin(id, asked.connId, asked.chatKey, asked.senderId, asked.binding, asked.replyTo)
         }
       } else if ([SOURCE_KIND, REPLY_KIND, 'user', 'schedule', 'tool-jobs', 'subagent-settled'].includes(source?.kind)) {
         dropOrigin(id)
