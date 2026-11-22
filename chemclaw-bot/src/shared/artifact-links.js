@@ -1,4 +1,4 @@
-const EXTENSION = /\.(?:html?|xlsx?|csv|tsv|pptx?|docx?|pdf|md|txt|json|png|jpe?g|svg|webp)$/i
+const EXTENSION = /\.(?:html?|xlsx?|csv|tsv|pptx?|docx?|pdf|md|txt|json|png|jpe?g|svg|webp|gif)$/i
 
 export function artifactPath(value) {
   if (typeof value !== 'string' || value.length > 2048 || /[\x00-\x1f]/.test(value)) return undefined

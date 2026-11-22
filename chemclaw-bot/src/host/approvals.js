@@ -30,20 +30,24 @@ export function install(rt) {
     }
     pending.set(id, entry)
     rt.noteApproval?.(sessionId, { tool: entry.tool, reason: entry.reason.slice(0, 200) })
-    const settled = () => {
+    const settled = (outcome) => {
       pending.delete(id)
       rt.noteApproval?.(sessionId, undefined)
+      if (owner !== undefined) rt.imApproval?.('settled', { id, outcome })
     }
     if (owner === undefined) return Promise.resolve(next()).finally(settled)
     rt.yieldRoomTurn?.(sessionId)
     return new Promise((resolve) => {
       entry.answer = (outcome) => {
         if (!pending.has(id)) return
-        settled()
+        settled(outcome)
         resolve(outcome)
       }
       if (request.signal?.aborted) entry.answer('cancelled')
-      request.signal?.addEventListener('abort', () => entry.answer('cancelled'), { once: true })
+      else {
+        request.signal?.addEventListener('abort', () => entry.answer('cancelled'), { once: true })
+        rt.imApproval?.('open', entry)
+      }
     })
   }, { prepend: true })
 

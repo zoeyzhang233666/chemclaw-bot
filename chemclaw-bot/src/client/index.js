@@ -41,6 +41,7 @@ import { freePriority, groupsFor, readMode, surfaceGroups, writeMode } from './s
 import { installLocale, language, t } from './i18n.js'
 import { noteClientError, quietly } from './diagnostics.js'
 import { ErrorToast, FEEDBACK_CSS } from './feedback.js'
+import { IM_CSS } from './im-page.js'
 import { ABOUT_CSS } from './about.js'
 import { SKILL_CSS } from './skill-library.js'
 import { isUserSkill, skillLabel } from '../shared/skills.js'
@@ -182,11 +183,13 @@ export function apply(ctx) {
     const nextComputer = JSON.stringify(value.computerLive ?? {})
     if (nextComputer !== computerKey) { computerKey = nextComputer; computer.set(value.computerLive ?? {}) }
     const current = roster.getSnapshot()
-    // Connector and capability states change without a new revision.
+    // Connector, IM and capability states change without a new revision.
     const live = {}
     if (value.readOnly !== undefined && value.readOnly !== current.readOnly) live.readOnly = value.readOnly
     if (value.connectors !== undefined && JSON.stringify(value.connectors) !== JSON.stringify(current.connectors ?? [])) live.connectors = value.connectors
     if (value.capabilityStatuses !== undefined && JSON.stringify(value.capabilityStatuses) !== JSON.stringify(current.capabilityStatuses ?? {})) live.capabilityStatuses = value.capabilityStatuses
+    if (value.imStatus !== undefined && JSON.stringify(value.imStatus) !== JSON.stringify(current.imStatus ?? {})) live.imStatus = value.imStatus
+    if (value.imVia !== undefined && JSON.stringify(value.imVia) !== JSON.stringify(current.imVia ?? {})) live.imVia = value.imVia
     if (Object.keys(live).length > 0 && current.ready) roster.set({ ...current, ...live })
     if (value.btwCards !== undefined && JSON.stringify(value.btwCards) !== JSON.stringify(current.btwCards ?? {})) live.btwCards = value.btwCards
     if (value.sideChats !== undefined && JSON.stringify(value.sideChats) !== JSON.stringify(current.sideChats ?? {})) live.sideChats = value.sideChats
@@ -940,6 +943,7 @@ export function apply(ctx) {
     ['shared', SHARED_CSS],
     ['secrets', SECRET_CSS + PROVIDERS_CSS + CHEMCLAW_UI_CSS],
     ['skills', SKILL_CSS],
+    ['im', IM_CSS],
     ['models', MODEL_CSS + FOLDER_CSS + BOT_SETTINGS_CSS + GROUP_SETTINGS_CSS + AVATAR_LIBRARY_CSS],
     ['usage', USAGE_CSS], ['schedules', SCHEDULE_CSS], ['feedback', FEEDBACK_CSS],
     ['about', ABOUT_CSS], ['members', MEMBER_CSS], ['user-messages', USER_MESSAGE_CSS],

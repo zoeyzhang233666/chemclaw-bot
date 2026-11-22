@@ -65,6 +65,7 @@ export function install(rt) {
     agents: Object.values(state.agents),
     // Key names and who may use them; values never leave the host.
     secrets: rt.secretsView(),
+    im: rt.imView?.(),
     capabilities: rt.capabilityLibraryView(),
     secretRequests: state.secretRequests ?? {},
     colors: [...COLORS, ...EXTRA_COLORS],
@@ -93,6 +94,8 @@ export function install(rt) {
     memoryNews: rt.memoryNews(),
     memoryReviews: rt.memoryReviews(),
     connectors: rt.connectorsView(),
+    imStatus: rt.imStatusView?.(),
+    imVia: rt.imViaView?.(),
     capabilityStatuses: rt.capabilityStatusesView(),
     computerLive: rt.computerLive?.() ?? {},
   })
@@ -160,6 +163,7 @@ export function install(rt) {
       const readOnly = rt.readOnly()
       if (readOnly !== undefined && !READS.has(endpoint)) return fail(readOnly, 'bot/read-only')
       if (endpoint.startsWith('computer-')) return ok(await rt.computerEndpoint(endpoint.slice('computer-'.length), body))
+      if (endpoint.startsWith('im-')) return ok(await rt.imEndpoint(endpoint, body, signal))
       switch (endpoint) {
         case 'data-status':
           return ok({ sources: [await rt.searchPluginStatus(), ...rt.publicDataStatus()], dependencies: await rt.dependenciesStatus() })
@@ -421,29 +425,9 @@ export function install(rt) {
         case 'memory-forget':
           await rt.load()
           return ok(await rt.memoryEndpoint(endpoint, body))
-        case 'answer-question': {
+        case 'answer-question':
           if (typeof body.sessionId !== 'string') return fail('Nothing to send', 'bot/invalid')
-          await rt.load()
-          const past = rt.pastOwners.get(body.sessionId)
-          const sessionId = rt.botOf(body.sessionId) ? rt.chatOf(body.sessionId) : past && past.roomId === undefined ? rt.chatOf(past.botId) : body.sessionId
-          const question = rt.own(state.questions, sessionId)
-          if (question === undefined || question.id !== body.questionId) return fail('This question is no longer open', 'bot/stale')
-          const reply = questionReply(question, body.answer)
-          if (reply === undefined) return fail('Nothing to send', 'bot/invalid')
-          // Claim the question before queueing so a second answer is refused.
-          delete state.questions[sessionId]
-          try {
-            await rt.ensureCapabilities(sessionId)
-            const agent = await rt.resolveAgent(sessionId)
-            agent.followup(createUserMessage({ content: [{ type: 'text', text: reply.text }], source: reply.source }))
-            await ctx.sessions.flush(agent.session)
-          } catch (error) {
-            state.questions[sessionId] ??= question
-            throw error
-          }
-          await rt.save()
-          return ok(true)
-        }
+          return ok(await answerQuestion(body.sessionId, body.questionId, body.answer))
         case 'view-reply': {
           if (typeof body.sessionId !== 'string') return fail('Nothing to send', 'bot/invalid')
           await rt.load()
@@ -472,28 +456,7 @@ export function install(rt) {
         case 'send': {
           const text = String(body.text ?? '').trim()
           if (text === '' || typeof body.sessionId !== 'string') return fail('Nothing to send', 'bot/invalid')
-          await rt.load()
-          // A Bot id or an earlier part of its own chat means the current part.
-          const past = rt.pastOwners.get(body.sessionId)
-          const sessionId = rt.botOf(body.sessionId) ? rt.chatOf(body.sessionId) : past && past.roomId === undefined ? rt.chatOf(past.botId) : body.sessionId
-          // Group: finish (or start) the open-room warm before the turn so createSession
-          // / brief do not sit on the critical path after the user already typed.
-          if (rt.roomOf(sessionId) !== undefined) await rt.awaitRoomWarm?.(sessionId, 5_000)
-          await rt.ensureCapabilities(sessionId)
-          // Re-apply tool deny once schemas are up (room hop especially: allow-list only).
-          try {
-            const agent = await rt.resolveAgent(sessionId)
-            if (typeof rt.hideBotUnusedTools === 'function') rt.hideBotUnusedTools(agent)
-            else rt.warn('chemclaw-bot: hideBotUnusedTools missing on send')
-          } catch (error) {
-            rt.warn('chemclaw-bot: tool trim on send failed: %s', error)
-          }
-          await ctx.sessionController.prompt({
-            requestId: randomUUID(),
-            sessionId,
-            mode: 'queue',
-            content: [{ type: 'text', text }],
-          }, AbortSignal.timeout(30_000))
+          await sendUser({ sessionId: body.sessionId, content: [{ type: 'text', text }] })
           return ok(true)
         }
         case 'side-new': {
@@ -612,6 +575,68 @@ export function install(rt) {
       return fail(message, code)
     }
   }
+
+  function currentSession(ref) {
+    const past = rt.pastOwners.get(ref)
+    return rt.botOf(ref) ? rt.chatOf(ref) : past && past.roomId === undefined ? rt.chatOf(past.botId) : ref
+  }
+
+  async function sendUser({ sessionId: ref, content, requestId = randomUUID() }) {
+    await rt.load()
+    const sessionId = currentSession(ref)
+    // Group: finish (or start) the open-room warm before the turn so createSession
+    // / brief do not sit on the critical path after the user already typed.
+    if (rt.roomOf(sessionId) !== undefined) await rt.awaitRoomWarm?.(sessionId, 5_000)
+    await rt.ensureCapabilities(sessionId)
+    // Re-apply tool deny once schemas are up (room hop especially: allow-list only).
+    try {
+      const agent = await rt.resolveAgent(sessionId)
+      if (typeof rt.hideBotUnusedTools === 'function') rt.hideBotUnusedTools(agent)
+      else rt.warn('chemclaw-bot: hideBotUnusedTools missing on send')
+    } catch (error) {
+      rt.warn('chemclaw-bot: tool trim on send failed: %s', error)
+    }
+    await ctx.sessionController.prompt({
+      requestId,
+      sessionId,
+      mode: 'queue',
+      content,
+    }, AbortSignal.timeout(30_000))
+  }
+
+  async function answerQuestion(ref, questionId, answer, requestId) {
+    await rt.load()
+    const sessionId = currentSession(ref)
+    const question = rt.own(state.questions, sessionId)
+    if (question === undefined || question.id !== questionId) throw Object.assign(new Error('This question is no longer open'), { code: 'bot/stale' })
+    const reply = questionReply(question, answer)
+    if (reply === undefined) throw invalid('Nothing to send')
+    // Claim the question before queueing so a second answer is refused.
+    delete state.questions[sessionId]
+    try {
+      await rt.ensureCapabilities(sessionId)
+      const agent = await rt.resolveAgent(sessionId)
+      agent.followup(createUserMessage({ content: [{ type: 'text', text: reply.text }], source: { ...reply.source, ...(requestId === undefined ? {} : { rpcId: requestId }) } }))
+      await ctx.sessions.flush(agent.session)
+    } catch (error) {
+      state.questions[sessionId] ??= question
+      throw error
+    }
+    await rt.save()
+    return true
+  }
+
+  async function stopChat(botId) {
+    const sessionId = rt.chatOf(botId)
+    const turn = rt.live.get(sessionId)?.turn
+    if (turn === undefined) return false
+    const agent = await rt.resolveAgent(sessionId)
+    if (rt.live.get(sessionId)?.turn !== turn) return false
+    agent.cancel({ kind: 'user' })
+    return true
+  }
+
+  Object.assign(rt, { sendUser, answerQuestion, stopChat })
 
   // An exact Fetch route on the shared /api channel; the browser authenticates with its session cookie.
   ctx.effect(() => ctx.connection.fetch.register({

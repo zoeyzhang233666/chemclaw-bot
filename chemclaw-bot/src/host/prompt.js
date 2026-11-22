@@ -47,6 +47,16 @@ const MAIN_RULES = [
   '- The team can have more than one Main Bot; list_bots marks them. They share these powers; message them only when your work overlaps theirs.',
 ].join('\n')
 
+const IM_IMAGE_POLICY = [
+  'This request came from a messaging app that can receive images. For a data chart or readout, use show_view. Supported display views are sent as chat images.',
+  'To send a separate image file, create or verify a PNG, JPEG, WebP or GIF in the conversation workspace and call present with its actual path, or include a Markdown image linked to that file.',
+  'Summarize briefly after delivery. Avoid repeating earlier prose or claiming that a filename, code or a desktop panel means the recipient has received an image.',
+].join('\n')
+
+const IM_GROUP_FILE_POLICY = 'For an IM group reply, include a Markdown link to each actual workspace file in the final group message, even if you also called present. The saved reply uses those links to attach the files to the group message.'
+
+const FILE_DELIVERY_POLICY = 'When the user asks for an actual SVG or HTML file, save the requested format in the conversation workspace and call present with the actual file path. Link the file in the final response with its workspace path if present is unavailable. For HTML meant to be opened locally, include the required visual assets in the HTML. Share a separate preview only when useful.'
+
 export function install(rt) {
   const { ctx } = rt
 
@@ -88,7 +98,10 @@ export function install(rt) {
       if (rt.roomOf(context?.agent?.id) || context?.agent?.session?.header?.parentSession !== undefined) return ''
       const router = nativeViewAvailable(ctx, context?.agent, context?.toolSet) ? NATIVE_VIEW_POLICY : GENUI_VIEW_POLICY
       const graphs = genuiViewAvailable(ctx, context?.agent, context?.toolSet) ? GENUI_GRAPH_POLICY : LEGACY_GRAPH_POLICY
-      const policy = [VIEW_POLICY, router, graphs].join('\n')
+      const policy = [VIEW_POLICY, router, graphs, FILE_DELIVERY_POLICY,
+        rt.imImageDeliveryOf?.(context?.agent?.id) ? IM_IMAGE_POLICY : '',
+        rt.imGroupFileDeliveryOf?.(context?.agent?.id) ? IM_GROUP_FILE_POLICY : '',
+      ].filter(Boolean).join('\n')
       return rt.state?.prefs?.advancedCharts === false
         ? policy + '\nAdvanced charts are disabled in ChemClaw Settings. In place of the seven advanced ECharts types, use a suitable basic native chart when it can communicate the same evidence. If the user expressly requests a disabled chart type, explain the setting and show the supported figures.'
         : policy
