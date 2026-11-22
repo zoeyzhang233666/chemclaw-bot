@@ -4,6 +4,20 @@ All notable changes to ChemClaw are listed here. The format follows [Keep a Chan
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-22
+
+### Added
+
+- Connect ChemClaw to WeChat, QQ, Feishu/Lark, WeCom, DingTalk, Telegram, Discord, and Slack from Settings → IM. Send and receive images and permitted files, and view supported charts as images in the chat app.
+- Add opt-in Computer Use controls with per-expert app permissions, stop, and user takeover on supported desktop configurations.
+
+### Fixed
+
+- Prevent repeated IM replies when a platform redelivers a message or the model repeats a response within the same turn.
+- Keep new Classic conversations separate from expert sessions. Show the answer and native visual cards together while keeping the original tool details available.
+- Restore the macOS source launcher for main and GitHub PR previews with separate test profiles.
+
+
 ## [0.3.1] - 2026-11-10
 
 ### Fixed
