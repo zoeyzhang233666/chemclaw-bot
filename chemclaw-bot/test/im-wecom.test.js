@@ -74,8 +74,9 @@ const until = async (fn, tries = 80) => {
   return undefined
 }
 
-test('check opens the gateway root with one standard upgrade handshake', async () => {
+test('check opens the gateway root with one standard upgrade handshake', async (t) => {
   const fake = await fakeWecom()
+  t.after(fake.close)
   const { account } = await wecom.check(FIELDS, env(fake))
   assert.deepEqual(account, { id: 'bot-1', name: 'bot-1' })
   assert.equal(fake.upgrades.length, 1)
@@ -83,19 +84,18 @@ test('check opens the gateway root with one standard upgrade handshake', async (
   assert.equal(fake.upgrades[0].header('Connection'), 'Upgrade')
   assert.equal(fake.upgrades[0].header('Upgrade'), 'websocket')
   assert.ok(fake.packets.some(packet => packet.cmd === 'aibot_subscribe' && packet.body.secret === 'sec-1'))
-  await fake.close()
 })
 
-test('check reports the gateway status when the handshake is refused', async () => {
+test('check reports the gateway status when the handshake is refused', async (t) => {
   const fake = await fakeWecom({ rejectStatus: 403 })
+  t.after(fake.close)
   await assert.rejects(() => wecom.check(FIELDS, env(fake)), /403/)
-  await fake.close()
 })
 
-test('check reports the business reason when the subscription is refused', async () => {
+test('check reports the business reason when the subscription is refused', async (t) => {
   const fake = await fakeWecom({ subscribeReply: { errcode: 60111, errmsg: 'invalid bot' } })
+  t.after(fake.close)
   await assert.rejects(() => wecom.check(FIELDS, env(fake)), /invalid bot/)
-  await fake.close()
 })
 
 test('connect opens the gateway root with one standard upgrade handshake and goes ready', async (t) => {
