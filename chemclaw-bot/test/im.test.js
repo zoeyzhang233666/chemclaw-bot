@@ -462,6 +462,31 @@ const pairedConn = async (s) => {
 
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+yVJ8AAAAASUVORK5CYII=', 'base64')
 
+test('IM gateway redelivery admits a platform message only once, including after the adapter reconnects', async (t) => {
+  const s = await start()
+  t.after(s.stop)
+  const { one } = await pairedConn(s)
+  await Promise.all([
+    dm(s, 'u1', 'same request', { messageId: 10 }),
+    dm(s, 'u1', 'same request', { messageId: 10 }),
+  ])
+  assert.equal(s.prompts.length, 1)
+  assert.equal(s.fake.env.runtime.get().receivedMessages.length, 1)
+
+  one.enabled = false
+  await s.rt.save()
+  for (let tries = 0; tries < 20 && !s.fake.stopped; tries++) await s.flush()
+  assert.equal(s.fake.stopped, 1)
+  one.enabled = true
+  await s.rt.save()
+  for (let tries = 0; tries < 20 && s.fake.connects < 2; tries++) await s.flush()
+  assert.equal(s.fake.connects, 2)
+  await dm(s, 'u1', 'same request', { messageId: 10 })
+  assert.equal(s.prompts.length, 1)
+  await dm(s, 'u1', 'same request', { messageId: 11 })
+  assert.equal(s.prompts.length, 2)
+})
+
 test('an accepted display view sends one image only to its IM origin, with an ordered fallback on rejection', async (t) => {
   let rejected = false
   const s = await start({ adapter: fakeAdapter({ sendImage: () => {
@@ -792,15 +817,28 @@ test('desktop input and unowned results withhold the rest of an IM turn', async 
 })
 
 test('only a saved reply within the IM group turn reaches its platform chat', async (t) => {
-  const s = await start()
+  const workspace = mkdtempSync(join(tmpdir(), 'chemclaw-im-group-files-'))
+  t.after(() => rmSync(workspace, { recursive: true, force: true }))
+  const html = Buffer.from('<!doctype html><p>Group report</p>')
+  writeFileSync(join(workspace, 'report.html'), html)
+  const seed = TEAM()
+  seed.rooms.r1.workDir = workspace
+  const s = await start({ seed, adapter: fakeAdapter({ sendFile: () => {} }) })
   t.after(s.stop)
+  s.rt.ctx.sessionController.inspect = async () => ({ meta: { cwd: workspace } })
   const { conn, one } = await pairedConn(s)
   one.chats.g1 = { kind: 'group', title: 'Group One', at: 1 }
   await s.rt.imEndpoint('im-chat', { id: conn.id, chatKey: 'g1', target: { roomId: 'r1' } })
   await gm(s, 'u1', 'hello')
   s.imTurn('r1')
-  s.rt.imGroupReply('r1', s.rt.botOf('b'), 'inside the round')
+  s.rt.imGroupReply('r1', s.rt.botOf('b'), 'inside the round [Report](./report.html)')
+  for (let tries = 0; tries < 20 && !s.fake.sent.some(entry => entry.file); tries++) await s.flush()
   s.emitEvent('r1', 'turn/end', { turn: 1 })
-  s.rt.imGroupReply('r1', s.rt.botOf('b'), 'late result')
-  assert.deepEqual(s.fake.sent.map(({ chat, text }) => [chat.key, text]), [['g1', '**Writer**: inside the round']])
+  s.rt.imGroupReply('r1', s.rt.botOf('b'), 'late result [Report](./report.html)')
+  await s.flush()
+  assert.deepEqual(s.fake.sent.map(({ chat, text, file }) => [chat.key, text ?? file.name]), [
+    ['g1', '**Writer**: inside the round Report'],
+    ['g1', 'report.html'],
+  ])
+  assert.deepEqual(s.fake.sent[1].file.data, html)
 })

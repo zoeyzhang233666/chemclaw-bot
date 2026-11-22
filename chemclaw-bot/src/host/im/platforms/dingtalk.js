@@ -5,16 +5,18 @@
 // batchSend/groupMessages path answers instead. No buttons — the core
 // numbers choices. Wire details ported from dingtalk-stream (MIT, see
 // NOTICE).
+import { zipSync } from 'fflate'
 import { chunkMarkdown } from '../format.js'
 import {
-  createChatQueue, detectImageMediaType, discardBody,
+  createChatQueue, detectImageMediaType, discardBody, fileExtension,
   FILE_LIMIT, IMAGE_LIMIT, isHttpUrl, mediaSignal, readCappedBytes,
 } from './media.js'
-import { retryDelay, retryWait, sendChunks } from './retry.js'
+import { retryDelay, retryWait, sendChunks, sendOnce } from './retry.js'
 
 const GATEWAY = 'https://api.dingtalk.com'
 const OAPI = 'https://oapi.dingtalk.com'
 const TEXT_LIMIT = 5000
+const NATIVE_FILE_TYPES = new Set(['xlsx', 'pdf', 'zip', 'rar', 'doc', 'docx'])
 const SOCKET_TIMEOUT = 30_000
 const IDLE_TIMEOUT = 10 * 60_000
 
@@ -65,38 +67,52 @@ export default {
       data: JSON.stringify(data),
     })
 
+    const sendRobotMessage = async (chat, msgKey, params) => {
+      const accessToken = await ensureToken()
+      const direct = chat.kind === 'direct'
+      const path = direct ? '/v1.0/robot/oToMessages/batchSend' : '/v1.0/robot/groupMessages/send'
+      const destination = direct ? { userIds: [chat.key] } : { openConversationId: chat.key }
+      return sendOnce(async () => {
+        const answer = await robot(env, accessToken, path, {
+          robotCode: clientId, ...destination, msgKey, msgParam: JSON.stringify(params),
+        }, AbortSignal.timeout(30_000))
+        if (answer === undefined) throw new Error('DingTalk returned no send receipt')
+        return answer
+      })
+    }
+
     const markdown = async (chat, job) => {
       const chunks = chunkMarkdown(String(job.text ?? ''), TEXT_LIMIT)
       return sendChunks(job, chunks, async (chunk, _last, previousId) => {
+        const params = { title: chunk.slice(0, 30), text: chunk }
         const hook = sessionWebhooks.get(chat.key)
         if (hook !== undefined && hook.until > Date.now()) {
-          const response = await env.fetch(hook.url, {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({ msgtype: 'markdown', markdown: { title: chunk.slice(0, 30), text: chunk } }),
+          return sendOnce(async () => {
+            const response = await env.fetch(hook.url, {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ msgtype: 'markdown', markdown: params }),
+              signal: AbortSignal.timeout(30_000),
+            })
+            const body = await response.json().catch(() => ({}))
+            if (!response.ok || body.errcode !== 0) {
+              const error = new Error(String(body.errmsg ?? 'DingTalk refused the reply'))
+              error.status = response.status
+              error.permanent = response.ok && body.errcode !== undefined
+              if (response.status === 429) error.retryAfter = Number(response.headers.get('retry-after'))
+              throw error
+            }
+            return String(body.processQueryKey ?? previousId ?? '')
           })
-          const body = await response.json().catch(() => ({}))
-          if (body.errcode !== 0) throw Object.assign(new Error(String(body.errmsg ?? 'DingTalk refused the reply')), { permanent: true })
-          return String(body.processQueryKey ?? previousId ?? '')
         }
-        if (chat.kind === 'direct') {
-          const answer = await robot(env, await ensureToken(), clientId, '/v1.0/robot/oToMessages/batchSend', {
-            robotCode: clientId, userIds: [chat.key],
-            msgKey: 'sampleMarkdown', msgParam: JSON.stringify({ title: chunk.slice(0, 30), text: chunk }),
-          })
-          return String(answer?.processQueryKey ?? previousId ?? '')
-        }
-        const answer = await robot(env, await ensureToken(), clientId, '/v1.0/robot/groupMessages/send', {
-          robotCode: clientId, openConversationId: chat.key,
-          msgKey: 'sampleMarkdown', msgParam: JSON.stringify({ title: chunk.slice(0, 30), text: chunk }),
-        })
-        return String(answer?.processQueryKey ?? previousId ?? '')
+        const answer = await sendRobotMessage(chat, 'sampleMarkdown', params)
+        return String(answer.processQueryKey ?? previousId ?? '')
       })
     }
 
     const downloadCodeBytes = async (downloadCode, limit, robotCode = clientId) => {
       const signal = mediaSignal(stopping.signal)
-      const answer = await robot(env, await ensureToken(signal), clientId, '/v1.0/robot/messageFiles/download', {
+      const answer = await robot(env, await ensureToken(signal), '/v1.0/robot/messageFiles/download', {
         downloadCode: String(downloadCode),
         robotCode: String(robotCode || clientId),
       }, signal)
@@ -184,7 +200,7 @@ export default {
           chat: { key, kind: direct ? 'direct' : 'group', title: '' },
           sender: { id: sender, name: String(data.senderNick ?? sender) },
           text: texts.join('\n').trim(), images, files,
-          mentioned, messageId: String(data.msgId ?? ''),
+          mentioned, messageId: String(data.msgId ?? headers?.messageId ?? ''),
         })
       })
     }
@@ -315,39 +331,52 @@ export default {
       if (!stopped) await open()
     })()
 
+    const sendAttachment = async (chat, attachment, type) => {
+      let bytes = Buffer.isBuffer(attachment.data) ? attachment.data : Buffer.from(attachment.data ?? [])
+      if (bytes.length === 0) throw Object.assign(new Error('Empty attachment'), { permanent: true })
+      const image = type === 'image'
+      let name = attachment.name || (image ? 'image.png' : 'attachment')
+      let mediaType = attachment.mediaType || (image ? 'image/png' : 'application/octet-stream')
+      let extension = fileExtension(name)
+      // DingTalk's file template accepts only a few types. A ZIP preserves the
+      // bytes and name of a format such as HTML or SVG inside the archive.
+      if (!image && !NATIVE_FILE_TYPES.has(extension)) {
+        const entry = name.split(/[\\/]/u).pop()
+        bytes = zipSync({ [entry && entry !== '.' && entry !== '..' ? entry : 'attachment']: bytes }, { level: 0 })
+        name += '.zip'
+        extension = 'zip'
+        mediaType = 'application/zip'
+      }
+      const form = new FormData()
+      form.append('media', new Blob([bytes], { type: mediaType }), name)
+      const upResp = await env.fetch(`${oapiBase(env)}/media/upload?access_token=${encodeURIComponent(await ensureToken())}&type=${type}`, {
+        method: 'POST',
+        body: form,
+        signal: AbortSignal.timeout(30_000),
+      })
+      const upJson = await upResp.json().catch(() => ({}))
+      const mediaId = String(upJson?.media_id ?? '')
+      if (!upResp.ok || upJson.errcode || mediaId === '') {
+        // Clear cached token on expired/invalid access_token codes before retry.
+        const expired = [40014, 42001].includes(Number(upJson.errcode))
+        if (expired) { token = undefined; tokenExpiresAt = 0 }
+        const error = new Error(String(upJson.errmsg ?? `DingTalk ${type} upload answered ${upResp.status}`))
+        error.status = expired ? undefined : upResp.status
+        if (upResp.status === 429) error.retryAfter = Number(upResp.headers.get('retry-after'))
+        error.permanent = !expired && (Boolean(upResp.ok && upJson.errcode)
+          || (upResp.status >= 400 && upResp.status < 500 && upResp.status !== 429))
+        throw error
+      }
+      const answer = image
+        ? await sendRobotMessage(chat, 'sampleImageMsg', { photoURL: mediaId })
+        : await sendRobotMessage(chat, 'sampleFile', { mediaId, fileName: name, fileType: extension })
+      return { messageId: String(answer.processQueryKey ?? '') }
+    }
+
     return {
       send: markdown,
-      sendImage: async (chat, image) => {
-        const bytes = Buffer.isBuffer(image?.data) ? image.data : Buffer.from(image?.data ?? [])
-        if (bytes.byteLength === 0) throw Object.assign(new Error('Empty image'), { permanent: true })
-        const form = new FormData()
-        form.append('media', new Blob([bytes], { type: image.mediaType || 'image/png' }), image.name || 'image.png')
-        const upResp = await env.fetch(`${oapiBase(env)}/media/upload?access_token=${encodeURIComponent(await ensureToken())}&type=image`, {
-          method: 'POST',
-          body: form,
-          signal: AbortSignal.timeout(30_000),
-        })
-        const upJson = await upResp.json().catch(() => ({}))
-        const mediaId = String(upJson?.media_id ?? '')
-        if (!upResp.ok || (upJson.errcode !== undefined && upJson.errcode !== 0) || mediaId === '') {
-          // Clear cached token on expired/invalid access_token codes so retry fetches a fresh one.
-          if ([40014, 42001].includes(Number(upJson.errcode))) { token = undefined; tokenExpiresAt = 0 }
-          const error = new Error(String(upJson.errmsg ?? `DingTalk image upload answered ${upResp.status}`))
-          error.status = upResp.status
-          if (upResp.status === 429) error.retryAfter = Number(upResp.headers.get('retry-after'))
-          error.permanent = upResp.status >= 400 && upResp.status < 500 && upResp.status !== 429
-          throw error
-        }
-        const msgParam = JSON.stringify({ photoURL: mediaId })
-        const answer = chat.kind === 'direct'
-          ? await robot(env, await ensureToken(), clientId, '/v1.0/robot/oToMessages/batchSend', {
-            robotCode: clientId, userIds: [chat.key], msgKey: 'sampleImageMsg', msgParam,
-          })
-          : await robot(env, await ensureToken(), clientId, '/v1.0/robot/groupMessages/send', {
-            robotCode: clientId, openConversationId: chat.key, msgKey: 'sampleImageMsg', msgParam,
-          })
-        return { messageId: String(answer?.processQueryKey ?? '') }
-      },
+      sendImage: (chat, image) => sendAttachment(chat, image, 'image'),
+      sendFile: (chat, file) => sendAttachment(chat, file, 'file'),
       stop: () => {
         stopped = true
         stopping.abort()
@@ -377,7 +406,7 @@ async function appToken(fields, env, signal) {
   return { accessToken: body.access_token, expiresAt: Date.now() + Math.max(60, Number(body.expires_in ?? 7200) - 300) * 1000 }
 }
 
-async function robot(env, token, clientId, path, body, signal) {
+async function robot(env, token, path, body, signal) {
   if (token === undefined) throw Object.assign(new Error('DingTalk has no access token yet'), { permanent: false })
   const response = await env.fetch(`${gatewayBase(env)}${path}`, {
     method: 'POST',
@@ -385,9 +414,11 @@ async function robot(env, token, clientId, path, body, signal) {
     body: JSON.stringify(body),
     ...(signal !== undefined ? { signal } : {}),
   })
-  const json = await response.json().catch(() => ({}))
+  const json = await response.json().catch(() => undefined)
   if (!response.ok) {
-    const error = new Error(String(json.message ?? json.errmsg ?? `DingTalk answered ${response.status}`))
+    const error = new Error(String(json?.message ?? json?.errmsg ?? `DingTalk answered ${response.status}`))
+    error.status = response.status
+    if (response.status === 429) error.retryAfter = Number(response.headers.get('retry-after'))
     error.permanent = response.status >= 400 && response.status < 500 && response.status !== 429
     throw error
   }

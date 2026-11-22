@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { createDecipheriv } from 'node:crypto'
 import { createServer } from 'node:http'
 import { test } from 'node:test'
+import { unzipSync } from 'fflate'
 import { extractLocalMarkdownImages, prepareOutboundReply } from '../src/host/im/outbound-images.js'
 import feishu from '../src/host/im/platforms/feishu.js'
 import weixin from '../src/host/im/platforms/weixin.js'
@@ -10,6 +11,10 @@ import discord from '../src/host/im/platforms/discord.js'
 import slack from '../src/host/im/platforms/slack.js'
 import dingtalk from '../src/host/im/platforms/dingtalk.js'
 import { fakeWsServer } from './fake-ws.js'
+
+const HTML = { data: Buffer.from('<!doctype html><p>报告</p>'), mediaType: 'text/html', name: '报告.html' }
+const SVG = { data: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><text>图表</text></svg>'), mediaType: 'image/svg+xml', name: '图表.svg' }
+const multipart = call => new Response(call.buf, { headers: call.headers }).formData()
 
 const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52])
 
@@ -300,7 +305,7 @@ test('prepareOutboundReply deduplicates repeated paths and surfaces unavailable/
   assert.ok(!out.text.includes('./a.png'))
 })
 
-test('Feishu sendImage uploads multipart to /open-apis/im/v1/images and delivers msg_type=image (#1761)', async (t) => {
+test('Feishu sends native images and original files with stable publish UUIDs', async (t) => {
   const calls = []
   const wss = await fakeWsServer({ onSocket() {} })
   const http = createServer((req, res) => {
@@ -329,6 +334,11 @@ test('Feishu sendImage uploads multipart to /open-apis/im/v1/images and delivers
         res.end(JSON.stringify({ code: 0, data: { image_key: 'img_v3_key1' } }))
         return
       }
+      if (req.url === '/open-apis/im/v1/files') {
+        res.writeHead(200, { 'content-type': 'application/json' })
+        res.end(JSON.stringify({ code: 0, data: { file_key: 'file_v3_key1' } }))
+        return
+      }
       res.writeHead(200, { 'content-type': 'application/json' })
       res.end(JSON.stringify({ code: 0, data: { message_id: 'om_img1' } }))
     })
@@ -354,6 +364,25 @@ test('Feishu sendImage uploads multipart to /open-apis/im/v1/images and delivers
   assert.equal(payload.receive_id, 'oc_1')
   assert.equal(payload.msg_type, 'image')
   assert.deepEqual(JSON.parse(payload.content), { image_key: 'img_v3_key1' })
+  const chat = { key: 'oc_1', kind: 'direct' }
+  for (const file of [HTML, SVG]) {
+    assert.equal((await handle.sendFile(chat, file)).messageId, 'om_img1')
+    const upload = await multipart(calls.filter(c => c.path === '/open-apis/im/v1/files').at(-1))
+    assert.equal(upload.get('file_type'), 'stream')
+    assert.equal(upload.get('file_name'), file.name)
+    assert.deepEqual(Buffer.from(await upload.get('file').arrayBuffer()), file.data)
+    const post = JSON.parse(calls.filter(c => c.path === msg.path).at(-1).buf)
+    assert.equal(post.msg_type, 'file')
+    assert.deepEqual(JSON.parse(post.content), { file_key: 'file_v3_key1' })
+    assert.notEqual(post.uuid, payload.uuid)
+  }
+  const job = { text: 'one response' }
+  await handle.send(chat, job)
+  await handle.send(chat, job)
+  const [first, retry] = calls.filter(c => c.path === msg.path).slice(-2).map(c => JSON.parse(c.buf))
+  assert.ok(first.uuid)
+  assert.equal(first.uuid, retry.uuid)
+
 })
 
 test('WeChat sends images and original file attachments through the encrypted CDN', async (t) => {
@@ -431,7 +460,7 @@ test('WeChat sends images and original file attachments through the encrypted CD
   }
 })
 
-test('Telegram, Discord, Slack, and DingTalk sendImage hit their native upload/send endpoints', async (t) => {
+test('Telegram, Discord, Slack and DingTalk send native images and file attachments', async (t) => {
   const calls = []
   const wss = await fakeWsServer({ onSocket() {} })
   const http = createServer((req, res) => {
@@ -442,7 +471,7 @@ test('Telegram, Discord, Slack, and DingTalk sendImage hit their native upload/s
       calls.push({ method: req.method, path: req.url, headers: req.headers, buf })
       if (req.url.endsWith('/getMe')) { res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify({ ok: true, result: { id: 1, username: 'tg' } })); return }
       if (req.url.endsWith('/getUpdates')) { res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify({ ok: true, result: [] })); return }
-      if (req.url.endsWith('/sendPhoto')) { res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify({ ok: true, result: { message_id: 77 } })); return }
+      if (req.url.endsWith('/sendPhoto') || req.url.endsWith('/sendDocument')) { res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify({ ok: true, result: { message_id: 77 } })); return }
       if (req.url === '/gateway/bot') { res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify({ url: wss.url })); return }
       if (req.url === '/channels/ch1/messages') { res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify({ id: 'dc-1' })); return }
       if (req.url === '/auth.test') { res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify({ ok: true, user_id: 'U1' })); return }
@@ -485,6 +514,51 @@ test('Telegram, Discord, Slack, and DingTalk sendImage hit their native upload/s
   const dtSend = calls.find(c => c.path === '/v1.0/robot/groupMessages/send')
   assert.equal(JSON.parse(dtSend.buf.toString('utf8')).msgKey, 'sampleImageMsg')
   assert.deepEqual(JSON.parse(JSON.parse(dtSend.buf.toString('utf8')).msgParam), { photoURL: '@lADP_media1' })
+  for (const file of [HTML, SVG]) {
+    assert.equal((await tg.sendFile({ key: '100', kind: 'direct' }, file)).messageId, 77)
+    const document = (await multipart(calls.filter(c => c.path === '/bott1/sendDocument').at(-1))).get('document')
+    assert.equal(document.name, file.name)
+    assert.deepEqual(Buffer.from(await document.arrayBuffer()), file.data)
+
+    assert.equal((await dc.sendFile({ key: 'ch1', kind: 'group' }, file)).messageId, 'dc-1')
+    const discordForm = await multipart(calls.filter(c => c.path === '/channels/ch1/messages').at(-1))
+    assert.equal(discordForm.get('files[0]').name, file.name)
+    assert.deepEqual(Buffer.from(await discordForm.get('files[0]').arrayBuffer()), file.data)
+    assert.equal(JSON.parse(discordForm.get('payload_json')).enforce_nonce, true)
+
+    assert.equal((await sl.sendFile({ key: 'C1', kind: 'group' }, file)).messageId, 'F123')
+    assert.deepEqual(calls.filter(c => c.path === '/slack-upload').at(-1).buf, file.data)
+    const done = JSON.parse(calls.filter(c => c.path === '/files.completeUploadExternal').at(-1).buf)
+    assert.deepEqual(done, { files: [{ id: 'F123', title: file.name }], channel_id: 'C1' })
+
+    assert.equal((await dt.sendFile({ key: 'u1', kind: 'direct' }, file)).messageId, 'dt-q1')
+    const dingUpload = await multipart(calls.filter(c => c.path.startsWith('/media/upload') && c.path.endsWith('&type=file')).at(-1))
+    const archive = dingUpload.get('media')
+    assert.equal(archive.name, file.name + '.zip')
+    const entries = unzipSync(new Uint8Array(await archive.arrayBuffer()))
+    assert.deepEqual(Object.keys(entries), [file.name])
+    assert.deepEqual(Buffer.from(entries[file.name]), file.data)
+    const send = JSON.parse(calls.filter(c => c.path === '/v1.0/robot/oToMessages/batchSend').at(-1).buf)
+    assert.equal(send.msgKey, 'sampleFile')
+    assert.deepEqual(send.userIds, ['u1'])
+    assert.deepEqual(JSON.parse(send.msgParam), { mediaId: '@lADP_media1', fileName: archive.name, fileType: 'zip' })
+  }
+  const pdf = { name: '报告.pdf', data: Buffer.from('%PDF-1.7') }
+  await dt.sendFile({ key: 'g1', kind: 'group' }, pdf)
+  const nativeUpload = await multipart(calls.filter(c => c.path.startsWith('/media/upload')).at(-1))
+  assert.equal(nativeUpload.get('media').name, pdf.name)
+  assert.deepEqual(Buffer.from(await nativeUpload.get('media').arrayBuffer()), pdf.data)
+  const nativeSend = JSON.parse(calls.filter(c => c.path === dtSend.path).at(-1).buf)
+  assert.deepEqual(JSON.parse(nativeSend.msgParam), { mediaId: '@lADP_media1', fileName: pdf.name, fileType: 'pdf' })
+
+  const job = { text: 'one response' }
+  const channel = { key: 'ch1', kind: 'group' }
+  await dc.send(channel, job)
+  await dc.send(channel, job)
+  const [first, retry] = calls.filter(c => c.path === '/channels/ch1/messages').slice(-2).map(c => JSON.parse(c.buf))
+  assert.ok(first.nonce && first.enforce_nonce)
+  assert.equal(first.nonce, retry.nonce)
+
 })
 
 test('WeChat and Slack reject untrusted upload URLs and Telegram falls back to sendDocument on dimension error (#1761)', async (t) => {

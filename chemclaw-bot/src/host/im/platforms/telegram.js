@@ -1,7 +1,7 @@
 // Telegram Bot API adapter: getUpdates long polling in, sendMessage out. Parts of the
 // protocol mapping follow dsh-im (MIT, © 2026 xmanrui — see NOTICE).
 import { chunkTelegram } from '../format.js'
-import { retryDelay, retryWait, sendChunks } from './retry.js'
+import { retryDelay, retryWait, sendChunks, sendOnce } from './retry.js'
 
 const CLOUD_API = 'https://api.telegram.org'
 const TEXT_LIMIT = 4096
@@ -242,11 +242,11 @@ export default {
           : {}
         const sendOne = async (body) => {
           try {
-            return await call('sendMessage', { chat_id: chat.key, text: body, parse_mode: 'HTML', ...markup })
+            return await sendOnce(() => call('sendMessage', { chat_id: chat.key, text: body, parse_mode: 'HTML', ...markup }))
           } catch (error) {
             // Telegram rejects entities it cannot parse; the same text goes plain.
-            if (body !== chunk.text && /can't parse entities|parse entities/i.test(String(error?.message ?? ''))) {
-              return await call('sendMessage', { chat_id: chat.key, text: chunk.text, ...markup })
+            if (error?.permanent && body !== chunk.text && /can't parse entities|parse entities/i.test(String(error?.message ?? ''))) {
+              return await sendOnce(() => call('sendMessage', { chat_id: chat.key, text: chunk.text, ...markup }))
             }
             throw error
           }
@@ -256,47 +256,48 @@ export default {
       })
     }
 
-    const sendImage = async (chat, image) => {
-      const bytes = Buffer.isBuffer(image?.data) ? image.data : Buffer.from(image?.data ?? [])
-      if (bytes.byteLength === 0) throw Object.assign(new Error('Empty image'), { permanent: true })
-      const upload = async (method, field) => {
-        const form = new FormData()
-        form.append('chat_id', String(chat.key))
-        form.append(field, new Blob([bytes], { type: image.mediaType || 'image/png' }), image.name || 'image.png')
-        const abort = new AbortController()
-        inFlight.add(abort)
-        if (stopped) abort.abort(stoppedError())
-        const timer = setTimeout(() => abort.abort(new Error('timeout')), 30_000)
-        try {
-          const response = await env.fetch(`${base}/${method}`, { method: 'POST', body: form, signal: abort.signal })
-          const body = await response.json().catch(() => ({}))
-          if (!body.ok) {
-            const error = new Error(String(body.description ?? `Telegram answered ${response.status}`))
-            error.status = body.error_code ?? response.status
-            if (body.parameters?.retry_after !== undefined) error.retryAfter = Number(body.parameters.retry_after)
-            error.permanent = error.status >= 400 && error.status < 500 && error.status !== 429
-            throw error
-          }
-          return { messageId: body.result?.message_id }
-        } catch (error) {
-          if (stopped) throw stoppedError()
-          if (abort.signal.aborted || error?.name === 'AbortError' || error?.name === 'TimeoutError') {
-            throw Object.assign(new Error('Telegram did not answer in time'), { unknown: true })
-          }
-          throw error
-        } finally {
-          clearTimeout(timer)
-          inFlight.delete(abort)
-        }
-      }
-      if (image.mediaType === 'image/gif') return upload('sendAnimation', 'animation')
+    const upload = async (chat, attachment, method, field) => sendOnce(async () => {
+      const bytes = Buffer.isBuffer(attachment.data) ? attachment.data : Buffer.from(attachment.data ?? [])
+      if (bytes.length === 0) throw Object.assign(new Error('Empty attachment'), { permanent: true })
+      const form = new FormData()
+      form.append('chat_id', String(chat.key))
+      form.append(field, new Blob([bytes], { type: attachment.mediaType || 'application/octet-stream' }), attachment.name || 'attachment')
+      const abort = new AbortController()
+      inFlight.add(abort)
+      if (stopped) abort.abort(stoppedError())
+      const timer = setTimeout(() => abort.abort(new Error('timeout')), 30_000)
       try {
-        return await upload('sendPhoto', 'photo')
+        const response = await env.fetch(`${base}/${method}`, { method: 'POST', body: form, signal: abort.signal })
+        const body = await response.json().catch(() => ({}))
+        if (!body.ok) {
+          const error = new Error(String(body.description ?? `Telegram answered ${response.status}`))
+          error.status = body.error_code ?? response.status
+          if (body.parameters?.retry_after !== undefined) error.retryAfter = Number(body.parameters.retry_after)
+          error.permanent = error.status >= 400 && error.status < 500 && error.status !== 429
+          throw error
+        }
+        return { messageId: body.result?.message_id }
+      } catch (error) {
+        if (stopped) throw stoppedError()
+        if (abort.signal.aborted || error?.name === 'AbortError' || error?.name === 'TimeoutError') {
+          throw Object.assign(new Error('Telegram did not answer in time'), { unknown: true })
+        }
+        throw error
+      } finally {
+        clearTimeout(timer)
+        inFlight.delete(abort)
+      }
+    })
+
+    const sendImage = async (chat, image) => {
+      if (image.mediaType === 'image/gif') return upload(chat, image, 'sendAnimation', 'animation')
+      try {
+        return await upload(chat, image, 'sendPhoto', 'photo')
       } catch (error) {
         // Tall screenshots or WebP files can exceed sendPhoto's dimension/format limits;
         // fall back to sendDocument so the user still gets the original image intact.
-        if (/PHOTO_INVALID_DIMENSIONS|IMAGE_PROCESS_FAILED|PHOTO_SAVE_FILE_INVALID/i.test(String(error?.message ?? ''))) {
-          return upload('sendDocument', 'document')
+        if (error?.permanent && /PHOTO_INVALID_DIMENSIONS|IMAGE_PROCESS_FAILED|PHOTO_SAVE_FILE_INVALID/i.test(String(error?.message ?? ''))) {
+          return upload(chat, image, 'sendDocument', 'document')
         }
         throw error
       }
@@ -305,6 +306,7 @@ export default {
     return {
       send,
       sendImage,
+      sendFile: (chat, file) => upload(chat, file, 'sendDocument', 'document'),
       edit: async (chat, messageId, { text, buttons }) => {
         const markup = { reply_markup: { inline_keyboard: (buttons ?? []).map(button => [{ text: button.label, callback_data: button.data }]) } }
         try {

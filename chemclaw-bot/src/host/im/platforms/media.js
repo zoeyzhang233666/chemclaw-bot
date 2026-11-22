@@ -80,6 +80,18 @@ export async function readCappedBytes(response, limit) {
   return { bytes: Buffer.concat(chunks, total) }
 }
 
+export async function receiveAttachment(response, name, images, files) {
+  if (!response.ok) {
+    await discardBody(response)
+    return
+  }
+  const { bytes } = await readCappedBytes(response, FILE_LIMIT)
+  if (!bytes?.length) return
+  const mediaType = bytes.length <= IMAGE_LIMIT ? detectImageMediaType(bytes) : undefined
+  if (mediaType !== undefined) images.push({ mediaType, data: bytes.toString('base64') })
+  else files.push({ name: String(name ?? 'file'), data: bytes })
+}
+
 // Serializes async handlers per chat key without creating an orphan `.finally()`
 // rejection chain when a task throws.
 export function createChatQueue() {

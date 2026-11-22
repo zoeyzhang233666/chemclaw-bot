@@ -3,7 +3,8 @@
 // `mentions`. Buttons are components; interactions come back as
 // INTERACTION_CREATE and are answered with a deferred update (type 6).
 // Wire details ported from dsh-im (MIT, see NOTICE).
-import { sendChunks } from './retry.js'
+import { mediaSignal, receiveAttachment } from './media.js'
+import { deliveryKey, sendChunks } from './retry.js'
 import { chunkMarkdown } from '../format.js'
 
 const API = 'https://discord.com/api/v10'
@@ -74,6 +75,7 @@ export default {
         method: options.method ?? 'POST',
         headers: { 'content-type': 'application/json', authorization: `Bot ${token}` },
         body: options.body === undefined ? undefined : JSON.stringify(options.body),
+        signal: AbortSignal.timeout(30_000),
       })
       const body = await response.json().catch(() => ({}))
       if (!response.ok) throw errorOf(body, response.status)
@@ -115,11 +117,8 @@ export default {
       const files = []
       for (const item of data.attachments ?? []) {
         try {
-          const response = await env.fetch(item.url)
-          const bytes = new Uint8Array(await response.arrayBuffer())
-          const mediaType = String(item.content_type ?? '')
-          if (mediaType.startsWith('image/')) images.push({ mediaType, data: Buffer.from(bytes).toString('base64') })
-          else files.push({ name: String(item.filename ?? 'file'), data: bytes })
+          const response = await env.fetch(item.url, { signal: mediaSignal() })
+          await receiveAttachment(response, item.filename, images, files)
         } catch { /* an attachment that cannot be fetched just does not arrive */ }
       }
       const text = String(data.content ?? '')
@@ -223,42 +222,45 @@ export default {
       else if (!stopped) open(false)
     })()
 
+    const sendAttachment = async (chat, attachment, image) => {
+      const bytes = Buffer.isBuffer(attachment.data) ? attachment.data : Buffer.from(attachment.data ?? [])
+      if (bytes.byteLength === 0) throw Object.assign(new Error('Empty attachment'), { permanent: true })
+      const form = new FormData()
+      form.append('payload_json', JSON.stringify({ nonce: deliveryKey(attachment), enforce_nonce: true }))
+      form.append('files[0]', new Blob([bytes], { type: attachment.mediaType || 'application/octet-stream' }), attachment.name || (image ? 'image.png' : 'attachment'))
+      let response
+      try {
+        response = await env.fetch(`${apiBase(env)}/channels/${chat.key}/messages`, {
+          method: 'POST',
+          headers: { authorization: `Bot ${token}` },
+          body: form,
+          signal: AbortSignal.timeout(30_000),
+        })
+      } catch (error) {
+        if (error?.name === 'TimeoutError' || error?.name === 'AbortError') {
+          throw Object.assign(new Error('Discord did not answer the attachment send in time'), { unknown: true })
+        }
+        throw error
+      }
+      const body = await response.json().catch(() => ({}))
+      if (!response.ok) throw errorOf(body, response.status)
+      return { messageId: String(body?.id ?? '') }
+    }
+
     return {
       send: async (chat, job) => {
         const { text, buttons } = job
         const chunks = chunkMarkdown(String(text ?? ''), TEXT_LIMIT)
-        return sendChunks(job, chunks, async (chunk, last, previousId) => {
+        return sendChunks(job, chunks, async (chunk, last, previousId, index) => {
           const components = last && buttons?.length > 0
             ? [{ type: 1, components: buttons.slice(0, 5).map(button => ({ type: 2, style: 1, label: button.label.slice(0, 80), custom_id: button.data })) }]
             : []
-          const sent = await rest(`/channels/${chat.key}/messages`, { body: { content: chunk, components } })
+          const sent = await rest(`/channels/${chat.key}/messages`, { body: { content: chunk, components, nonce: deliveryKey(job, index), enforce_nonce: true } })
           return String(sent?.id ?? previousId ?? '')
         })
       },
-      sendImage: async (chat, image) => {
-        const bytes = Buffer.isBuffer(image?.data) ? image.data : Buffer.from(image?.data ?? [])
-        if (bytes.byteLength === 0) throw Object.assign(new Error('Empty image'), { permanent: true })
-        const form = new FormData()
-        form.append('payload_json', JSON.stringify({ content: '' }))
-        form.append('files[0]', new Blob([bytes], { type: image.mediaType || 'image/png' }), image.name || 'image.png')
-        let response
-        try {
-          response = await env.fetch(`${apiBase(env)}/channels/${chat.key}/messages`, {
-            method: 'POST',
-            headers: { authorization: `Bot ${token}` },
-            body: form,
-            signal: AbortSignal.timeout(30_000),
-          })
-        } catch (error) {
-          if (error?.name === 'TimeoutError' || error?.name === 'AbortError') {
-            throw Object.assign(new Error('Discord did not answer the image send in time'), { unknown: true })
-          }
-          throw error
-        }
-        const body = await response.json().catch(() => ({}))
-        if (!response.ok) throw errorOf(body, response.status)
-        return { messageId: String(body?.id ?? '') }
-      },
+      sendImage: (chat, image) => sendAttachment(chat, image, true),
+      sendFile: (chat, file) => sendAttachment(chat, file, false),
       edit: async (chat, messageId, { text, buttons }) => {
         const components = buttons?.length > 0
           ? [{ type: 1, components: buttons.slice(0, 5).map(button => ({ type: 2, style: 1, label: button.label.slice(0, 80), custom_id: button.data })) }]

@@ -99,6 +99,32 @@ test('a message in an im channel is direct, app_mention is group, every envelope
   await until(() => fake.acks.length === 4)
 })
 
+test('Slack receives a PNG as an image and preserves SVG as an original file', async (t) => {
+  const fake = await fakeSlack()
+  const messages = []
+  const png = Buffer.from('89504e470d0a1a0a0000000d49484452', 'hex')
+  const svg = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><text>原件</text></svg>')
+  const pngUrl = 'https://files.example.org/plot.png'
+  const svgUrl = 'https://files.example.org/plot.svg'
+  const fields = FIELDS
+  const handle = slack.connect(fields, {
+    ...env(fake),
+    fetch: async (url, options) => {
+      if (url === pngUrl) return new Response(png)
+      if (url === svgUrl) return new Response(svg)
+      return fetch(url, options)
+    },
+  }, { onMessage: msg => messages.push(msg), onAction() {}, onStatus() {} })
+  t.after(() => { handle.stop(); fake.close() })
+  const ws = await until(() => fake.sockets[0])
+  fake.push(ws, envelope({ type: 'message', subtype: 'file_share', channel_type: 'im', channel: 'D1', user: 'U2', ts: '3.0',
+    files: [{ name: '图.png', url_private: pngUrl, mimetype: 'image/png' }, { name: '原图.svg', url_private: svgUrl, mimetype: 'image/svg+xml' }],
+  }))
+  assert.ok(await until(() => messages[0]))
+  assert.deepEqual(messages[0].images, [{ mediaType: 'image/png', data: png.toString('base64') }])
+  assert.deepEqual(messages[0].files, [{ name: '原图.svg', data: svg }])
+})
+
 test('a block_actions envelope reports the action', async (t) => {
   const fake = await fakeSlack()
   const actions = []

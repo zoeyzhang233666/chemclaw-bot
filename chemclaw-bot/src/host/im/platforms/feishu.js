@@ -7,7 +7,7 @@
 // by PATCH. The tiny protobuf codec below implements only this frame shape.
 // Protocol ported from @larksuiteoapi/node-sdk (MIT, see NOTICE).
 import { chunkMarkdown } from '../format.js'
-import { retryDelay, retryWait, sendChunks } from './retry.js'
+import { deliveryKey, retryDelay, retryWait, sendChunks } from './retry.js'
 
 const TEXT_LIMIT = 4000
 const SOCKET_TIMEOUT = 30_000
@@ -435,15 +435,51 @@ export default {
       },
     })
 
+    const sendAttachment = async (chat, attachment, type) => {
+      const bytes = Buffer.isBuffer(attachment.data) ? attachment.data : Buffer.from(attachment.data ?? [])
+      if (bytes.length === 0) throw Object.assign(new Error('Empty attachment'), { permanent: true })
+      const image = type === 'image'
+      const form = new FormData()
+      form.append(`${type}_type`, image ? 'message' : 'stream')
+      const name = attachment.name || (image ? 'image.png' : 'attachment')
+      if (!image) form.append('file_name', name)
+      form.append(type, new Blob([bytes], { type: attachment.mediaType }), name)
+      const upload = await env.fetch(`${apiBase(env, fields)}/open-apis/im/v1/${type}s`, {
+        method: 'POST',
+        headers: { authorization: `Bearer ${await freshToken()}` },
+        body: form,
+        signal: AbortSignal.timeout(30_000),
+      })
+      const json = await upload.json().catch(() => ({}))
+      const key = `${type}_key`
+      if (!upload.ok || json.code || !json.data?.[key]) {
+        const error = new Error(String(json.msg ?? `Feishu ${type} upload answered ${upload.status}`))
+        error.status = upload.status
+        error.permanent = Boolean(json.code && upload.ok) || (upload.status >= 400 && upload.status < 500 && upload.status !== 429)
+        if (upload.status === 429) error.retryAfter = Number(upload.headers.get('retry-after'))
+        throw error
+      }
+      const sent = await rest('/open-apis/im/v1/messages?receive_id_type=chat_id', {
+        body: {
+          receive_id: chat.key,
+          uuid: deliveryKey(attachment),
+          msg_type: type,
+          content: JSON.stringify({ [key]: json.data[key] }),
+        },
+      })
+      return { messageId: String(sent?.data?.message_id ?? '') }
+    }
+
     return {
       send: async (chat, job) => {
         const { text, buttons } = job
         const chunks = chunkMarkdown(String(text ?? ''), TEXT_LIMIT)
-        return sendChunks(job, chunks, async (chunk, last, previousId) => {
+        return sendChunks(job, chunks, async (chunk, last, previousId, index) => {
           const interactive = buttons !== undefined && last
           const sent = await rest('/open-apis/im/v1/messages?receive_id_type=chat_id', {
             body: {
               receive_id: chat.key,
+              uuid: deliveryKey(job, index),
               msg_type: interactive ? 'interactive' : 'text',
               content: interactive ? card(chunk, buttons) : JSON.stringify({ text: chunk }),
             },
@@ -451,36 +487,8 @@ export default {
           return String(sent?.data?.message_id ?? previousId ?? '')
         })
       },
-      sendImage: async (chat, image) => {
-        const bytes = Buffer.isBuffer(image?.data) ? image.data : Buffer.from(image?.data ?? [])
-        if (bytes.byteLength === 0) throw Object.assign(new Error('Empty image'), { permanent: true })
-        const form = new FormData()
-        form.append('image_type', 'message')
-        form.append('image', new Blob([bytes], { type: image.mediaType || 'image/png' }), image.name || 'image.png')
-        const upload = await env.fetch(`${apiBase(env, fields)}/open-apis/im/v1/images`, {
-          method: 'POST',
-          headers: { authorization: `Bearer ${await freshToken()}` },
-          body: form,
-          signal: AbortSignal.timeout(30_000),
-        })
-        const json = await upload.json().catch(() => ({}))
-        const imageKey = String(json?.data?.image_key ?? '')
-        if (!upload.ok || (json.code !== undefined && json.code !== 0) || imageKey === '') {
-          const error = new Error(String(json.msg ?? `Feishu image upload answered ${upload.status}`))
-          error.status = upload.status
-          error.permanent = upload.status >= 400 && upload.status < 500 && upload.status !== 429
-          if (upload.status === 429) error.retryAfter = Number(upload.headers.get('retry-after'))
-          throw error
-        }
-        const sent = await rest('/open-apis/im/v1/messages?receive_id_type=chat_id', {
-          body: {
-            receive_id: chat.key,
-            msg_type: 'image',
-            content: JSON.stringify({ image_key: imageKey }),
-          },
-        })
-        return { messageId: String(sent?.data?.message_id ?? '') }
-      },
+      sendImage: (chat, image) => sendAttachment(chat, image, 'image'),
+      sendFile: (chat, file) => sendAttachment(chat, file, 'file'),
       edit: async (chat, messageId, { text, buttons }) => {
         await rest(`/open-apis/im/v1/messages/${messageId}`, {
           method: 'PATCH',
@@ -589,6 +597,7 @@ async function api(env, base, token, path, { method = 'GET', body } = {}) {
     method,
     headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),
+    signal: AbortSignal.timeout(30_000),
   })
   const json = await response.json().catch(() => ({}))
   if (!response.ok || (json.code !== undefined && json.code !== 0)) {

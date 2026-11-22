@@ -99,6 +99,33 @@ test('a DM is direct, a guild message is a mention when the bot is in mentions',
   assert.equal(messages[2].mentioned, false)
 })
 
+test('Discord receives a PNG as an image and preserves SVG as an original file', async (t) => {
+  const fake = await fakeDiscord()
+  const messages = []
+  const png = Buffer.from('89504e470d0a1a0a0000000d49484452', 'hex')
+  const svg = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><text>原件</text></svg>')
+  const pngUrl = 'https://files.example.org/plot.png'
+  const svgUrl = 'https://files.example.org/plot.svg'
+  const fields = { token: 'tok' }
+  const handle = discord.connect(fields, {
+    ...env(fake),
+    fetch: async (url, options) => {
+      if (url === pngUrl) return new Response(png)
+      if (url === svgUrl) return new Response(svg)
+      return fetch(url, options)
+    },
+  }, { onMessage: msg => messages.push(msg), onAction() {}, onStatus() {} })
+  t.after(() => { handle.stop(); fake.close() })
+  const ws = await until(() => fake.sockets[0])
+  fake.push(ws, { op: 0, t: 'MESSAGE_CREATE', s: 2, d: {
+    id: '20', channel_id: 'dm1', author: { id: 'u1' },
+    attachments: [{ filename: '图.png', url: pngUrl, content_type: 'image/png' }, { filename: '原图.svg', url: svgUrl, content_type: 'image/svg+xml' }],
+  } })
+  assert.ok(await until(() => messages[0]))
+  assert.deepEqual(messages[0].images, [{ mediaType: 'image/png', data: png.toString('base64') }])
+  assert.deepEqual(messages[0].files, [{ name: '原图.svg', data: svg }])
+})
+
 test('a conversation is titled by its channel, a DM by the person', async (t) => {
   const fake = await fakeDiscord()
   fake.replies['/api/v10/channels/g1'] = { result: { id: 'g1', name: 'general', type: 0 } }

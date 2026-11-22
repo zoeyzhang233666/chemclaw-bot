@@ -25,6 +25,7 @@ const RETRY_MAX_MS = 30_000
 const SEND_ATTEMPTS = 4
 const TYPING_MS = 4_000
 const CONSUMED_REQUESTS_KEEP = 200
+const RECEIVED_MESSAGES_KEEP = 512
 const NUMBERS = /^\s*\d+(\s+\d+)*\s*$/
 // A quoted reply is answered with the message it quotes: the last messages sent
 // to a chat are kept by the ids the platform named them, and only their start.
@@ -99,6 +100,7 @@ export function install(rt) {
 
   // ---------------------------------------------------------------- runtime file
   const runtimes = new Map() // id → { data: {runtime, cards, sent}, timer }
+  const inboundReceipts = new WeakMap() // connection runtime → recent and in-flight message IDs
   const runtimeOf = async (id) => {
     let held = runtimes.get(id)
     if (held !== undefined) return held
@@ -1045,7 +1047,8 @@ export function install(rt) {
         || binding === undefined || bindingOf(current, msg.chat.key) !== binding || rt.readOnly() !== undefined) return
     const requestId = `im:${conn.platform}:${randomUUID()}`
     // The turn this starts belongs to this chat: its replies go back here and nowhere else.
-    rememberRequest(requestId, current, msg.chat.key, msg.sender.id, binding, conn.platform === 'qq' ? msg.messageId : undefined)
+    const replyTo = conn.platform === 'qq' ? msg.messageId : msg.replyTo
+    rememberRequest(requestId, current, msg.chat.key, msg.sender.id, binding, replyTo)
     try {
       await rt.sendUser({ sessionId, content, requestId })
     } catch (error) {
@@ -1267,10 +1270,43 @@ export function install(rt) {
     setStatus(conn.id, { state: 'connecting', at: Date.now() })
     try {
       const env = await envFor(conn)
+      // QQ and WeChat already filter gateway replays before downloading media.
+      const runtime = env.runtime.get()
+      let receipts
+      if (conn.platform !== 'qq' && conn.platform !== 'weixin') {
+        receipts = inboundReceipts.get(runtime)
+        if (receipts === undefined) {
+          const remembered = runtime.receivedMessages
+          receipts = {
+            received: new Set(Array.isArray(remembered) ? remembered.slice(-RECEIVED_MESSAGES_KEEP) : []),
+            receiving: new Set(),
+          }
+          inboundReceipts.set(runtime, receipts)
+        }
+      }
       const handle = adapter.connect(fieldsOf(conn), env, {
-        onMessage: (msg) => {
+        onMessage: async (msg) => {
           const current = fresh(conn.id)
-          return current === undefined || current.enabled === false || rt.readOnly() !== undefined || runners.get(conn.id) !== runner ? undefined : onMessage(current)(msg).catch(error => rt.warn('chemclaw-bot: im message failed: %s', rt.redactSecrets(reasonOf(error))))
+          if (current === undefined || current.enabled === false || rt.readOnly() !== undefined || runners.get(conn.id) !== runner) return
+          const messageId = String(msg.messageId ?? '')
+          const key = receipts !== undefined && messageId !== '' ? JSON.stringify([msg.chat.kind, msg.chat.key, messageId]) : undefined
+          if (key !== undefined) {
+            if (receipts.received.has(key) || receipts.receiving.has(key)) return
+            receipts.receiving.add(key)
+          }
+          try {
+            await onMessage(current)(msg)
+            if (key !== undefined) {
+              const { received } = receipts
+              received.add(key)
+              if (received.size > RECEIVED_MESSAGES_KEEP) received.delete(received.values().next().value)
+              env.runtime.set({ receivedMessages: [...received] })
+            }
+          } catch (error) {
+            rt.warn('chemclaw-bot: im message failed: %s', rt.redactSecrets(reasonOf(error)))
+          } finally {
+            if (key !== undefined) receipts.receiving.delete(key)
+          }
         },
         onAction: (action) => {
           const current = fresh(conn.id)
@@ -1729,6 +1765,11 @@ export function install(rt) {
     return origin && typeof runners.get(origin.conn.id)?.handle?.sendImage === 'function'
   }
 
+  const imGroupFileDeliveryOf = (id) => {
+    const origin = originOf(rt.groupOwners.get(id)?.roomId)
+    return origin && typeof runners.get(origin.conn.id)?.handle?.sendFile === 'function'
+  }
+
   const imApproval = (kind, data) => {
     if (kind === 'open') {
       void diffCards().catch(error => rt.warn('chemclaw-bot: IM approval card failed: %s', error))
@@ -1771,5 +1812,5 @@ export function install(rt) {
   }))
 
   Object.assign(rt, { imView, imStatusView, imViaView, imEndpoint, imGroupReply, imApproval, imStateSaved,
-    imDisplayView, imImageDeliveryOf, renderImViewImage, withholdImReply: dropOrigin })
+    imDisplayView, imImageDeliveryOf, imGroupFileDeliveryOf, renderImViewImage, withholdImReply: dropOrigin })
 }

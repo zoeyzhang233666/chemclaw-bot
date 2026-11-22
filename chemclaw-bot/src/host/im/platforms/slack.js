@@ -4,7 +4,8 @@
 // edits. A message in an `im` channel is direct; `app_mention` is the group
 // trigger. Buttons are Block Kit actions; block_actions come back as
 // interactive envelopes. Wire details ported from dsh-im (MIT, see NOTICE).
-import { sendChunks } from './retry.js'
+import { mediaSignal, receiveAttachment } from './media.js'
+import { sendChunks, sendOnce } from './retry.js'
 import { chunkMarkdown } from '../format.js'
 
 const API = 'https://slack.com/api/'
@@ -68,11 +69,14 @@ export default {
       const images = []
       const files = []
       for (const file of event.files ?? []) {
-        const mediaType = String(file.mimetype ?? '')
-        const bytes = await download(file.url_private, botToken, env).catch(() => undefined)
-        if (bytes === undefined) continue
-        if (mediaType.startsWith('image/')) images.push({ mediaType, data: Buffer.from(bytes).toString('base64') })
-        else files.push({ name: String(file.name ?? 'file'), data: bytes })
+        if (!file.url_private) continue
+        try {
+          const response = await env.fetch(file.url_private, {
+            headers: { authorization: `Bearer ${botToken}` },
+            signal: mediaSignal(),
+          })
+          await receiveAttachment(response, file.name, images, files)
+        } catch { /* a missing file does not suppress its caption */ }
       }
       const text = String(event.text ?? '').replaceAll(`<@${selfId}>`, '').trim()
       await handlers.onMessage({
@@ -164,87 +168,84 @@ export default {
       return blocks
     }
 
-    return {
-      send: async (chat, job) => {
-        const { text, buttons } = job
-        const chunks = chunkMarkdown(text, TEXT_LIMIT)
-        return sendChunks(job, chunks, async (chunk, last, previousId) => {
-          const result = await api('chat.postMessage', {
-            channel: chat.key,
-            text: chunk,
-            blocks: blocksFor(toMrkdwn(chunk), last ? buttons : undefined),
-          })
-          return String(result?.ts ?? previousId ?? '')
-        })
-      },
-      sendImage: async (chat, image) => {
-        const bytes = Buffer.isBuffer(image?.data) ? image.data : Buffer.from(image?.data ?? [])
-        if (bytes.byteLength === 0) throw Object.assign(new Error('Empty image'), { permanent: true })
-        const name = image.name || 'image.png'
-        const metaResp = await env.fetch(`${apiBase(env)}files.getUploadURLExternal`, {
+    const sendAttachment = async (chat, attachment) => {
+      const bytes = Buffer.isBuffer(attachment.data) ? attachment.data : Buffer.from(attachment.data ?? [])
+      if (bytes.byteLength === 0) throw Object.assign(new Error('Empty attachment'), { permanent: true })
+      const name = attachment.name || 'attachment'
+      const metaResp = await env.fetch(`${apiBase(env)}files.getUploadURLExternal`, {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${botToken}`,
+          'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
+        },
+        body: new URLSearchParams({ filename: name, length: String(bytes.byteLength) }),
+        signal: AbortSignal.timeout(30_000),
+      })
+      const meta = await metaResp.json().catch(() => ({}))
+      if (metaResp.status === 429) throw Object.assign(new Error('Slack rate limited the send'), { retryAfter: Number(metaResp.headers.get('retry-after')) })
+      let uploadUrl
+      try { uploadUrl = meta?.upload_url ? new URL(String(meta.upload_url)) : undefined } catch { uploadUrl = undefined }
+      const customApiHost = (() => { try { return env.config?.api ? new URL(String(env.config.api)).host : '' } catch { return '' } })()
+      const trustedSlackHost = uploadUrl !== undefined && uploadUrl.username === '' && uploadUrl.password === ''
+        && ((customApiHost !== '' && uploadUrl.host === customApiHost && (uploadUrl.protocol === 'http:' || uploadUrl.protocol === 'https:'))
+          || (uploadUrl.protocol === 'https:' && (uploadUrl.port === '' || uploadUrl.port === '443')
+            && /(^|\.)(slack\.com|slack-edge\.com|slack-files\.com)$/i.test(uploadUrl.hostname)))
+      if (!meta?.ok || !meta.file_id || !trustedSlackHost) {
+        const error = fail(meta?.error ?? (!trustedSlackHost && meta?.ok ? 'untrusted_upload_url' : `HTTP ${metaResp.status}`))
+        error.status = metaResp.status
+        if (meta?.error === undefined && !(!trustedSlackHost && meta?.ok)) {
+          error.permanent = metaResp.status >= 400 && metaResp.status < 500 && metaResp.status !== 429
+        }
+        throw error
+      }
+      const upResp = await env.fetch(uploadUrl, {
+        method: 'POST',
+        headers: { 'content-type': attachment.mediaType || 'application/octet-stream' },
+        body: bytes,
+        redirect: 'error',
+        signal: AbortSignal.timeout(30_000),
+      })
+      if (!upResp.ok) {
+        const error = new Error(`Slack attachment upload answered ${upResp.status}`)
+        error.status = upResp.status
+        if (upResp.status === 429) error.retryAfter = Number(upResp.headers.get('retry-after'))
+        error.permanent = upResp.status >= 400 && upResp.status < 500 && upResp.status !== 429
+        throw error
+      }
+      await sendOnce(async () => {
+        const doneResp = await env.fetch(`${apiBase(env)}files.completeUploadExternal`, {
           method: 'POST',
-          headers: {
-            authorization: `Bearer ${botToken}`,
-            'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-          },
-          body: new URLSearchParams({ filename: name, length: String(bytes.byteLength) }),
+          headers: { authorization: `Bearer ${botToken}`, 'content-type': 'application/json; charset=utf-8' },
+          body: JSON.stringify({ files: [{ id: meta.file_id, title: attachment.alt || name }], channel_id: chat.key }),
           signal: AbortSignal.timeout(30_000),
         })
-        const meta = await metaResp.json().catch(() => ({}))
-        if (metaResp.status === 429) throw Object.assign(new Error('Slack rate limited the send'), { retryAfter: Number(metaResp.headers.get('retry-after')) })
-        let uploadUrl
-        try { uploadUrl = meta?.upload_url ? new URL(String(meta.upload_url)) : undefined } catch { uploadUrl = undefined }
-        const customApiHost = (() => { try { return env.config?.api ? new URL(String(env.config.api)).host : '' } catch { return '' } })()
-        const trustedSlackHost = uploadUrl !== undefined && uploadUrl.username === '' && uploadUrl.password === ''
-          && ((customApiHost !== '' && uploadUrl.host === customApiHost && (uploadUrl.protocol === 'http:' || uploadUrl.protocol === 'https:'))
-            || (uploadUrl.protocol === 'https:' && (uploadUrl.port === '' || uploadUrl.port === '443')
-              && /(^|\.)(slack\.com|slack-edge\.com|slack-files\.com)$/i.test(uploadUrl.hostname)))
-        if (!meta?.ok || !meta.file_id || !trustedSlackHost) {
-          const error = fail(meta?.error ?? (!trustedSlackHost && meta?.ok ? 'untrusted_upload_url' : `HTTP ${metaResp.status}`))
-          error.status = metaResp.status
-          if (meta?.error === undefined && !(!trustedSlackHost && meta?.ok)) {
-            error.permanent = metaResp.status >= 400 && metaResp.status < 500 && metaResp.status !== 429
-          }
-          throw error
-        }
-        const upResp = await env.fetch(uploadUrl, {
-          method: 'POST',
-          headers: { 'content-type': image.mediaType || 'application/octet-stream' },
-          body: bytes,
-          redirect: 'error',
-          signal: AbortSignal.timeout(30_000),
-        })
-        if (!upResp.ok) {
-          const error = new Error(`Slack image upload answered ${upResp.status}`)
-          error.status = upResp.status
-          if (upResp.status === 429) error.retryAfter = Number(upResp.headers.get('retry-after'))
-          error.permanent = upResp.status >= 400 && upResp.status < 500 && upResp.status !== 429
-          throw error
-        }
-        let doneResp
-        try {
-          doneResp = await env.fetch(`${apiBase(env)}files.completeUploadExternal`, {
-            method: 'POST',
-            headers: { authorization: `Bearer ${botToken}`, 'content-type': 'application/json; charset=utf-8' },
-            body: JSON.stringify({ files: [{ id: meta.file_id, title: image.alt || name }], channel_id: chat.key }),
-            signal: AbortSignal.timeout(30_000),
-          })
-        } catch (error) {
-          if (error?.name === 'TimeoutError' || error?.name === 'AbortError') {
-            throw Object.assign(new Error('Slack did not answer the image send in time'), { unknown: true })
-          }
-          throw error
-        }
         const done = await doneResp.json().catch(() => ({}))
         if (doneResp.status === 429) throw Object.assign(new Error('Slack rate limited the send'), { retryAfter: Number(doneResp.headers.get('retry-after')) })
         if (!doneResp.ok || !done?.ok) {
           const error = fail(done?.error ?? `HTTP ${doneResp.status}`)
           error.status = doneResp.status
-          if (done?.error === undefined) error.permanent = doneResp.status >= 400 && doneResp.status < 500 && doneResp.status !== 429
+          error.permanent = doneResp.ok ? done?.error !== undefined && error.permanent : doneResp.status >= 400 && doneResp.status < 500
           throw error
         }
-        return { messageId: String(meta.file_id) }
+      })
+      return { messageId: String(meta.file_id) }
+    }
+
+    return {
+      send: async (chat, job) => {
+        const { text, buttons } = job
+        const chunks = chunkMarkdown(text, TEXT_LIMIT)
+        return sendChunks(job, chunks, async (chunk, last, previousId) => {
+          const result = await sendOnce(() => api('chat.postMessage', {
+            channel: chat.key,
+            text: chunk,
+            blocks: blocksFor(toMrkdwn(chunk), last ? buttons : undefined),
+          }))
+          return String(result?.ts ?? previousId ?? '')
+        })
       },
+      sendImage: sendAttachment,
+      sendFile: sendAttachment,
       edit: async (chat, messageId, { text, buttons }) => {
         await api('chat.update', { channel: chat.key, ts: messageId, text: toMrkdwn(text).slice(0, TEXT_LIMIT), blocks: blocksFor(toMrkdwn(text).slice(0, TEXT_LIMIT), buttons) })
       },
@@ -266,15 +267,15 @@ async function call(env, fields, method, params) {
       'content-type': 'application/json; charset=utf-8',
     },
     body: JSON.stringify(params),
+    signal: AbortSignal.timeout(30_000),
   })
   const body = await response.json().catch(() => ({}))
   if (response.status === 429) throw Object.assign(new Error('Slack rate limited the send'), { retryAfter: Number(response.headers.get('retry-after')) })
-  if (!body.ok) throw fail(body.error ?? `HTTP ${response.status}`)
+  if (!response.ok || !body.ok) {
+    const error = fail(body.error ?? `HTTP ${response.status}`)
+    error.status = response.status
+    error.permanent = response.ok ? body.error !== undefined && error.permanent : response.status >= 400 && response.status < 500
+    throw error
+  }
   return body
-}
-
-async function download(url, token, env) {
-  const response = await env.fetch(String(url ?? ''), { headers: { authorization: `Bearer ${token}` } })
-  if (!response.ok) return undefined
-  return new Uint8Array(await response.arrayBuffer())
 }

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
 import { execFile } from 'node:child_process'
 import { test } from 'node:test'
 import { promisify } from 'node:util'
@@ -11,7 +12,7 @@ const execFileP = promisify(execFile)
 // pushed frames, aibot_send_msg answers through pending req_ids. Like the real
 // gateway it only takes the root path and matches Connection / Upgrade in their
 // exact case, so a lowercase handshake gets a 404.
-async function fakeWecom({ rejectStatus, subscribeReply } = {}) {
+async function fakeWecom({ rejectStatus, subscribeReply, dropSendReceipt = false } = {}) {
   const packets = []
   const upgrades = []
   const wss = await fakeWsServer({
@@ -32,8 +33,16 @@ async function fakeWecom({ rejectStatus, subscribeReply } = {}) {
         if (packet.cmd === 'aibot_subscribe') {
           ws.send(JSON.stringify({ headers: { req_id: packet.headers.req_id }, ...(subscribeReply ?? { errcode: 0, errmsg: 'ok' }) }))
         }
-        if (packet.cmd === 'aibot_send_msg') {
-          ws.send(JSON.stringify({ headers: { req_id: packet.headers.req_id }, errcode: 0, errmsg: 'ok', body: { msgid: 'w1' } }))
+        if (dropSendReceipt && packet.cmd === 'aibot_send_msg') { ws.close(); return }
+        const answers = {
+          aibot_send_msg: { msgid: 'w1' },
+          aibot_respond_msg: {},
+          aibot_upload_media_init: { upload_id: `upload-${packet.headers.req_id}` },
+          aibot_upload_media_chunk: {},
+          aibot_upload_media_finish: { media_id: `media-${packet.body?.upload_id}` },
+        }
+        if (Object.hasOwn(answers, packet.cmd)) {
+          ws.send(JSON.stringify({ headers: { req_id: packet.headers.req_id }, errcode: 0, body: answers[packet.cmd] }))
         }
       })
     },
@@ -154,6 +163,51 @@ test('a send replies through the callback req_id, and after that window aibot_se
   assert.ok(respond, 'responded through the callback')
   assert.equal(respond.headers.req_id, 'req-9')
   assert.equal(respond.body.msgtype, 'markdown')
+})
+
+test('WeCom publishes images and files after acknowledged media uploads', async (t) => {
+  const fake = await fakeWecom()
+  const statuses = []
+  const handle = wecom.connect(FIELDS, env(fake), { onMessage() {}, onAction() {}, onStatus: status => statuses.push(status.state) })
+  t.after(() => { handle.stop(); fake.close() })
+  assert.ok(await until(() => statuses.includes('ready')))
+  const image = { name: 'chart.png', data: Buffer.from('89504e470d0a1a0a0000000d49484452', 'hex') }
+  const html = { name: '报告.html', data: Buffer.from('<!doctype html><p>测试</p>'.repeat(30000)) }
+  const svg = { name: '图表.svg', data: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"/>') }
+  for (const [type, file, chat] of [
+    ['image', image, { key: 'u1', kind: 'direct' }],
+    ['file', html, { key: 'g1', kind: 'group' }],
+    ['file', svg, { key: 'g1', kind: 'group' }],
+  ]) {
+    const start = fake.packets.length
+    const sent = type === 'image' ? await handle.sendImage(chat, file) : await handle.sendFile(chat, file)
+    assert.equal(sent.messageId, 'w1')
+    const [init, ...rest] = fake.packets.slice(start)
+    assert.equal(init.cmd, 'aibot_upload_media_init')
+    assert.deepEqual(init.body, {
+      type, filename: file.name, total_size: file.data.length,
+      total_chunks: Math.ceil(file.data.length / (512 * 1024)),
+      md5: createHash('md5').update(file.data).digest('hex'),
+    })
+    const publish = rest.pop()
+    const finish = rest.pop()
+    const uploadId = `upload-${init.headers.req_id}`
+    assert.deepEqual(finish.body, { upload_id: uploadId })
+    assert.deepEqual(rest.map(chunk => [chunk.cmd, chunk.body.chunk_index, chunk.body.upload_id]),
+      rest.map((_, index) => ['aibot_upload_media_chunk', index, uploadId]))
+    assert.deepEqual(Buffer.concat(rest.map(chunk => Buffer.from(chunk.body.base64_data, 'base64'))), file.data)
+    assert.equal(publish.cmd, 'aibot_send_msg')
+    assert.deepEqual(publish.body, { chatid: chat.key, msgtype: type, [type]: { media_id: `media-${uploadId}` } })
+  }
+})
+
+test('WeCom reports uncertain delivery if the socket drops after a publish', async (t) => {
+  const fake = await fakeWecom({ dropSendReceipt: true })
+  const statuses = []
+  const handle = wecom.connect(FIELDS, env(fake), { onMessage() {}, onAction() {}, onStatus: status => statuses.push(status.state) })
+  t.after(() => { handle.stop(); fake.close() })
+  assert.ok(await until(() => statuses.includes('ready')))
+  await assert.rejects(handle.send({ key: 'u1', kind: 'direct' }, { text: 'one response' }), { unknown: true })
 })
 
 test('a dropped socket reconnects and subscribes again', async (t) => {

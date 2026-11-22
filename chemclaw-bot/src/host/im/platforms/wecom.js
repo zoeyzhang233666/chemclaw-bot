@@ -9,7 +9,7 @@
 // matches Connection / Upgrade case-sensitively, so the socket comes from `ws`:
 // Node's built-in WebSocket sends those header names in lowercase.
 import { sendChunks } from './retry.js'
-import { createDecipheriv } from 'node:crypto'
+import { createDecipheriv, createHash } from 'node:crypto'
 import { chunkMarkdown } from '../format.js'
 
 // Loaded on first WeCom check or connect so plugin startup skips `ws` when unused.
@@ -24,6 +24,8 @@ const TEXT_LIMIT = 4000
 const FILE_LIMIT = 100 * 1024 * 1024
 // A prompt image rides the whole request, so it gets a tighter cap of its own.
 const IMAGE_LIMIT = 20 * 1024 * 1024
+const UPLOAD_CHUNK_SIZE = 512 * 1024
+const UPLOAD_MAX_CHUNKS = 100
 
 const socketUrl = env => String(env.config?.gateway ?? env.config?.api ?? WSS).replace(/\/+$/, '')
 // Keep the cause on screen: a refused handshake reports its HTTP status here.
@@ -84,32 +86,75 @@ export default {
     let reqCounter = 0
     // A refusal is kept on the status while the adapter retries.
     let lastError
+    let subscribed = false
+    let subscriptionId
     const fail = (message) => {
       lastError = message
       handlers.onStatus({ state: 'error', error: message })
     }
     // Passive replies reuse the last callback req_id per chat.
     const lastReqId = new Map()
-    const pending = new Map() // req_id → {resolve, reject}
+    const pending = new Map()
 
     const nextReqId = () => `r${++reqCounter}`
     const sendFrame = (packet) => { if (socket?.readyState === 1) socket.send(JSON.stringify(packet)) }
-    const request = (cmd, body, reqId) => {
-      const req_id = reqId ?? nextReqId()
-      sendFrame({ cmd, headers: { req_id }, body })
-      if (cmd === 'aibot_send_msg') {
-        return new Promise((resolve, reject) => {
-          pending.set(req_id, { resolve, reject })
-          setTimeout(() => {
-            if (pending.delete(req_id)) reject(new Error('WeCom did not answer the send'))
-          }, 15_000).unref?.()
+    const request = (cmd, body, req_id = nextReqId()) => {
+      if (!subscribed || socket?.readyState !== 1) throw new Error('WeCom socket is not subscribed')
+      if (pending.has(req_id)) throw new Error('WeCom is still acknowledging an earlier reply')
+      const publishing = cmd === 'aibot_send_msg' || cmd === 'aibot_respond_msg'
+      return new Promise((resolve, reject) => {
+        const finish = (error, value) => {
+          if (pending.get(req_id)?.finish !== finish) return
+          clearTimeout(timer)
+          pending.delete(req_id)
+          if (error === undefined) resolve(value)
+          else reject(error)
+        }
+        const lost = () => finish(Object.assign(new Error('WeCom did not acknowledge the request'), { unknown: publishing }))
+        const timer = setTimeout(lost, 15_000)
+        timer.unref?.()
+        pending.set(req_id, { finish, lost })
+        try {
+          socket.send(JSON.stringify({ cmd, headers: { req_id }, body }), error => { if (error) lost() })
+        } catch {
+          lost()
+        }
+      })
+    }
+    const sendAttachment = async (chat, attachment, type) => {
+      const bytes = Buffer.isBuffer(attachment.data) ? attachment.data : Buffer.from(attachment.data ?? [])
+      const totalChunks = Math.ceil(bytes.length / UPLOAD_CHUNK_SIZE)
+      if (totalChunks < 1 || totalChunks > UPLOAD_MAX_CHUNKS) {
+        throw Object.assign(new Error('WeCom attachments must be between 1 byte and 50 MiB'), { permanent: true })
+      }
+      const init = await request('aibot_upload_media_init', {
+        type,
+        filename: attachment.name || (type === 'image' ? 'image.png' : 'attachment'),
+        total_size: bytes.length,
+        total_chunks: totalChunks,
+        md5: createHash('md5').update(bytes).digest('hex'),
+      })
+      if (!init?.upload_id) throw new Error('WeCom returned no upload ID')
+      for (let index = 0; index < totalChunks; index += 1) {
+        const offset = index * UPLOAD_CHUNK_SIZE
+        await request('aibot_upload_media_chunk', {
+          upload_id: init.upload_id, chunk_index: index,
+          base64_data: bytes.subarray(offset, offset + UPLOAD_CHUNK_SIZE).toString('base64'),
         })
       }
+      const uploaded = await request('aibot_upload_media_finish', { upload_id: init.upload_id })
+      if (!uploaded?.media_id) throw new Error('WeCom returned no media ID')
+      // The model and upload may take longer than the callback reply window.
+      const sent = await request('aibot_send_msg', {
+        chatid: chat.key, msgtype: type, [type]: { media_id: uploaded.media_id },
+      })
+      return { messageId: String(sent?.msgid ?? '') }
     }
 
     const onCallback = async (headers, body) => {
       const key = String(body.chattype === 'single' ? body.from?.userid ?? '' : body.chatid ?? '')
-      lastReqId.set(key, String(headers?.req_id ?? ''))
+      const replyTo = String(headers?.req_id ?? '')
+      if (replyTo !== '') lastReqId.set(key, replyTo)
       const direct = body.chattype === 'single'
       // Groups only count when the bot was @-ed: the text keeps the mention.
       // A voice message carries its own transcription, which is all of the text
@@ -158,7 +203,7 @@ export default {
         sender: { id: String(body.from?.userid ?? ''), name: String(body.from?.name ?? body.from?.userid ?? '') },
         text: words, images, files,
         mentioned: body.chattype !== 'single' && body.mention_robot === true,
-        messageId: String(body.msgid ?? ''),
+        messageId: String(body.msgid ?? replyTo), replyTo,
       })
     }
 
@@ -186,27 +231,26 @@ export default {
         return
       }
       socket.on('open', () => {
-        sendFrame({ cmd: 'aibot_subscribe', headers: { req_id: nextReqId() }, body: { secret, bot_id: botId } })
+        subscriptionId = nextReqId()
+        sendFrame({ cmd: 'aibot_subscribe', headers: { req_id: subscriptionId }, body: { secret, bot_id: botId } })
       })
       socket.on('message', (data) => {
         if (stopped || generation !== gen) return
         let packet
         try { packet = JSON.parse(String(data)) } catch { return }
         if (packet.errcode !== undefined) {
-          if (packet.errcode !== 0) {
-            fail(String(packet.errmsg ?? `WeCom answered ${packet.errcode}`))
-            const held = pending.get(packet.headers?.req_id)
-            if (held !== undefined) {
-              pending.delete(packet.headers?.req_id)
-              held.reject(Object.assign(new Error(String(packet.errmsg ?? 'WeCom refused')), { permanent: true }))
-            }
+          const held = pending.get(packet.headers?.req_id)
+          if (held !== undefined) {
+            if (packet.errcode === 0) held.finish(undefined, packet.body)
+            else held.finish(Object.assign(new Error(String(packet.errmsg ?? `WeCom refused the request (${packet.errcode})`)), { permanent: true }))
             return
           }
-          if (packet.headers?.req_id !== undefined && pending.has(packet.headers.req_id)) {
-            const held = pending.get(packet.headers.req_id)
-            pending.delete(packet.headers.req_id)
-            held.resolve(packet.body)
+          if (packet.errcode !== 0) {
+            fail(String(packet.errmsg ?? `WeCom answered ${packet.errcode}`))
+            return
           }
+          if (packet.headers?.req_id !== subscriptionId) return
+          subscribed = true
           lastError = undefined
           handlers.onStatus({ state: 'ready', account: { id: botId, name: botId } })
           return
@@ -220,6 +264,8 @@ export default {
       socket.on('close', () => {
         clearTimeout(pingTimer)
         if (stopped || generation !== gen) return
+        subscribed = false
+        for (const held of pending.values()) held.lost()
         // A refusal stays on screen until a socket subscribes again.
         if (lastError === undefined) handlers.onStatus({ state: 'connecting' })
         reconnectTimer = setTimeout(() => { if (!stopped) open() }, 2000)
@@ -252,22 +298,21 @@ export default {
               button_selection: { question_key: 'choice', option_list: buttons.slice(0, 10).map(b => ({ id: b.data, text: b.label.slice(0, 30) })) },
             }
           }
-          const reqId = lastReqId.get(chat.key)
-          if (reqId !== undefined) {
-            sendFrame({ cmd: 'aibot_respond_msg', headers: { req_id: reqId }, body })
-            return undefined
-          }
-          const result = await request('aibot_send_msg', { ...body, chatid: chat.kind === 'group' ? chat.key : undefined, userid: chat.kind === 'direct' ? chat.key : undefined })
+          const reqId = chat.replyTo || lastReqId.get(chat.key)
+          const result = reqId === undefined
+            ? await request('aibot_send_msg', { ...body, chatid: chat.key })
+            : await request('aibot_respond_msg', body, reqId)
           return String(result?.msgid ?? previousId ?? '')
         })
       },
+      sendImage: (chat, image) => sendAttachment(chat, image, 'image'),
+      sendFile: (chat, file) => sendAttachment(chat, file, 'file'),
       stop: () => {
         stopped = true
         generation += 1
         clearTimeout(reconnectTimer)
         clearTimeout(pingTimer)
-        for (const held of pending.values()) held.reject(new Error('stopped'))
-        pending.clear()
+        for (const held of pending.values()) held.finish(Object.assign(new Error('stopped'), { stopped: true }))
         try { socket?.close(1000, 'stop') } catch { /* not open */ }
       },
     }
