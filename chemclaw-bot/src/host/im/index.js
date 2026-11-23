@@ -25,6 +25,7 @@ const RETRY_MAX_MS = 30_000
 const SEND_ATTEMPTS = 4
 const TYPING_MS = 4_000
 const CONSUMED_REQUESTS_KEEP = 200
+const WEIXIN_REQUESTS_KEEP = 200
 const RECEIVED_MESSAGES_KEEP = 512
 const NUMBERS = /^\s*\d+(\s+\d+)*\s*$/
 // A quoted reply is answered with the message it quotes: the last messages sent
@@ -411,9 +412,11 @@ export function install(rt) {
   // An IM message starts a turn carrying the request it came in on; every other way a
   // turn starts — the Web UI, a peer Bot's message, a scheduled task, work picked up
   // after a restart — has no IM origin, and its replies, views and cards stay in the app.
-  // Nothing is persisted: after a restart there is no origin, so nothing goes out. A
-  // Bot's origin lives until its turn ends, a conflicting IM source joins it, or a
-  // background result with no known owner enters it. A group's own Session ends its
+  // Live origins are never persisted. Only WeChat's queued request identity and route
+  // are saved before enqueueing, so a restored user prompt can claim its original chat
+  // after restart if the pairing, binding and Session still match. A Bot's origin
+  // lives until its turn ends, a conflicting IM source joins it, or a background
+  // result with no known owner enters it. A group's own Session ends its
   // relay turn at once while its members keep working, so its origin lives until a
   // new round starts in the group or the user is unpaired. A request lives until its
   // message is admitted, however long it waits in the queue behind a busy Bot.
@@ -497,6 +500,27 @@ export function install(rt) {
     // The binding is captured when the message arrives, not when it is admitted: a chat
     // rebound while the message waits in the queue still answers the target that asked.
     requests.set(requestId, { connId: conn.id, chatKey, senderId, binding, replyTo, at: Date.now() })
+  }
+  // DSH can restore an accepted WeChat prompt after this process restarts. Commit
+  // just its origin metadata, never the message text, *before* sending the prompt.
+  const rememberWeixinRequest = async (conn, requestId, chatKey, senderId, binding, replyTo) => {
+    const previous = conn.weixinRequests
+    const pairedAt = conn.paired?.find(peer => peer.id === senderId)?.at
+    const recent = { ...previous, [requestId]: {
+      chatKey, senderId, binding, pairedAt,
+      ...(replyTo === undefined ? {} : { replyTo }),
+    } }
+    const ids = Object.keys(recent)
+    for (let i = 0; i < ids.length - WEIXIN_REQUESTS_KEEP; i += 1) delete recent[ids[i]]
+    conn.weixinRequests = recent
+    try {
+      await rt.save({ required: true })
+    } catch (error) {
+      // A failed save must not leave a misleading in-memory recovery route.
+      if (previous === undefined) delete conn.weixinRequests
+      else conn.weixinRequests = previous
+      throw error
+    }
   }
   // The Session a Bot writes into now, for a card that carries no Session of its own.
   const chatOfBot = botId => rt.botOf(botId) === undefined ? undefined : rt.chatOf(botId)
@@ -883,6 +907,28 @@ export function install(rt) {
     if (target?.roomId !== undefined && rt.roomOf(target.roomId) !== undefined) return target
     return undefined
   }
+  const weixinRequestOf = (source, sessionId) => {
+    const rpcId = source?.rpcId
+    if (typeof rpcId !== 'string' || !rpcId.startsWith('im:weixin:')
+        || source.kind !== 'user' || source.principal !== undefined) return undefined
+    for (const conn of Object.values(connections())) {
+      if (conn.platform !== 'weixin' || conn.enabled === false) continue
+      const entry = rt.own(conn.weixinRequests, rpcId)
+      if (entry?.binding === undefined || bindingOf(conn, entry.chatKey) !== entry.binding) continue
+      if (!conn.paired?.some(peer => peer.id === entry.senderId && peer.at === entry.pairedAt)) continue
+      const chat = conn.chats?.[entry.chatKey]
+      if (chat === undefined) continue
+      const target = resolveTarget(conn, chat)
+      if (target === undefined) continue
+      const targetSession = target.botId !== undefined
+        ? chatOfBot(target.botId)
+        : (rt.roomOf(target.roomId)?.sessionId ?? target.roomId)
+      if (targetSession === sessionId && (entry.consumedOn === undefined || entry.consumedOn === sessionId)) {
+        return { conn, entry }
+      }
+    }
+    return undefined
+  }
 
   // One card this chat was sent and has not answered yet. A button names its own
   // card, so it must never fall through to a newer card of the same kind.
@@ -1048,7 +1094,8 @@ export function install(rt) {
     const requestId = `im:${conn.platform}:${randomUUID()}`
     // The turn this starts belongs to this chat: its replies go back here and nowhere else.
     const replyTo = conn.platform === 'qq' ? msg.messageId : msg.replyTo
-    rememberRequest(requestId, current, msg.chat.key, msg.sender.id, binding, replyTo)
+    if (current.platform === 'weixin') await rememberWeixinRequest(current, requestId, msg.chat.key, msg.sender.id, binding, replyTo)
+    else rememberRequest(requestId, current, msg.chat.key, msg.sender.id, binding, replyTo)
     try {
       await rt.sendUser({ sessionId, content, requestId })
     } catch (error) {
@@ -1703,12 +1750,13 @@ export function install(rt) {
       const rpcId = source?.rpcId
       if (typeof rpcId === 'string' && rpcId.startsWith('im:')) {
         if (consumedRequests.has(rpcId)) return
+        const savedRequest = weixinRequestOf(source, id)
+        // A restored DSH prompt must not reclaim a consumed route twice.
+        if (savedRequest?.entry.consumedOn !== undefined) return
         const asked = requests.get(rpcId)
         requests.delete(rpcId)
-        if (asked === undefined) dropOrigin(id)
+        if (savedRequest === undefined && asked === undefined) dropOrigin(id)
         else {
-          consumedRequests.add(rpcId)
-          if (consumedRequests.size > CONSUMED_REQUESTS_KEEP) consumedRequests.delete(consumedRequests.values().next().value)
           if (Number.isInteger(event.seq)) {
             const recent = imVia.get(id) ?? {}
             recent[event.seq] = rpcId.split(':')[1]
@@ -1716,7 +1764,18 @@ export function install(rt) {
             if (seqs.length > 200) delete recent[seqs[0]]
             imVia.set(id, recent)
           }
-          claimOrigin(id, asked.connId, asked.chatKey, asked.senderId, asked.binding, asked.replyTo)
+          if (savedRequest !== undefined) {
+            const { conn, entry } = savedRequest
+            entry.consumedOn = id
+            // The original route is already committed. Persist consumption so
+            // a later restart cannot claim it again.
+            void rt.save().catch(error => rt.warn('chemclaw-bot: saving consumed WeChat request failed: %s', error))
+            claimOrigin(id, conn.id, entry.chatKey, entry.senderId, entry.binding, entry.replyTo)
+          } else {
+            consumedRequests.add(rpcId)
+            if (consumedRequests.size > CONSUMED_REQUESTS_KEEP) consumedRequests.delete(consumedRequests.values().next().value)
+            claimOrigin(id, asked.connId, asked.chatKey, asked.senderId, asked.binding, asked.replyTo)
+          }
         }
       } else if ([SOURCE_KIND, REPLY_KIND, 'user', 'schedule', 'tool-jobs', 'subagent-settled'].includes(source?.kind)) {
         dropOrigin(id)
