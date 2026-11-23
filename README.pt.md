@@ -1,4 +1,4 @@
-# ChemClaw v0.3.0
+# ChemClaw v0.4.0
 
 [简体中文](README.md) | [English](README.en.md) | [日本語](README.ja.md) | [한국어](README.ko.md) | [Русский](README.ru.md) | [Français](README.fr.md) | [العربية](README.ar.md) | [Español](README.es.md) | **Português**
 
@@ -149,9 +149,31 @@ Cada Bot no ambiente de trabalho pode abrir sites, ler páginas, clicar, preench
 
 São **50 Bots e 15 grupos** para vendas, compras, exportação, importação, investigação setorial, spot–futuros, quant, documentos e validação de evidências. O coordenador distribui funções e pode chamar-se um especialista com `@`.
 
+## Controlo do computador (Computer Use)
+
+Nos ambientes de trabalho compatíveis, o ChemClaw consegue clicar, escrever e ler resultados em aplicações depois de ativar **Definições → Controlo do computador** e conceder as permissões do sistema. As permissões podem ser configuradas por especialista; o utilizador pode parar a tarefa ou retomar o controlo. **A função está desativada por predefinição.** Uma demonstração em macOS mostra uma multiplicação realizada na aplicação Calculadora e a leitura do resultado.
+
+**Computer control settings and real application task:**
+
+![Computer Use settings and per-agent permissions](docs/images/cases/15-computer-use-permissions.webp)
+
+![ChemClaw controlling macOS Calculator and reading the result](docs/images/cases/16-computer-use-calculator.webp)
+
+## Mensagens instantâneas
+
+Em **Definições → Mensagens instantâneas**, o ChemClaw permite ligar **WeChat, QQ, Feishu / Lark, WeCom, DingTalk, Telegram, Discord e Slack**. O método de autenticação varia; o WeChat permite emparelhamento por código QR. Num exemplo real, o utilizador pede um gráfico de velas de futuros de metanol no WeChat e recebe uma imagem e uma análise. Os formatos e limites de tamanho dos anexos dependem de cada plataforma; nem todas foram verificadas com contas reais.
+
+**Supported channels and WeChat example:**
+
+![Available instant messaging integrations](docs/images/cases/17-instant-messaging-platforms.webp)
+
+| WeChat request | Chart and analysis |
+| --- | --- |
+| <img src="docs/images/cases/18-wechat-chart-request.webp" alt="Requesting a methanol futures chart in WeChat" width="380"> | <img src="docs/images/cases/19-wechat-chart-result.webp" alt="Chart and explanation returned in WeChat" width="380"> |
+
 ## 11. Instalação e configuração
 
-1. Descarregue **ChemClaw v0.3.0** para Windows, macOS Intel/Apple Silicon ou Linux nas [GitHub Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases).
+1. Descarregue **ChemClaw v0.4.0** para Windows, macOS Intel/Apple Silicon ou Linux nas [GitHub Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases).
 2. Obtenha a chave do modelo no [APIHub](https://apihub.chem-cloud.cn/) e introduza-a em **Definições → Modelos → APIHub**. Confirme os preços, prazos e limites atuais no site.
 3. Obtenha uma **chave de dados separada** no [Chemcloud Data Hub](https://mcp.chem-cloud.cn/) e introduza-a em **Definições → Conectores**.
 4. Abra um especialista ou grupo e descreva a necessidade em linguagem natural.

@@ -1,4 +1,4 @@
-# ChemClaw v0.3.0
+# ChemClaw v0.4.0
 
 [简体中文](README.md) | **English** | [日本語](README.ja.md) | [한국어](README.ko.md) | [Русский](README.ru.md) | [Français](README.fr.md) | [العربية](README.ar.md) | [Español](README.es.md) | [Português](README.pt.md)
 
@@ -813,13 +813,39 @@ Specialists can work on different research and analysis tasks. Longer investigat
 
 ---
 
+## Desktop control (Computer Use)
+
+In supported desktop environments, ChemClaw can use applications beyond the browser after you enable **Settings → Computer Control** and grant the required OS permissions. It can click, type, and read on-screen results. Each specialist can have its own permission level, and you can stop or take over control. **Computer control is off by default.**
+
+For example, an on-device macOS demonstration instructs ChemClaw to enter `111,988,732 × 765,427,834` into Calculator and read back `85,719,292,567,166,488`. Actual behavior depends on OS permissions and application state.
+
+**Computer control settings and real application task:**
+
+![Computer Use settings and per-agent permissions](docs/images/cases/15-computer-use-permissions.webp)
+
+![ChemClaw controlling macOS Calculator and reading the result](docs/images/cases/16-computer-use-calculator.webp)
+
+## Instant messaging
+
+Under **Settings → IM**, ChemClaw supports **WeChat, QQ, Feishu / Lark, WeCom, DingTalk, Telegram, Discord, and Slack**. Authentication methods vary by service; WeChat supports QR-code pairing. After linking the appropriate chat, users can send tasks through a messaging app and receive replies.
+
+A WeChat demonstration requests a methanol futures candlestick chart and receives a chart and written analysis. Supported channels may also deliver images and file attachments; SVG, HTML, file formats, and size limits depend on the platform. Availability in the app does not imply that every platform has been verified with a live account.
+
+**Supported channels and WeChat example:**
+
+![Available instant messaging integrations](docs/images/cases/17-instant-messaging-platforms.webp)
+
+| WeChat request | Chart and analysis |
+| --- | --- |
+| <img src="docs/images/cases/18-wechat-chart-request.webp" alt="Requesting a methanol futures chart in WeChat" width="380"> | <img src="docs/images/cases/19-wechat-chart-result.webp" alt="Chart and explanation returned in WeChat" width="380"> |
+
 ## 11. Download and installation
 
 ### Option 1: Install the standalone desktop app (recommended)
 
 **Want to start right away? Install ChemClaw and configure an AI model.**
 
-1. Download the relevant **v0.3.0** package from [ChemClaw Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases). Check the release page for the available Windows, macOS, and Linux downloads.
+1. Download the relevant **v0.4.0** package from [ChemClaw Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases). Check the release page for the available Windows, macOS, and Linux downloads.
 2. **Configure a model:** Visit [APIHub](https://apihub.chem-cloud.cn/), sign up or sign in, and get a model key as instructed. In ChemClaw, open **Settings → Models**, choose the preconfigured **APIHub**, paste your key, select an available model, and save. The model interprets questions, researches sources, analyzes data, and creates deliverables. No manual API URL setup is required.
 3. **Connect chemical data (recommended):** Obtain a separate data key from [Chemcloud Data Hub](https://mcp.chem-cloud.cn/) and enter it under **Settings → Connectors → Chemcloud Data Hub**. This authorizes applicable product, company, value-chain, trade, and market data. **The model and data keys are different.**
 4. Open a business specialist or group in the left sidebar and ask a question.
@@ -847,7 +873,7 @@ If you already use DeepSeek Harness Desktop, ChemClaw can be installed as a plug
 2. In DSH, open **Plugins → Add Plugin** and enter:
 
    ```text
-   github:zoeyzhang233666/chemclaw-bot#v0.3.0&path:/chemclaw-bot
+   github:zoeyzhang233666/chemclaw-bot#v0.4.0&path:/chemclaw-bot
    ```
 
 3. Alternatively, download the offline plugin archive `chemclaw-bot-0.3.0.tgz` from the corresponding GitHub Release and install from it.

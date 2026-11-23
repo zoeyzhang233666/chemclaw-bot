@@ -1,4 +1,4 @@
-# ChemClaw v0.3.1
+# ChemClaw v0.4.0
 
 **简体中文** | [English](README.en.md) | [日本語](README.ja.md) | [한국어](README.ko.md) | [Русский](README.ru.md) | [Français](README.fr.md) | [العربية](README.ar.md) | [Español](README.es.md) | [Português](README.pt.md)
 
@@ -184,11 +184,37 @@ ChemClaw 支持调用 DSH Agent 制作插件，甚至直接修改经典模式的
 
 ![用 DSH 创造模式制作便利贴墙插件（示例二）](docs/images/cases/14-dsh-plugin-sticky-notes-2.png)
 
+## 电脑操控（Computer Use）
+
+ChemClaw 不只可以浏览网页。在受支持的桌面环境中，开启 **设置 → 电脑操控** 并完成系统授权后，智能体还可以根据任务操作电脑应用，包括鼠标点击、键盘输入和读取界面结果。可以针对不同专家配置操作权限；操作过程中支持停止和由用户接管。**电脑操控默认关闭**，使用前需要主动开启并确认授权。
+
+例如，在 macOS 上要求 ChemClaw 操作系统计算器，输入 `111,988,732 × 765,427,834`，读取计算结果 `85,719,292,567,166,488`。实际可执行的操作取决于操作系统、辅助功能/屏幕录制权限与当前应用状态。
+
+**电脑操控界面与实际操作：**
+
+![电脑操控开关、系统权限与专家操作权限](docs/images/cases/15-computer-use-permissions.webp)
+
+![ChemClaw 实际操作 macOS 计算器并读取乘法结果](docs/images/cases/16-computer-use-calculator.webp)
+
+## 即时通讯
+
+除了桌面应用，ChemClaw 也可以在 **设置 → 即时通讯** 中连接 **微信、QQ、飞书 / Lark、企业微信、钉钉、Telegram、Discord 和 Slack**。连接或认证方式因平台而异；微信支持扫码配对，连接后可以绑定对话对象，在常用聊天工具里向 ChemClaw 发起任务。
+
+例如，在微信中询问“甲醇期货价格 K 线图”，ChemClaw 可以返回行情图表和文字分析。支持的平台还可以传递图片与文件附件；图表、SVG、HTML 等内容的发送方式与大小限制以实际平台能力为准。首次使用应核实账号绑定、消息来源和附件接收权限。
+
+**支持的平台与微信实际使用：**
+
+![设置中的微信、QQ、飞书等即时通讯平台](docs/images/cases/17-instant-messaging-platforms.webp)
+
+| 微信发送任务 | 图表及分析回复 |
+| --- | --- |
+| <img src="docs/images/cases/18-wechat-chart-request.webp" alt="微信中请求甲醇期货 K 线图" width="380"> | <img src="docs/images/cases/19-wechat-chart-result.webp" alt="微信收到的甲醇期货图表和文字分析" width="380"> |
+
 ## 下载安装
 
 **方式一：直接安装桌面版（推荐）**
 
-1. 在 [ChemClaw Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases) 下载 **v0.3.1** 安装包并安装（Windows/macOS/Linux 文件以发布页为准）。
+1. 在 [ChemClaw Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases) 下载 **v0.4.0** 安装包并安装（Windows/macOS/Linux 文件以发布页为准）。
 2. **配模型**：到 [APIHub](https://apihub.chem-cloud.cn/) 注册、取模型密钥，在 **设置 → 模型** 选预设的 APIHub，粘贴密钥并选可用模型。
 3. **接数据（推荐）**：到 [芯化和云数据中台](https://mcp.chem-cloud.cn/) 申请数据密钥，在 **设置 → 连接器 → 芯化和云数据中台** 粘贴保存。连接地址已预设，无需懂 MCP。
 4. 打开左侧的专家或协作群，直接提问即可。
@@ -202,7 +228,7 @@ ChemClaw 支持调用 DSH Agent 制作插件，甚至直接修改经典模式的
 
 > 巨潮公告、PubChem、OPSIN、化工社、可覆盖的 AKShare 历史行情、联网搜索等通常**无需额外密钥**，能否取到数据取决于网络和第三方来源。
 
-**方式二：作为 DeepSeek Harness 插件安装**（已用 DSH 桌面版时）：确保本机有 Git，在 **插件 → 添加插件** 输入 `github:zoeyzhang233666/chemclaw-bot#v0.3.1&path:/chemclaw-bot`，按提示启用并重启。
+**方式二：作为 DeepSeek Harness 插件安装**（已用 DSH 桌面版时）：确保本机有 Git，在 **插件 → 添加插件** 输入 `github:zoeyzhang233666/chemclaw-bot#v0.4.0&path:/chemclaw-bot`，按提示启用并重启。
 
 ## 使用前了解这些
 

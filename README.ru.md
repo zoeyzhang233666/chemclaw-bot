@@ -1,4 +1,4 @@
-# ChemClaw v0.3.0
+# ChemClaw v0.4.0
 
 [简体中文](README.md) | [English](README.en.md) | [日本語](README.ja.md) | [한국어](README.ko.md) | **Русский** | [Français](README.fr.md) | [العربية](README.ar.md) | [Español](README.es.md) | [Português](README.pt.md)
 
@@ -165,6 +165,28 @@ ChemClaw поддерживает отраслевой анализ нефти, 
 ## 10. Специалисты и рабочие группы
 
 В поставку входят **50 агентов и 15 групп**: внутренние продажи, поиск поставщиков, экспорт, импорт, исследование отрасли, фьючерсные спреды, количественная аналитика, документы и оценка источников. В обычном чате можно назначить профильную роль; в группе координатор распределяет части работы между специалистами. Пользователь может упомянуть отдельного агента через `@` и проверить итоговую работу.
+
+## Управление компьютером (Computer Use)
+
+В поддерживаемых настольных системах ChemClaw может нажимать кнопки мышью, вводить текст и считывать результаты из приложений после включения функции в **Настройки → Управление компьютером** и выдачи разрешений ОС. Права настраиваются для каждого агента отдельно; пользователь может остановить работу или перехватить управление. **По умолчанию функция выключена.** На macOS можно, например, поручить агенту выполнить умножение в системном «Калькуляторе» и считать результат.
+
+**Computer control settings and real application task:**
+
+![Computer Use settings and per-agent permissions](docs/images/cases/15-computer-use-permissions.webp)
+
+![ChemClaw controlling macOS Calculator and reading the result](docs/images/cases/16-computer-use-calculator.webp)
+
+## Мессенджеры
+
+Через **Настройки → Мессенджеры** доступны **WeChat, QQ, Feishu / Lark, WeCom, DingTalk, Telegram, Discord и Slack**. Способ авторизации зависит от платформы; WeChat поддерживает подключение по QR-коду. В реальном примере через WeChat запрашивается свечной график фьючерсов на метанол, а в ответ приходят изображение и пояснение. Форматы и размеры вложений зависят от канала; наличие интеграции не означает проверку всех платформ с реальными учётными записями.
+
+**Supported channels and WeChat example:**
+
+![Available instant messaging integrations](docs/images/cases/17-instant-messaging-platforms.webp)
+
+| WeChat request | Chart and analysis |
+| --- | --- |
+| <img src="docs/images/cases/18-wechat-chart-request.webp" alt="Requesting a methanol futures chart in WeChat" width="380"> | <img src="docs/images/cases/19-wechat-chart-result.webp" alt="Chart and explanation returned in WeChat" width="380"> |
 
 ## 11. Установка и настройка
 
