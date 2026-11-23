@@ -155,9 +155,23 @@
 
 في بيئات سطح المكتب المدعومة، يستطيع ChemClaw النقر بالماوس وكتابة النص وقراءة النتائج الظاهرة في التطبيقات بعد تفعيل **الإعدادات ← التحكم في الكمبيوتر** ومنح أذونات نظام التشغيل. يمكن تخصيص الصلاحيات لكل وكيل، ويمكن للمستخدم إيقاف المهمة أو استعادة التحكم. **الميزة معطلة افتراضياً.** يوضح مثال عملي على macOS إجراء عملية حسابية في تطبيق الآلة الحاسبة وقراءة النتيجة.
 
+**Computer control settings and real application task:**
+
+![Computer Use settings and per-agent permissions](docs/images/cases/15-computer-use-permissions.webp)
+
+![ChemClaw controlling macOS Calculator and reading the result](docs/images/cases/16-computer-use-calculator.webp)
+
 ## المراسلة الفورية
 
 من **الإعدادات ← المراسلة الفورية** يمكن ربط **WeChat وQQ وFeishu / Lark وWeCom وDingTalk وTelegram وDiscord وSlack**. تختلف طريقة المصادقة حسب المنصة؛ ويدعم WeChat الاقتران عبر رمز QR. في مثال عملي عبر WeChat، يطلب المستخدم مخطط شموع لعقود الميثانول الآجلة ويتلقى صورة المخطط مع تحليل مكتوب. تتوقف صيغ المرفقات وحدود أحجامها على إمكانات كل منصة، ولا يعني توفر الربط أنه اختُبر بحسابات حقيقية على جميع المنصات.
+
+**Supported channels and WeChat example:**
+
+![Available instant messaging integrations](docs/images/cases/17-instant-messaging-platforms.webp)
+
+| WeChat request | Chart and analysis |
+| --- | --- |
+| <img src="docs/images/cases/18-wechat-chart-request.webp" alt="Requesting a methanol futures chart in WeChat" width="380"> | <img src="docs/images/cases/19-wechat-chart-result.webp" alt="Chart and explanation returned in WeChat" width="380"> |
 
 ## 11. التنزيل والربط
 

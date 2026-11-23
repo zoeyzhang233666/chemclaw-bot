@@ -155,9 +155,23 @@ Chaque Bot peut utiliser son propre navigateur sur le poste de travail : ouvrir 
 
 Sur les systèmes de bureau compatibles, ChemClaw peut cliquer, saisir du texte et lire les résultats affichés dans les applications après activation de **Paramètres → Contrôle de l’ordinateur** et autorisation par le système. Les droits sont configurables par Bot ; l’utilisateur peut arrêter la tâche ou reprendre la main. **La fonction est désactivée par défaut.** Une démonstration sur macOS montre un calcul effectué dans l’application Calculatrice et la lecture du résultat.
 
+**Computer control settings and real application task:**
+
+![Computer Use settings and per-agent permissions](docs/images/cases/15-computer-use-permissions.webp)
+
+![ChemClaw controlling macOS Calculator and reading the result](docs/images/cases/16-computer-use-calculator.webp)
+
 ## Messagerie instantanée
 
 Dans **Paramètres → Messagerie**, ChemClaw prend en charge **WeChat, QQ, Feishu / Lark, WeCom, DingTalk, Telegram, Discord et Slack**. Les méthodes de connexion varient ; WeChat accepte l’association par QR code. Dans un exemple réel, un utilisateur demande un graphique en chandeliers des contrats à terme sur le méthanol via WeChat et reçoit une image et une analyse. Le format et la taille des pièces jointes dépendent de chaque plateforme ; toutes n’ont pas été validées avec de vrais comptes.
+
+**Supported channels and WeChat example:**
+
+![Available instant messaging integrations](docs/images/cases/17-instant-messaging-platforms.webp)
+
+| WeChat request | Chart and analysis |
+| --- | --- |
+| <img src="docs/images/cases/18-wechat-chart-request.webp" alt="Requesting a methanol futures chart in WeChat" width="380"> | <img src="docs/images/cases/19-wechat-chart-result.webp" alt="Chart and explanation returned in WeChat" width="380"> |
 
 ## 11. Installation et connexion
 

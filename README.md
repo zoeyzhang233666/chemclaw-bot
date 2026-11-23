@@ -190,11 +190,25 @@ ChemClaw 不只可以浏览网页。在受支持的桌面环境中，开启 **�
 
 例如，在 macOS 上要求 ChemClaw 操作系统计算器，输入 `111,988,732 × 765,427,834`，读取计算结果 `85,719,292,567,166,488`。实际可执行的操作取决于操作系统、辅助功能/屏幕录制权限与当前应用状态。
 
+**电脑操控界面与实际操作：**
+
+![电脑操控开关、系统权限与专家操作权限](docs/images/cases/15-computer-use-permissions.webp)
+
+![ChemClaw 实际操作 macOS 计算器并读取乘法结果](docs/images/cases/16-computer-use-calculator.webp)
+
 ## 即时通讯
 
 除了桌面应用，ChemClaw 也可以在 **设置 → 即时通讯** 中连接 **微信、QQ、飞书 / Lark、企业微信、钉钉、Telegram、Discord 和 Slack**。连接或认证方式因平台而异；微信支持扫码配对，连接后可以绑定对话对象，在常用聊天工具里向 ChemClaw 发起任务。
 
 例如，在微信中询问“甲醇期货价格 K 线图”，ChemClaw 可以返回行情图表和文字分析。支持的平台还可以传递图片与文件附件；图表、SVG、HTML 等内容的发送方式与大小限制以实际平台能力为准。首次使用应核实账号绑定、消息来源和附件接收权限。
+
+**支持的平台与微信实际使用：**
+
+![设置中的微信、QQ、飞书等即时通讯平台](docs/images/cases/17-instant-messaging-platforms.webp)
+
+| 微信发送任务 | 图表及分析回复 |
+| --- | --- |
+| <img src="docs/images/cases/18-wechat-chart-request.webp" alt="微信中请求甲醇期货 K 线图" width="380"> | <img src="docs/images/cases/19-wechat-chart-result.webp" alt="微信收到的甲醇期货图表和文字分析" width="380"> |
 
 ## 下载安装
 

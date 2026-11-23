@@ -171,9 +171,23 @@ Botごとのデスクトップブラウザーで公開ページを開き、必�
 
 対応するデスクトップ環境では、**設定 → パソコン操作**で機能を有効にし、OSの許可を与えると、ChemClaw がマウス操作・文字入力・画面結果の読み取りを行えます。Botごとに権限を設定でき、ユーザーは停止または操作を引き継げます。**初期状態では無効**です。macOS の実機例では「計算機」アプリで乗算を実行し、結果を読み取りました。
 
+**Computer control settings and real application task:**
+
+![Computer Use settings and per-agent permissions](docs/images/cases/15-computer-use-permissions.webp)
+
+![ChemClaw controlling macOS Calculator and reading the result](docs/images/cases/16-computer-use-calculator.webp)
+
 ## インスタントメッセージ
 
 **設定 → インスタントメッセージ**から、**WeChat、QQ、Feishu / Lark、WeCom（企業微信）、DingTalk、Telegram、Discord、Slack**に接続できます。接続方法はサービスごとに異なり、WeChatはQRコードでのペアリングに対応します。WeChatの実例では、メタノール先物のローソク足チャートを依頼し、画像と分析文を受信しました。画像・ファイルの対応形式と容量制限は各サービスによって異なります。
+
+**Supported channels and WeChat example:**
+
+![Available instant messaging integrations](docs/images/cases/17-instant-messaging-platforms.webp)
+
+| WeChat request | Chart and analysis |
+| --- | --- |
+| <img src="docs/images/cases/18-wechat-chart-request.webp" alt="Requesting a methanol futures chart in WeChat" width="380"> | <img src="docs/images/cases/19-wechat-chart-result.webp" alt="Chart and explanation returned in WeChat" width="380"> |
 
 ## 11. インストールと接続
 

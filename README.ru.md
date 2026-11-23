@@ -170,9 +170,23 @@ ChemClaw поддерживает отраслевой анализ нефти, 
 
 В поддерживаемых настольных системах ChemClaw может нажимать кнопки мышью, вводить текст и считывать результаты из приложений после включения функции в **Настройки → Управление компьютером** и выдачи разрешений ОС. Права настраиваются для каждого агента отдельно; пользователь может остановить работу или перехватить управление. **По умолчанию функция выключена.** На macOS можно, например, поручить агенту выполнить умножение в системном «Калькуляторе» и считать результат.
 
+**Computer control settings and real application task:**
+
+![Computer Use settings and per-agent permissions](docs/images/cases/15-computer-use-permissions.webp)
+
+![ChemClaw controlling macOS Calculator and reading the result](docs/images/cases/16-computer-use-calculator.webp)
+
 ## Мессенджеры
 
 Через **Настройки → Мессенджеры** доступны **WeChat, QQ, Feishu / Lark, WeCom, DingTalk, Telegram, Discord и Slack**. Способ авторизации зависит от платформы; WeChat поддерживает подключение по QR-коду. В реальном примере через WeChat запрашивается свечной график фьючерсов на метанол, а в ответ приходят изображение и пояснение. Форматы и размеры вложений зависят от канала; наличие интеграции не означает проверку всех платформ с реальными учётными записями.
+
+**Supported channels and WeChat example:**
+
+![Available instant messaging integrations](docs/images/cases/17-instant-messaging-platforms.webp)
+
+| WeChat request | Chart and analysis |
+| --- | --- |
+| <img src="docs/images/cases/18-wechat-chart-request.webp" alt="Requesting a methanol futures chart in WeChat" width="380"> | <img src="docs/images/cases/19-wechat-chart-result.webp" alt="Chart and explanation returned in WeChat" width="380"> |
 
 ## 11. Установка и настройка
 

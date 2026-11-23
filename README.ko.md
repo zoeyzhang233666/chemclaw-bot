@@ -153,9 +153,23 @@ Chemcloud의 「화학산업 AI 에이전트용 업계 전문지식 고품질 �
 
 지원되는 데스크톱 환경에서 **설정 → 컴퓨터 제어**를 켜고 운영체제 권한을 부여하면 ChemClaw가 마우스 클릭, 키보드 입력, 화면 결과 확인을 수행할 수 있습니다. 전문가별 권한을 설정할 수 있고 사용자가 언제든 중지하거나 제어권을 가져올 수 있습니다. **기본적으로 꺼져 있습니다.** macOS 계산기 앱에서 실제로 곱셈을 수행하고 결과를 읽는 예시가 있습니다.
 
+**Computer control settings and real application task:**
+
+![Computer Use settings and per-agent permissions](docs/images/cases/15-computer-use-permissions.webp)
+
+![ChemClaw controlling macOS Calculator and reading the result](docs/images/cases/16-computer-use-calculator.webp)
+
 ## 메신저 연결
 
 **설정 → 메신저**에서 **WeChat, QQ, Feishu / Lark, WeCom(기업 위챗), DingTalk, Telegram, Discord, Slack**을 연결할 수 있습니다. 연결 방식은 플랫폼마다 다르며 WeChat은 QR 코드 페어링을 지원합니다. WeChat 사용 예시에서는 메탄올 선물 캔들 차트를 요청하고 차트 이미지와 분석을 받았습니다. 이미지 및 파일 첨부의 형식·크기 제한은 각 플랫폼 정책에 따릅니다.
+
+**Supported channels and WeChat example:**
+
+![Available instant messaging integrations](docs/images/cases/17-instant-messaging-platforms.webp)
+
+| WeChat request | Chart and analysis |
+| --- | --- |
+| <img src="docs/images/cases/18-wechat-chart-request.webp" alt="Requesting a methanol futures chart in WeChat" width="380"> | <img src="docs/images/cases/19-wechat-chart-result.webp" alt="Chart and explanation returned in WeChat" width="380"> |
 
 ## 11. 설치 및 연결
 

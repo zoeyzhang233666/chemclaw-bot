@@ -819,11 +819,25 @@ In supported desktop environments, ChemClaw can use applications beyond the brow
 
 For example, an on-device macOS demonstration instructs ChemClaw to enter `111,988,732 × 765,427,834` into Calculator and read back `85,719,292,567,166,488`. Actual behavior depends on OS permissions and application state.
 
+**Computer control settings and real application task:**
+
+![Computer Use settings and per-agent permissions](docs/images/cases/15-computer-use-permissions.webp)
+
+![ChemClaw controlling macOS Calculator and reading the result](docs/images/cases/16-computer-use-calculator.webp)
+
 ## Instant messaging
 
 Under **Settings → IM**, ChemClaw supports **WeChat, QQ, Feishu / Lark, WeCom, DingTalk, Telegram, Discord, and Slack**. Authentication methods vary by service; WeChat supports QR-code pairing. After linking the appropriate chat, users can send tasks through a messaging app and receive replies.
 
 A WeChat demonstration requests a methanol futures candlestick chart and receives a chart and written analysis. Supported channels may also deliver images and file attachments; SVG, HTML, file formats, and size limits depend on the platform. Availability in the app does not imply that every platform has been verified with a live account.
+
+**Supported channels and WeChat example:**
+
+![Available instant messaging integrations](docs/images/cases/17-instant-messaging-platforms.webp)
+
+| WeChat request | Chart and analysis |
+| --- | --- |
+| <img src="docs/images/cases/18-wechat-chart-request.webp" alt="Requesting a methanol futures chart in WeChat" width="380"> | <img src="docs/images/cases/19-wechat-chart-result.webp" alt="Chart and explanation returned in WeChat" width="380"> |
 
 ## 11. Download and installation
 
