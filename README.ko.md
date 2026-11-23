@@ -1,4 +1,4 @@
-# ChemClaw v0.3.0
+# ChemClaw v0.4.0
 
 [简体中文](README.md) | [English](README.en.md) | [日本語](README.ja.md) | **한국어** | [Русский](README.ru.md) | [Français](README.fr.md) | [العربية](README.ar.md) | [Español](README.es.md) | [Português](README.pt.md)
 
@@ -149,9 +149,17 @@ Chemcloud의 「화학산업 AI 에이전트용 업계 전문지식 고품질 �
 
 **50개 전문 Bot과 15개 그룹**은 중국 내수 판매, 구매, 수출입, 산업 분석, 현·선물, 퀀트, 문서 작성과 자료 검증을 담당합니다. 그룹의 진행자가 역할을 분담하고 `@`로 전문 Bot을 지정할 수 있습니다.
 
+## 컴퓨터 제어 (Computer Use)
+
+지원되는 데스크톱 환경에서 **설정 → 컴퓨터 제어**를 켜고 운영체제 권한을 부여하면 ChemClaw가 마우스 클릭, 키보드 입력, 화면 결과 확인을 수행할 수 있습니다. 전문가별 권한을 설정할 수 있고 사용자가 언제든 중지하거나 제어권을 가져올 수 있습니다. **기본적으로 꺼져 있습니다.** macOS 계산기 앱에서 실제로 곱셈을 수행하고 결과를 읽는 예시가 있습니다.
+
+## 메신저 연결
+
+**설정 → 메신저**에서 **WeChat, QQ, Feishu / Lark, WeCom(기업 위챗), DingTalk, Telegram, Discord, Slack**을 연결할 수 있습니다. 연결 방식은 플랫폼마다 다르며 WeChat은 QR 코드 페어링을 지원합니다. WeChat 사용 예시에서는 메탄올 선물 캔들 차트를 요청하고 차트 이미지와 분석을 받았습니다. 이미지 및 파일 첨부의 형식·크기 제한은 각 플랫폼 정책에 따릅니다.
+
 ## 11. 설치 및 연결
 
-1. [GitHub Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases)에서 Windows EXE, macOS(Intel/Apple Silicon), Linux에 맞는 **v0.3.0** 파일을 다운로드하세요.
+1. [GitHub Releases](https://github.com/zoeyzhang233666/chemclaw-bot/releases)에서 Windows EXE, macOS(Intel/Apple Silicon), Linux에 맞는 **v0.4.0** 파일을 다운로드하세요.
 2. [APIHub](https://apihub.chem-cloud.cn/)에서 AI 모델 키를 발급받아 **설정 → 모델 → APIHub**에 입력하고 사용 가능한 모델을 고르세요. 요금, 기간과 사용 한도는 서비스 페이지의 현재 조건을 확인하세요.
 3. [Chemcloud Data Hub](https://mcp.chem-cloud.cn/)의 **별도 데이터 키**를 발급받아 **설정 → 커넥터**에 입력하세요.
 4. 좌측의 전문가 또는 그룹을 열고 실무 질문을 입력하면 됩니다.
