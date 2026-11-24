@@ -11,7 +11,7 @@ const LEGACY_EXECUTABLES = ['chemclaw', 'chemclaw-bot', 'chemclaw.exe']
 import { classify, isComputerTool, levelAllows, LEVELS, DRIVER_GLOBAL, DRIVER_REFUSED } from './catalog.js'
 import { createLeases } from './leases.js'
 import { prepareComputerHelper } from './mac-helper.js'
-import { REPLY_KIND } from '../constants.js'
+import { REPLY_KIND, SOURCE_KIND } from '../constants.js'
 import { output } from '../tools.js'
 
 const REGISTRY_PACKAGE = '@deepseek-ai/dsh-computer-use'
@@ -989,7 +989,11 @@ export function install(rt) {
     const sessionId = rt.chatOf(botId)
     await rt.ensureCapabilities?.(sessionId)
     const agent = await rt.resolveAgent(sessionId)
-    agent.followup(createUserMessage({ content: [{ type: 'text', text: HANDBACK_TEXT }] }))
+    agent.followup(createUserMessage({
+      content: [{ type: 'text', text: HANDBACK_TEXT }],
+      // DSH v4 requires a producer-owned source; this is not a Bot-to-Bot relay.
+      source: { kind: SOURCE_KIND, role: 'handback' },
+    }))
     await ctx.sessions.flush(agent.session)
     return true
   }

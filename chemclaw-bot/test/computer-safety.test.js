@@ -41,3 +41,29 @@ test('Computer Use leases isolate Bots and release after a session ends', () => 
     leases.dispose()
   }
 })
+
+test('computer handback keeps a producer-owned, non-relay source', async (t) => {
+  const { mkdtempSync, rmSync, writeFileSync } = await import('node:fs')
+  const { tmpdir } = await import('node:os')
+  const { join } = await import('node:path')
+  const { createRuntime } = await import('./legacy-runtime.js')
+  const { fakeContext } = await import('./fake-ctx.js')
+  const home = mkdtempSync(join(tmpdir(), 'chemclaw-handback-'))
+  writeFileSync(join(home, 'state.json'), JSON.stringify({
+    version: 1, mainBotIds: ['w1'], revision: 1,
+    bots: { w1: { id: 'w1', sessionId: 'w1', name: 'Writer', role: 'Test', instructions: '', createdAt: 1 } },
+    rooms: {}, exchanges: [], exchangeTurns: {}, questions: {},
+  }))
+  const ctx = fakeContext()
+  const rt = createRuntime(ctx, { home })
+  t.after(async () => { await ctx.dispose(); rmSync(home, { recursive: true, force: true, maxRetries: 5 }) })
+  await rt.load()
+  await rt.computerEndpoint('set-enabled', { enabled: true })
+  const followups = []
+  ctx.sessions = { flush: async () => {} }
+  rt.resolveAgent = async () => ({ followup: message => followups.push(message), session: { id: 'w1' } })
+  rt.chatOf = () => 'w1'
+  await rt.computerEndpoint('handback', { botId: 'w1' })
+  assert.deepEqual(followups.at(-1)?.source, { kind: 'bot', role: 'handback' })
+  assert.match(followups.at(-1)?.content?.[0]?.text ?? '', /handed the computer back/i)
+})

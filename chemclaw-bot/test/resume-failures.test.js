@@ -120,3 +120,64 @@ test('context-blocked work survives restart without resolving or replaying its t
   assert.equal(run.delivered.length, 0)
   assert.deepEqual(run.notes(), saved)
 })
+
+test('two concurrent deferred deliveries of one exchange send once and persist one queue note', async t => {
+  let complete
+  const pendingSend = new Promise(resolve => { complete = resolve })
+  const sent = []
+  const run = start(t, { turns: {}, queued: {} }, {
+    deliver: async args => { sent.push(args); return pendingSend },
+  })
+  const args = { toId: 'b', sessionId: 's', exchangeId: 'same-exchange', role: 'request', deferred: true, text: 'reply once' }
+  const first = run.rt.deliver(args)
+  const duplicate = run.rt.deliver({ ...args })
+  assert.equal(sent.length, 1, 'duplicate must join the in-flight send')
+  await waitFor(() => run.notes().queued.s?.length === 1)
+  assert.equal(run.notes().queued.s[0].args.exchangeId, 'same-exchange')
+  complete('accepted')
+  assert.deepEqual(await Promise.all([first, duplicate]), ['accepted', 'accepted'])
+  assert.equal(sent.length, 1)
+  assert.equal(run.rt.unreadOf('s').length, 1)
+})
+
+test('failed deferred delivery shares its failure, then a later retry can send again', async t => {
+  let rejectFirst
+  const blocked = new Promise((_, reject) => { rejectFirst = reject })
+  let attempts = 0
+  const run = start(t, { turns: {}, queued: {} }, {
+    deliver: async () => { attempts += 1; if (attempts === 1) return blocked; return 'retried' },
+  })
+  const args = { toId: 'b', sessionId: 's', exchangeId: 'failed-once', role: 'request', deferred: true }
+  const first = run.rt.deliver(args)
+  const second = run.rt.deliver({ ...args })
+  assert.equal(attempts, 1)
+  rejectFirst(new Error('transient delivery error'))
+  const settled = await Promise.allSettled([first, second])
+  assert.deepEqual(settled.map(item => item.status), ['rejected', 'rejected'])
+  assert.match(settled[0].reason.message, /transient delivery error/)
+  assert.match(settled[1].reason.message, /transient delivery error/)
+  await waitFor(() => run.notes().queued.s === undefined)
+  assert.equal(await run.rt.deliver(args), 'retried')
+  assert.equal(attempts, 2, 'a failed in-flight record must not block retries')
+})
+
+test('deferred deduplication is scoped to a Session and does not change ordinary deliveries', async t => {
+  const calls = []
+  let release
+  const pendingSend = new Promise(resolve => { release = resolve })
+  const run = start(t, { turns: {}, queued: {} }, {
+    deliver: async args => { calls.push(args); return pendingSend },
+  })
+  const args = { toId: 'b', exchangeId: 'same-id', role: 'request', deferred: true }
+  const a = run.rt.deliver({ ...args, sessionId: 's' })
+  const b = run.rt.deliver({ ...args, sessionId: 'other-session' })
+  assert.equal(calls.length, 2, 'different Sessions must not be coalesced')
+  const normal = { ...args, deferred: false, sessionId: 's', exchangeId: 'normal' }
+  const c = run.rt.deliver(normal)
+  const d = run.rt.deliver({ ...normal })
+  assert.equal(calls.length, 4, 'non-deferred deliveries are not coalesced')
+  await waitFor(() => run.notes().queued.s?.length === 2)
+  assert.deepEqual(run.notes().queued.s.map(item => item.args.exchangeId), ['same-id', 'normal'])
+  release('done')
+  assert.deepEqual(await Promise.all([a, b, c, d]), ['done', 'done', 'done', 'done'])
+})

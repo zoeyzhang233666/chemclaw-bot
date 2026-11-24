@@ -193,8 +193,12 @@ export function install(rt) {
       await rt.save()
       // The greeting runs on the Bot's own model, once its provider is registered.
       void rt.waitForModel(bot)
-        .then(() => rt.applyModel(bot).catch(error => rt.warn('chemclaw-bot: model for %s not applied: %s', cleanName, error)))
+        .then(
+          () => rt.applyModel(bot).catch(error => rt.warn('chemclaw-bot: model for %s not applied: %s', cleanName, error)),
+          error => rt.warn('chemclaw-bot: model for %s not ready, greeting on its current model: %s', cleanName, error),
+        )
         .then(() => { if (greet) sendKickoff(bot, { text, from: createdBy }) })
+        .catch(error => rt.warn('chemclaw-bot: greeting for %s not sent: %s', cleanName, error))
       return bot
     } catch (error) {
       // The Bot's Session was already made: archive it instead of leaving an orphan.

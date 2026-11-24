@@ -6,7 +6,7 @@ import { hostname, tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { format } from 'node:util'
-import { apply } from './legacy-runtime.js'
+import { createRuntime } from './legacy-runtime.js'
 import { fakeContext } from './fake-ctx.js'
 
 // Enough of the dsh services for the roster to make Sessions; kickoff messages are dropped.
@@ -58,7 +58,7 @@ function start(team, { models = [], reasoning = {}, archiveError, selection } = 
     route = options
     return register(options)
   }
-  apply(ctx, { home })
+  const rt = createRuntime(ctx, { home })
   const call = async (endpoint, payload) => {
     const response = await route.fetch(new Request('http://localhost/api/bot', { method: 'POST', body: JSON.stringify({ endpoint, payload }) }))
     return response.json()
@@ -67,7 +67,7 @@ function start(team, { models = [], reasoning = {}, archiveError, selection } = 
     await ctx.dispose()
     rmSync(home, { recursive: true, force: true, maxRetries: 5 })
   }
-  return { call, stop, home, sent, selected, ctx, archived, warnings }
+  return { call, stop, home, sent, selected, ctx, rt, archived, warnings }
 }
 
 const settle = () => new Promise(resolve => setTimeout(resolve, 20))
@@ -121,6 +121,19 @@ test('other Bots start on the default model and greet at once', async (t) => {
   await settle()
   assert.equal(writer.model, 'deepseek/deepseek-v4-flash')
   assert.deepEqual(sent.map(entry => entry.sessionId), [writer.id])
+})
+
+
+test('new Bot greeting survives a rejected model readiness check', async (t) => {
+  const { call, stop, sent, warnings, rt } = start(undefined, { models: ['deepseek-v4-flash'] })
+  t.after(stop)
+  await call('state', {})
+  rt.waitForModel = async () => { throw new Error('model provider temporarily unavailable') }
+  const bot = (await call('create-bot', { name: 'Model Failover' })).value
+  assert.ok(bot?.id, 'Bot creation must succeed')
+  await until(() => warnings.some(line => line.includes('model for Model Failover not ready')))
+  await until(() => sent.some(entry => entry.sessionId === bot.id))
+  assert.equal(sent.filter(entry => entry.sessionId === bot.id).length, 1)
 })
 
 test('a new name must be one "@" can call; a name saved before the rule still saves', async (t) => {
