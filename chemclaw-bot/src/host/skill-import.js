@@ -1,7 +1,9 @@
 import { randomUUID } from 'node:crypto'
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { dirname, join, posix } from 'node:path'
+import { setTimeout as delay } from 'node:timers/promises'
 import { unzipSync } from 'fflate'
+import { desktopGitHubTransport, gitHubRateLimited, transientGitHubError } from './github-network.js'
 import { managedSkillPath, parseSkill, safeSkillPath, SKILL_LIMITS } from './skill-files.js'
 import { skillEmoji, skillExample, validSkillEmoji } from '../shared/skill-presentation.js'
 
@@ -52,21 +54,125 @@ export function unpackSkills(bytes) {
   return validateEntries(Object.entries(files).map(([path, data]) => ({ path, data: Buffer.from(data) })))
 }
 
-async function download(url, request, limit, signal) {
-  const response = await request(url, { headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'ChemClaw' }, redirect: 'error', signal })
-  if (!response.ok) throw new Error(`GitHub answered ${response.status}. Use a public repository and try again.`)
-  if (Number(response.headers.get('content-length')) > limit) throw new Error('GitHub download exceeds the size limit.')
+function githubFailure(error) {
+  if (error?.name === 'AbortError' || /aborted due to timeout/i.test(String(error?.message ?? ''))) {
+    throw new Error('GitHub download timed out. Narrow the path to a skill directory or try again.')
+  }
+  if (error instanceof Error && /^(Enter a GitHub|Use a public|Only public|GitHub |No SKILL\.md|Too many files|Skill archives|Choose a SKILL|Unsafe skill|Duplicate skill|Expanded skill)/.test(error.message)) {
+    throw error
+  }
+  throw new Error('GitHub download failed. Check your network and try again.', { cause: error })
+}
+
+function rejectGitHubStatus(response) {
+  if (gitHubRateLimited(response)) {
+    throw new Error('GitHub rate limit exceeded. Wait a few minutes and try again.')
+  }
+  throw new Error(`GitHub answered ${response.status}. Use a public repository and try again.`)
+}
+
+async function download(url, request, limit, signal, { accept = 'application/vnd.github+json' } = {}) {
+  let response
+  try {
+    response = await request(url, { headers: { Accept: accept, 'User-Agent': 'ChemClaw' }, redirect: 'error', signal })
+  } catch (error) { githubFailure(error) }
+  if (!response.ok || Number(response.headers.get('content-length')) > limit) {
+    await response.body?.cancel().catch(() => undefined)
+    if (!response.ok) rejectGitHubStatus(response)
+    throw new Error('GitHub download exceeds the size limit.')
+  }
   const chunks = []
   let bytes = 0
-  for await (const chunk of response.body) {
-    bytes += chunk.length
-    if (bytes > limit) throw new Error('GitHub download exceeds the size limit.')
-    chunks.push(chunk)
+  try {
+    for await (const chunk of response.body) {
+      bytes += chunk.length
+      if (bytes > limit) throw new Error('GitHub download exceeds the size limit.')
+      chunks.push(chunk)
+    }
+  } catch (error) {
+    if (error?.message === 'GitHub download exceeds the size limit.') throw error
+    githubFailure(error)
   }
   return Buffer.concat(chunks)
 }
 
-export async function githubSkills(value, { request = fetch, signal = AbortSignal.timeout(60000) } = {}) {
+async function downloadRaw(url, request, signal) {
+  for (let attempt = 0; ; attempt++) {
+    signal.throwIfAborted()
+    try {
+      return await download(url, request, SKILL_LIMITS.upload, signal, { accept: '*/*' })
+    } catch (error) {
+      if (signal.aborted || attempt >= 2 || !transientGitHubError(error.cause)) throw error
+      await delay(250 * (attempt + 1), undefined, { signal })
+    }
+  }
+}
+
+async function mapPool(items, limit, signal, worker) {
+  const results = Array.from({ length: items.length })
+  const controller = new AbortController()
+  const downloadSignal = AbortSignal.any([signal, controller.signal])
+  let next = 0
+  try {
+    await Promise.all(Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (next < items.length) {
+        downloadSignal.throwIfAborted()
+        const index = next++
+        results[index] = await worker(items[index], downloadSignal)
+      }
+    }))
+  } finally {
+    controller.abort()
+  }
+  return results
+}
+
+function skillRootsFrom(blobs) {
+  const instructions = blobs.filter(entry => /(^|\/)SKILL\.md$/i.test(entry.path))
+  if (!instructions.length) throw new Error('No SKILL.md was found. Choose a skill file, folder, or ZIP archive.')
+  const roots = [...new Set(instructions.map(entry => {
+    const root = posix.dirname(entry.path)
+    return root === '.' ? '' : root
+  }))].sort((a, b) => a.length - b.length)
+  return roots.filter((root, index) => !roots.slice(0, index).some(parent => parent === '' || root === parent || root.startsWith(`${parent}/`)))
+}
+
+function selectGithubBlobs(blobs, subdir) {
+  if (subdir) {
+    const prefix = `${subdir}/`
+    const selected = blobs.filter(entry => entry.path.startsWith(prefix))
+    if (!selected.length) throw new Error('No SKILL.md was found. Choose a skill file, folder, or ZIP archive.')
+    return selected
+  }
+  const roots = skillRootsFrom(blobs)
+  return blobs.filter(entry => roots.some(root => root === '' || entry.path === root || entry.path.startsWith(`${root}/`)))
+}
+
+async function githubEntries(owner, repo, ref, subdir, { request, signal }) {
+  const api = `https://api.github.com/repos/${owner}/${repo}`
+  const tree = JSON.parse((await download(`${api}/git/trees/${encodeURIComponent(ref)}?recursive=1`, request, 8 * 1024 * 1024, signal)).toString())
+  if (tree.truncated) throw new Error('GitHub repository tree is too large to list. Open a skill directory URL instead.')
+  const blobs = (tree.tree || []).filter(entry => entry.type === 'blob')
+  const selected = selectGithubBlobs(blobs, subdir)
+  if (selected.length > SKILL_LIMITS.files) throw new Error('Too many files in this skill archive.')
+  let total = 0
+  for (const entry of selected) {
+    if (entry.mode === '120000' || entry.mode === '160000') throw new Error('Skill archives cannot contain links or special files.')
+    total += Number(entry.size) || 0
+    if (total > SKILL_LIMITS.upload) throw new Error('GitHub download exceeds the size limit.')
+  }
+  const prefix = subdir ? `${subdir}/` : ''
+  const entries = await mapPool(selected, 8, signal, async (entry, downloadSignal) => {
+    const path = prefix ? entry.path.slice(prefix.length) : entry.path
+    safeSkillPath(path)
+    const raw = `https://raw.githubusercontent.com/${owner}/${repo}/${encodeURIComponent(ref)}/${entry.path.split('/').map(encodeURIComponent).join('/')}`
+    const data = await downloadRaw(raw, request, downloadSignal)
+    return { path, data }
+  })
+  return validateEntries(entries)
+}
+
+export async function githubSkills(value, { request, signal = AbortSignal.timeout(60000) } = {}) {
   let url
   try { url = new URL(value) } catch { throw new Error('Enter a GitHub repository or skill directory URL.') }
   if (url.protocol !== 'https:' || url.hostname !== 'github.com' || url.port || url.username || url.password || url.search || url.hash) throw new Error('Use a public https://github.com repository URL without credentials.')
@@ -74,37 +180,41 @@ export async function githubSkills(value, { request = fetch, signal = AbortSigna
   const [owner, rawRepo, kind, ...tail] = parts
   const repo = rawRepo?.replace(/\.git$/, '')
   if (!/^[\w.-]+$/.test(owner ?? '') || !/^[\w.-]+$/.test(repo ?? '') || (kind && !['tree', 'blob'].includes(kind))) throw new Error('Enter a GitHub repository or skill directory URL.')
-  const api = `https://api.github.com/repos/${owner}/${repo}`
-  const info = JSON.parse((await download(api, request, 1024 * 1024, signal)).toString())
-  if (info.private) throw new Error('Only public GitHub repositories are supported.')
-  let ref = info.default_branch
-  let subdir = ''
-  if (kind) {
-    // A branch may contain slashes; resolve the longest actual ref before the path.
-    let found = false
-    for (let split = tail.length; split >= 1; split--) {
-      const candidate = tail.slice(0, split).join('/')
-      try {
-        const commit = JSON.parse((await download(`${api}/commits/${encodeURIComponent(candidate)}`, request, 1024 * 1024, signal)).toString())
-        ref = commit.sha
-        subdir = tail.slice(split).join('/')
-        found = true
-        break
-      } catch (error) { if (!/answered 404|answered 422/.test(error.message)) throw error }
+  let transport
+  try {
+    if (!request) {
+      transport = await desktopGitHubTransport(signal)
+      request = transport.request
     }
-    if (!found) throw new Error('GitHub branch or revision was not found.')
-    if (kind === 'blob') {
-      if (!/(^|\/)SKILL\.md$/i.test(subdir)) throw new Error('Choose a SKILL.md file or a skill directory.')
-      subdir = posix.dirname(subdir)
-      if (subdir === '.') subdir = ''
+    const api = `https://api.github.com/repos/${owner}/${repo}`
+    const info = JSON.parse((await download(api, request, 1024 * 1024, signal)).toString())
+    if (info.private) throw new Error('Only public GitHub repositories are supported.')
+    let ref = info.default_branch
+    let subdir = ''
+    if (kind) {
+      // A branch may contain slashes; resolve the longest actual ref before the path.
+      let found = false
+      for (let split = tail.length; split >= 1; split--) {
+        const candidate = tail.slice(0, split).join('/')
+        try {
+          const commit = JSON.parse((await download(`${api}/commits/${encodeURIComponent(candidate)}`, request, 1024 * 1024, signal)).toString())
+          ref = commit.sha
+          subdir = tail.slice(split).join('/')
+          found = true
+          break
+        } catch (error) { if (!/answered 404|answered 422/.test(error.message)) throw error }
+      }
+      if (!found) throw new Error('GitHub branch or revision was not found.')
+      if (kind === 'blob') {
+        if (!/(^|\/)SKILL\.md$/i.test(subdir)) throw new Error('Choose a SKILL.md file or a skill directory.')
+        subdir = posix.dirname(subdir)
+        if (subdir === '.') subdir = ''
+      }
     }
-  }
-  if (subdir) safeSkillPath(subdir)
-  const archive = await download(`https://codeload.github.com/${owner}/${repo}/zip/${encodeURIComponent(ref)}`, request, SKILL_LIMITS.upload, signal)
-  const entries = unpackSkills(archive)
-  const root = entries[0]?.path.split('/')[0]
-  const prefix = `${root}/${subdir ? `${subdir}/` : ''}`
-  return { entries: entries.filter(entry => entry.path.startsWith(prefix)).map(entry => ({ ...entry, path: entry.path.slice(prefix.length) })), source: { type: 'github', url: url.href, revision: ref } }
+    if (subdir) safeSkillPath(subdir)
+    const entries = await githubEntries(owner, repo, ref, subdir, { request, signal })
+    return { entries, source: { type: 'github', url: url.href, revision: ref } }
+  } catch (error) { githubFailure(error) } finally { await transport?.close() }
 }
 
 export function identifySkills(entries) {

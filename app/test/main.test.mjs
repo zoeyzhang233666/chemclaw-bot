@@ -3,7 +3,7 @@
 // runs. The Electron parts are test doubles: no display, no DSH, no data of the user.
 import assert from 'node:assert/strict'
 import { before, test } from 'node:test'
-import { state } from './helpers/fake-electron.mjs'
+import { session, state } from './helpers/fake-electron.mjs'
 import { state as hostState } from './helpers/fake-host-process.mjs'
 import { startApp, trayMenu, waitFor, window } from './helpers/app-harness.mjs'
 import { installHooks } from './helpers/register.mjs'
@@ -25,6 +25,24 @@ test('the first window trades the launch URL for the Host\'s cookie', async () =
   await waitFor(() => win.loaded.some(url => url.includes('token=')), 'reach the Host')
   assert.equal(win.loaded.filter(url => url.includes('token=')).length, 1, 'the token is used once')
   assert.equal(state.cookies.length, 1, 'the Host left a cookie for its address')
+})
+
+test('the Host resolves only the two public GitHub origins through Electron', async () => {
+  const seen = []
+  session.defaultSession.resolveProxy = async url => {
+    seen.push(url)
+    if (url.startsWith('https://api.')) return 'DIRECT'
+    return 'PROXY proxy.example:8080'
+  }
+  try {
+    hostState.receive({ type: 'chemclaw:github-proxies', id: 'probe', url: 'https://unrelated.example/' })
+    await waitFor(() => hostState.messages.some(message => message.id === 'probe'), 'resolve GitHub routes')
+    assert.deepEqual(seen, ['https://api.github.com/', 'https://raw.githubusercontent.com/'])
+    assert.deepEqual(hostState.messages.find(message => message.id === 'probe'), {
+      type: 'chemclaw:github-proxies-response', id: 'probe',
+      routes: { api: 'DIRECT', raw: 'PROXY proxy.example:8080' },
+    })
+  } finally { delete session.defaultSession.resolveProxy }
 })
 
 test('a window that is gone for good is built anew and talks to the same Host', async () => {

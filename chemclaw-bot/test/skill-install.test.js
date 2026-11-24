@@ -94,22 +94,134 @@ test('installation previews, skips conflicts, replaces atomically, keeps resourc
   assert.ok(rt.state.removedSkills.includes('example'))
 })
 
-test('GitHub repository, branch with slashes, directory and SKILL.md links retain sibling resources', async () => {
-  const bytes = zipSync({ 'repo-sha/skills/example/SKILL.md': strToU8(content()), 'repo-sha/skills/example/scripts/run.py': strToU8('pass'), 'repo-sha/other/SKILL.md': strToU8(content('other')) })
-  const request = async url => {
-    if (url.includes('codeload.github.com')) return new Response(bytes)
-    if (url.endsWith('/commits/feature%2Fwork')) return Response.json({ sha: 'resolved-sha' })
-    if (url.includes('/commits/')) return new Response('', { status: 404 })
-    return Response.json({ private: false, default_branch: 'main' })
+function githubFixture(files, { branch = 'main', commits = {} } = {}) {
+  const tree = Object.entries(files).map(([path, data]) => {
+    const bytes = Buffer.isBuffer(data) ? data : Buffer.from(String(data))
+    return { path, type: 'blob', mode: '100644', size: bytes.length, sha: path, bytes }
+  })
+  return async url => {
+    if (url.includes('/git/trees/')) {
+      return Response.json({ truncated: false, tree: tree.map(({ path, type, mode, size, sha }) => ({ path, type, mode, size, sha })) })
+    }
+    if (url.includes('raw.githubusercontent.com/')) {
+      const path = decodeURIComponent(url.match(/raw\.githubusercontent\.com\/[^/]+\/[^/]+\/[^/]+\/(.*)$/)?.[1] || '')
+      const entry = tree.find(item => item.path === path)
+      if (!entry) return new Response('', { status: 404 })
+      return new Response(entry.bytes)
+    }
+    if (url.includes('/commits/')) {
+      for (const [name, sha] of Object.entries({ [branch]: 'resolved-sha', ...commits })) {
+        if (url.endsWith(`/commits/${encodeURIComponent(name)}`)) return Response.json({ sha })
+      }
+      return new Response('', { status: 404 })
+    }
+    if (/\/repos\/[^/]+\/[^/]+$/.test(url)) return Response.json({ private: false, default_branch: branch })
+    return new Response('', { status: 404 })
   }
+}
+
+test('GitHub repository, branch with slashes, directory and SKILL.md links retain sibling resources', async () => {
+  const files = {
+    'skills/example/SKILL.md': content(),
+    'skills/example/scripts/run.py': 'pass',
+    'skills/example/references/note.md': 'keep',
+    'skills/example/assets/icon.bin': Buffer.from([0, 255, 1]),
+    'other/SKILL.md': content('other'),
+    'other/scripts/helper.sh': 'echo hi',
+    'README.md': 'ignore me',
+  }
+  const request = githubFixture(files, { commits: { 'feature/work': 'resolved-sha' } })
   const repo = await githubSkills('https://github.com/owner/repo', { request })
   assert.equal(identifySkills(repo.entries).length, 2)
+  assert.ok(!repo.entries.some(item => item.path === 'README.md'))
+  assert.ok(repo.entries.some(item => item.path === 'skills/example/scripts/run.py'))
+  assert.ok(repo.entries.some(item => item.path === 'skills/example/assets/icon.bin'))
   for (const url of ['https://github.com/owner/repo/tree/feature/work/skills/example', 'https://github.com/owner/repo/blob/feature/work/skills/example/SKILL.md']) {
     const result = await githubSkills(url, { request })
-    assert.deepEqual(result.entries.map(item => item.path), ['SKILL.md', 'scripts/run.py'])
+    assert.deepEqual(result.entries.map(item => item.path).sort(), ['SKILL.md', 'assets/icon.bin', 'references/note.md', 'scripts/run.py'])
     assert.equal(result.source.revision, 'resolved-sha')
   }
   for (const url of ['https://github.com.evil.test/o/r', 'http://github.com/o/r', 'https://user:pass@github.com/o/r']) await assert.rejects(githubSkills(url, { request }), /public/)
+})
+
+test('GitHub import keeps nested skill packages and reports timeout, rate limit and truncated trees', async () => {
+  const nested = githubFixture({
+    'skills/parent/SKILL.md': content('parent'),
+    'skills/parent/scripts/run.py': 'pass',
+    'skills/parent/nested/SKILL.md': content('nested'),
+    'skills/parent/nested/references/data.csv': 'a,b\n',
+    'vendor/noise.bin': Buffer.alloc(1024, 7),
+  })
+  const root = await githubSkills('https://github.com/owner/large-repo', { request: nested })
+  assert.deepEqual(identifySkills(root.entries).map(item => item.name).sort(), ['nested', 'parent'])
+  assert.ok(!root.entries.some(item => item.path.startsWith('vendor/')))
+  assert.ok(root.entries.some(item => item.path === 'skills/parent/nested/references/data.csv'))
+
+  const deep = await githubSkills('https://github.com/owner/large-repo/tree/main/skills/parent/nested', { request: nested })
+  assert.deepEqual(deep.entries.map(item => item.path).sort(), ['SKILL.md', 'references/data.csv'])
+
+  const timedOut = async () => { throw Object.assign(new Error('The operation was aborted due to timeout'), { name: 'AbortError' }) }
+  await assert.rejects(githubSkills('https://github.com/owner/repo', { request: timedOut }), /timed out/)
+
+  const limited = async () => new Response('', { status: 403, headers: { 'x-ratelimit-remaining': '0' } })
+  await assert.rejects(githubSkills('https://github.com/owner/repo', { request: limited }), /rate limit/)
+
+  const truncated = async url => {
+    if (url.includes('/git/trees/')) return Response.json({ truncated: true, tree: [] })
+    if (/\/repos\/[^/]+\/[^/]+$/.test(url)) return Response.json({ private: false, default_branch: 'main' })
+    return new Response('', { status: 404 })
+  }
+  await assert.rejects(githubSkills('https://github.com/owner/repo', { request: truncated }), /tree is too large/)
+
+  const unsafe = githubFixture({ 'skills/example/SKILL.md': content(), 'skills/example/safe/../escape.txt': 'nope' })
+  await assert.rejects(githubSkills('https://github.com/owner/repo/tree/main/skills/example', { request: unsafe }), /Unsafe/)
+
+  const symlink = async url => {
+    if (url.includes('/git/trees/')) return Response.json({ truncated: false, tree: [
+      { path: 'SKILL.md', type: 'blob', mode: '100644', size: 20 },
+      { path: 'link.py', type: 'blob', mode: '120000', size: 4 },
+    ] })
+    if (/\/repos\/[^/]+\/[^/]+$/.test(url)) return Response.json({ private: false, default_branch: 'main' })
+    return new Response('', { status: 404 })
+  }
+  await assert.rejects(githubSkills('https://github.com/owner/repo', { request: symlink }), /links/)
+})
+
+test('GitHub import retries a transient raw connection error without re-downloading other files', async () => {
+  const files = { 'skills/example/SKILL.md': content(), 'skills/example/scripts/run.py': 'pass' }
+  const request = githubFixture(files)
+  const attempts = new Map()
+  const run = url => {
+    const count = (attempts.get(url) ?? 0) + 1
+    attempts.set(url, count)
+    if (url.endsWith('/run.py') && count === 1) {
+      const cause = Object.assign(new Error('Connect timeout'), { code: 'UND_ERR_CONNECT_TIMEOUT' })
+      throw new TypeError('fetch failed', { cause })
+    }
+    return request(url)
+  }
+  const result = await githubSkills('https://github.com/owner/repo', { request: run })
+  assert.deepEqual(result.entries.map(entry => entry.path), Object.keys(files))
+  assert.equal(result.entries[1].data.toString(), files['skills/example/scripts/run.py'])
+  assert.deepEqual([...attempts.values()], [1, 1, 1, 2])
+})
+
+test('GitHub import aborts active raw requests and leaves queued files untouched on a permanent error', async () => {
+  const files = { 'skills/example/SKILL.md': content() }
+  for (let i = 0; i < 10; i++) files[`skills/example/file-${i}.txt`] = 'resource'
+  const request = githubFixture(files)
+  const signals = []
+  const run = (url, { signal }) => {
+    if (!url.includes('raw.githubusercontent.com')) return request(url)
+    signals.push(signal)
+    if (url.endsWith('/SKILL.md')) return new Response(null, { status: 404 })
+    return new Promise((_, reject) => {
+      signal.addEventListener('abort', () => reject(signal.reason), { once: true })
+    })
+  }
+  await assert.rejects(githubSkills('https://github.com/owner/repo', { request: run }), /answered 404/)
+  assert.equal(signals.length, 8)
+  assert.ok(signals.every(signal => signal.aborted))
 })
 
 test('manual emoji choices survive edits and reload, while invalid input leaves the saved skill intact', async t => {

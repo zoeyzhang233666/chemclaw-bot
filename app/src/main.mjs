@@ -320,7 +320,20 @@ async function start() {
     // update can still come when this version's Host does not start.
     updates = startUpdates()
     host = newHost()
+    const activeHost = host
     host.onMessage(message => {
+      if (message?.type === 'chemclaw:github-proxies' && typeof message.id === 'string') {
+        const resolve = async url => {
+          try { return await session.defaultSession.resolveProxy(url) } catch { return undefined }
+        }
+        void Promise.all([
+          resolve('https://api.github.com/'),
+          resolve('https://raw.githubusercontent.com/'),
+        ]).then(([api, raw]) => activeHost.send({
+          type: 'chemclaw:github-proxies-response', id: message.id, routes: { api, raw },
+        }))
+        return
+      }
       if (message?.type !== 'chemclaw:browser-endpoint' || typeof message.id !== 'string' || !isBotId(message.botId)) return
       const downloadRoots = message.downloadRoots
       if (!Array.isArray(downloadRoots) || downloadRoots.length > 4 || !Array.from(downloadRoots).every(root => typeof root === 'string' && isAbsolute(root))) {
