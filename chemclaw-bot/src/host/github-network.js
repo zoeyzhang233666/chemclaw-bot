@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { Agent, ProxyAgent } from 'undici'
+import { Agent, fetch as fetchWithDispatcher, ProxyAgent } from 'undici'
 
 const DIRECT = 'DIRECT'
 const protocols = new Map([['PROXY', 'http:'], ['HTTP', 'http:'], ['HTTPS', 'https:'], ['SOCKS5', 'socks5:']])
@@ -64,7 +64,8 @@ function resolveAppProxies(signal) {
 }
 
 export function createGitHubTransport(routes, {
-  fetch: fetchUrl = fetch,
+  // Electron's bundled fetch can use an older Dispatcher handler protocol.
+  fetch: fetchUrl = (url, options) => options.dispatcher ? fetchWithDispatcher(url, options) : fetch(url, options),
   dispatcherFor = route => route === DIRECT ? new Agent() : new ProxyAgent(route),
 } = {}) {
   const candidates = new Map([

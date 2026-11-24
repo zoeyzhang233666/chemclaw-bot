@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
+import { MockAgent } from 'undici'
 import { createGitHubTransport, gitHubProxyRoutes, gitHubRateLimited } from '../src/host/github-network.js'
 
 const api = 'https://api.github.com/repos/owner/repo'
@@ -78,4 +79,16 @@ test('an aborted request never falls back to another route', async () => {
   })
   await assert.rejects(f.request(raw, { signal: controller.signal }))
   assert.equal(f.calls.length, 1)
+})
+
+test('proxied fetch and its dispatcher use the same Undici request protocol', async () => {
+  const dispatcher = new MockAgent()
+  dispatcher.disableNetConnect()
+  dispatcher.get('https://raw.githubusercontent.com').intercept({ path: '/owner/repo/main/SKILL.md' }).reply(200, 'fixture')
+  const transport = createGitHubTransport({ raw: proxyRules }, { dispatcherFor: () => dispatcher })
+  try {
+    const response = await transport.request(raw, { signal: AbortSignal.timeout(1_000), redirect: 'error' })
+    assert.equal(await response.text(), 'fixture')
+    dispatcher.assertNoPendingInterceptors()
+  } finally { await dispatcher.close() }
 })
