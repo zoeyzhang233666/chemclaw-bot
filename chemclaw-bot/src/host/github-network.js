@@ -6,7 +6,7 @@ const protocols = new Map([['PROXY', 'http:'], ['HTTP', 'http:'], ['HTTPS', 'htt
 const transientCodes = new Set([
   'ECONNREFUSED', 'ECONNRESET', 'EHOSTUNREACH', 'ENETUNREACH', 'ETIMEDOUT',
   'EAI_AGAIN', 'ENOTFOUND', 'UND_ERR_CONNECT_TIMEOUT', 'UND_ERR_HEADERS_TIMEOUT',
-  'UND_ERR_BODY_TIMEOUT', 'UND_ERR_SOCKET',
+  'UND_ERR_BODY_TIMEOUT', 'UND_ERR_SOCKET', 'UND_ERR_PRX_CONN',
 ])
 
 export function transientGitHubError(error) {

@@ -52,7 +52,7 @@ test('fallback preserves a rate limit if the alternate cannot connect', async ()
 
 test('raw falls back on transport failure, but HTTP errors and TLS rejection do not bypass a route', async () => {
   const reachable = fixture(route => {
-    if (route !== 'DIRECT') throw connectionError('ECONNREFUSED')
+    if (route !== 'DIRECT') throw connectionError('UND_ERR_PRX_CONN')
     return new Response('content')
   })
   assert.equal(await (await reachable.send(raw)).text(), 'content')
