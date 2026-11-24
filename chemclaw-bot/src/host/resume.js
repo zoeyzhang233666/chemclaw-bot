@@ -168,18 +168,39 @@ export function install(rt) {
   }
 
   const deliver = rt.deliver
+  // Deferred requests can be handed back by the live turn and recovered by the
+  // restart path at the same time. Share the one in-flight send, including its
+  // failure, instead of delivering the same exchange to a Bot twice.
+  // Only pending deliveries are coalesced; failed sends can be retried normally.
+  const sending = new Map()
   rt.deliver = async (args) => {
     const noted = { ...args, exchangeId: args.exchangeId ?? randomUUID() }
     const sessionId = noted.sessionId ?? rt.chatOf(noted.toId)
+    const deferred = noted.deferred === true && noted.resent !== true
+    const key = `${sessionId}\u0000${noted.exchangeId}`
+    if (deferred && sending.has(key)) return sending.get(key)
     // Noted before it is sent: a turn may take it up before the send returns.
-    queued = { ...queued, [sessionId]: [...(queued[sessionId] ?? []), { at: Date.now(), args: noted }].slice(-QUEUED_MAX) }
+    // Updating an existing exchange note avoids stacking duplicates in inflight.json.
+    const waiting = queued[sessionId] ?? []
+    const at = waiting.findIndex(item => item.args.exchangeId === noted.exchangeId)
+    const note = { at: Date.now(), args: noted }
+    const next = at < 0 ? [...waiting, note] : waiting.map((item, index) => index === at ? note : item)
+    queued = { ...queued, [sessionId]: next.slice(-QUEUED_MAX) }
     persist()
-    try {
-      return await deliver(noted)
-    } catch (error) {
-      forgetQueued(noted.exchangeId)
-      throw error
+    const run = (async () => {
+      try {
+        return await deliver(noted)
+      } catch (error) {
+        forgetQueued(noted.exchangeId)
+        throw error
+      }
+    })()
+    if (deferred) {
+      sending.set(key, run)
+      const done = () => { if (sending.get(key) === run) sending.delete(key) }
+      run.then(done, done)
     }
+    return run
   }
 
   // What a Session was sent and no turn has read yet.
