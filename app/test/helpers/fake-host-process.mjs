@@ -21,6 +21,7 @@ export const state = {
   stops: 0,
   fail: false,
   failHost: undefined,
+  messages: [],
   // The Host waits for the test to let it answer.
   held: false,
   release: () => { if (open !== undefined) { open(); open = undefined } },
@@ -39,6 +40,7 @@ export class HostProcess {
   constructor(options) {
     this.#options = options
     state.failHost = options.onFailure
+    state.receive = message => { for (const listener of this.#messageListeners) listener(message) }
     state.computerHelperHome = options.env?.DS_BOT_COMPUTER_HELPER_HOME
   }
 
@@ -51,7 +53,7 @@ export class HostProcess {
 
   onMessage(listener) { this.#messageListeners.add(listener); return () => this.#messageListeners.delete(listener) }
 
-  send() {}
+  send(message) { state.messages.push(message); return true }
 
   async stop() { state.stops += 1 }
 }

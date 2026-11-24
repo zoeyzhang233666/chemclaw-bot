@@ -3,6 +3,7 @@ import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { dirname, join, posix } from 'node:path'
 import { setTimeout as delay } from 'node:timers/promises'
 import { unzipSync } from 'fflate'
+import { desktopGitHubTransport, gitHubRateLimited, transientGitHubError } from './github-network.js'
 import { managedSkillPath, parseSkill, safeSkillPath, SKILL_LIMITS } from './skill-files.js'
 import { skillEmoji, skillExample, validSkillEmoji } from '../shared/skill-presentation.js'
 
@@ -64,7 +65,7 @@ function githubFailure(error) {
 }
 
 function rejectGitHubStatus(response) {
-  if (response.status === 429 || (response.status === 403 && response.headers.get('x-ratelimit-remaining') === '0')) {
+  if (gitHubRateLimited(response)) {
     throw new Error('GitHub rate limit exceeded. Wait a few minutes and try again.')
   }
   throw new Error(`GitHub answered ${response.status}. Use a public repository and try again.`)
@@ -75,8 +76,11 @@ async function download(url, request, limit, signal, { accept = 'application/vnd
   try {
     response = await request(url, { headers: { Accept: accept, 'User-Agent': 'ChemClaw' }, redirect: 'error', signal })
   } catch (error) { githubFailure(error) }
-  if (!response.ok) rejectGitHubStatus(response)
-  if (Number(response.headers.get('content-length')) > limit) throw new Error('GitHub download exceeds the size limit.')
+  if (!response.ok || Number(response.headers.get('content-length')) > limit) {
+    await response.body?.cancel().catch(() => undefined)
+    if (!response.ok) rejectGitHubStatus(response)
+    throw new Error('GitHub download exceeds the size limit.')
+  }
   const chunks = []
   let bytes = 0
   try {
@@ -92,19 +96,13 @@ async function download(url, request, limit, signal, { accept = 'application/vnd
   return Buffer.concat(chunks)
 }
 
-const RETRYABLE_RAW_ERRORS = new Set([
-  'ECONNRESET', 'ETIMEDOUT', 'EAI_AGAIN', 'UND_ERR_CONNECT_TIMEOUT',
-  'UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT', 'UND_ERR_SOCKET',
-])
-
 async function downloadRaw(url, request, signal) {
   for (let attempt = 0; ; attempt++) {
     signal.throwIfAborted()
     try {
       return await download(url, request, SKILL_LIMITS.upload, signal, { accept: '*/*' })
     } catch (error) {
-      const cause = error.cause?.cause ?? error.cause
-      if (signal.aborted || attempt >= 2 || !RETRYABLE_RAW_ERRORS.has(cause?.code)) throw error
+      if (signal.aborted || attempt >= 2 || !transientGitHubError(error.cause)) throw error
       await delay(250 * (attempt + 1), undefined, { signal })
     }
   }
@@ -174,7 +172,7 @@ async function githubEntries(owner, repo, ref, subdir, { request, signal }) {
   return validateEntries(entries)
 }
 
-export async function githubSkills(value, { request = fetch, signal = AbortSignal.timeout(60000) } = {}) {
+export async function githubSkills(value, { request, signal = AbortSignal.timeout(60000) } = {}) {
   let url
   try { url = new URL(value) } catch { throw new Error('Enter a GitHub repository or skill directory URL.') }
   if (url.protocol !== 'https:' || url.hostname !== 'github.com' || url.port || url.username || url.password || url.search || url.hash) throw new Error('Use a public https://github.com repository URL without credentials.')
@@ -182,7 +180,12 @@ export async function githubSkills(value, { request = fetch, signal = AbortSigna
   const [owner, rawRepo, kind, ...tail] = parts
   const repo = rawRepo?.replace(/\.git$/, '')
   if (!/^[\w.-]+$/.test(owner ?? '') || !/^[\w.-]+$/.test(repo ?? '') || (kind && !['tree', 'blob'].includes(kind))) throw new Error('Enter a GitHub repository or skill directory URL.')
+  let transport
   try {
+    if (!request) {
+      transport = await desktopGitHubTransport(signal)
+      request = transport.request
+    }
     const api = `https://api.github.com/repos/${owner}/${repo}`
     const info = JSON.parse((await download(api, request, 1024 * 1024, signal)).toString())
     if (info.private) throw new Error('Only public GitHub repositories are supported.')
@@ -211,7 +214,7 @@ export async function githubSkills(value, { request = fetch, signal = AbortSigna
     if (subdir) safeSkillPath(subdir)
     const entries = await githubEntries(owner, repo, ref, subdir, { request, signal })
     return { entries, source: { type: 'github', url: url.href, revision: ref } }
-  } catch (error) { githubFailure(error) }
+  } catch (error) { githubFailure(error) } finally { await transport?.close() }
 }
 
 export function identifySkills(entries) {
