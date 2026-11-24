@@ -187,6 +187,43 @@ test('GitHub import keeps nested skill packages and reports timeout, rate limit 
   await assert.rejects(githubSkills('https://github.com/owner/repo', { request: symlink }), /links/)
 })
 
+test('GitHub import retries a transient raw connection error without re-downloading other files', async () => {
+  const files = { 'skills/example/SKILL.md': content(), 'skills/example/scripts/run.py': 'pass' }
+  const request = githubFixture(files)
+  const attempts = new Map()
+  const run = url => {
+    const count = (attempts.get(url) ?? 0) + 1
+    attempts.set(url, count)
+    if (url.endsWith('/run.py') && count === 1) {
+      const cause = Object.assign(new Error('Connect timeout'), { code: 'UND_ERR_CONNECT_TIMEOUT' })
+      throw new TypeError('fetch failed', { cause })
+    }
+    return request(url)
+  }
+  const result = await githubSkills('https://github.com/owner/repo', { request: run })
+  assert.deepEqual(result.entries.map(entry => entry.path), Object.keys(files))
+  assert.equal(result.entries[1].data.toString(), files['skills/example/scripts/run.py'])
+  assert.deepEqual([...attempts.values()], [1, 1, 1, 2])
+})
+
+test('GitHub import aborts active raw requests and leaves queued files untouched on a permanent error', async () => {
+  const files = { 'skills/example/SKILL.md': content() }
+  for (let i = 0; i < 10; i++) files[`skills/example/file-${i}.txt`] = 'resource'
+  const request = githubFixture(files)
+  const signals = []
+  const run = (url, { signal }) => {
+    if (!url.includes('raw.githubusercontent.com')) return request(url)
+    signals.push(signal)
+    if (url.endsWith('/SKILL.md')) return new Response(null, { status: 404 })
+    return new Promise((_, reject) => {
+      signal.addEventListener('abort', () => reject(signal.reason), { once: true })
+    })
+  }
+  await assert.rejects(githubSkills('https://github.com/owner/repo', { request: run }), /answered 404/)
+  assert.equal(signals.length, 8)
+  assert.ok(signals.every(signal => signal.aborted))
+})
+
 test('manual emoji choices survive edits and reload, while invalid input leaves the saved skill intact', async t => {
   const { rt, home } = await fixture(t)
   const body = { name: 'custom-work', kind: 'skill', description: 'Custom workflow', content: 'Use the attached material.' }

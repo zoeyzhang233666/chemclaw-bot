@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { dirname, join, posix } from 'node:path'
+import { setTimeout as delay } from 'node:timers/promises'
 import { unzipSync } from 'fflate'
 import { managedSkillPath, parseSkill, safeSkillPath, SKILL_LIMITS } from './skill-files.js'
 import { skillEmoji, skillExample, validSkillEmoji } from '../shared/skill-presentation.js'
@@ -59,7 +60,7 @@ function githubFailure(error) {
   if (error instanceof Error && /^(Enter a GitHub|Use a public|Only public|GitHub |No SKILL\.md|Too many files|Skill archives|Choose a SKILL|Unsafe skill|Duplicate skill|Expanded skill)/.test(error.message)) {
     throw error
   }
-  throw new Error('GitHub download failed. Check your network and try again.')
+  throw new Error('GitHub download failed. Check your network and try again.', { cause: error })
 }
 
 function rejectGitHubStatus(response) {
@@ -91,16 +92,40 @@ async function download(url, request, limit, signal, { accept = 'application/vnd
   return Buffer.concat(chunks)
 }
 
-async function mapPool(items, limit, worker) {
-  const results = Array.from({ length: items.length })
-  let next = 0
-  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, async () => {
-    for (;;) {
-      const index = next++
-      if (index >= items.length) return
-      results[index] = await worker(items[index], index)
+const RETRYABLE_RAW_ERRORS = new Set([
+  'ECONNRESET', 'ETIMEDOUT', 'EAI_AGAIN', 'UND_ERR_CONNECT_TIMEOUT',
+  'UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT', 'UND_ERR_SOCKET',
+])
+
+async function downloadRaw(url, request, signal) {
+  for (let attempt = 0; ; attempt++) {
+    signal.throwIfAborted()
+    try {
+      return await download(url, request, SKILL_LIMITS.upload, signal, { accept: '*/*' })
+    } catch (error) {
+      const cause = error.cause?.cause ?? error.cause
+      if (signal.aborted || attempt >= 2 || !RETRYABLE_RAW_ERRORS.has(cause?.code)) throw error
+      await delay(250 * (attempt + 1), undefined, { signal })
     }
-  }))
+  }
+}
+
+async function mapPool(items, limit, signal, worker) {
+  const results = Array.from({ length: items.length })
+  const controller = new AbortController()
+  const downloadSignal = AbortSignal.any([signal, controller.signal])
+  let next = 0
+  try {
+    await Promise.all(Array.from({ length: Math.min(limit, items.length) }, async () => {
+      while (next < items.length) {
+        downloadSignal.throwIfAborted()
+        const index = next++
+        results[index] = await worker(items[index], downloadSignal)
+      }
+    }))
+  } finally {
+    controller.abort()
+  }
   return results
 }
 
@@ -139,11 +164,11 @@ async function githubEntries(owner, repo, ref, subdir, { request, signal }) {
     if (total > SKILL_LIMITS.upload) throw new Error('GitHub download exceeds the size limit.')
   }
   const prefix = subdir ? `${subdir}/` : ''
-  const entries = await mapPool(selected, 8, async entry => {
+  const entries = await mapPool(selected, 8, signal, async (entry, downloadSignal) => {
     const path = prefix ? entry.path.slice(prefix.length) : entry.path
     safeSkillPath(path)
     const raw = `https://raw.githubusercontent.com/${owner}/${repo}/${encodeURIComponent(ref)}/${entry.path.split('/').map(encodeURIComponent).join('/')}`
-    const data = await download(raw, request, SKILL_LIMITS.upload, signal, { accept: '*/*' })
+    const data = await downloadRaw(raw, request, downloadSignal)
     return { path, data }
   })
   return validateEntries(entries)
